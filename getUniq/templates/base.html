@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>U-M Account Registration</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">-->
+        <link rel="stylesheet" href="{% static 'css/getUniq.css' %}">
+        <link rel="shortcut icon" href={% static 'img/favicon.ico' %>
+    </head>
+    <body>
+        <!--<div class="page-header">
+            <h1>Social ID Verification</h1>
+        </div>-->
+        <header class="navbar" role="banner">
+            <a href="#"><img src="/static/img/its-logo@3x.png" class="container banner-img img-responsive pull-left" alt="U-M Social Login wordmark"></a>
+        </header>
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% block content %}
+        {% endblock content %}
+
+        <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
+        <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+        {% block javascript_page %}
+        {% endblock javascript_page %}
+    </body>
+
+    <footer class="container" role="contentinfo">
+        <ul class="footer-links text-center">
+            <li><a href="http://www.umich.edu/" title="University of Michigan Homepage"><small>University of Michigan</small></a></li>
+            <li>
+            &copy; 2017 <a href="http://www.umich.edu/~regents/" title="Regents of the University of Michigan"><small>The Regents of the University of Michigan</small></a>
+        </ul>
+    </footer>
+</html>

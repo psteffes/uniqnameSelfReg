@@ -1,0 +1,2 @@
+
+Hello. Activate your account at {{ secure_url }}

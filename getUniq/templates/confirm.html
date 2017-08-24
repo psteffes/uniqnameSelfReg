@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main id="main" class="container">
+
+  <h1 class="text-center sr-only">Social ID Verification</h1>
+  <p id="title" class="text-center lead">Token Gear</p>
+
+  <div class="row">
+    <div id="grid" class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+
+     <fieldset class="well well-lg">
+      <form id="id-verifyForm" action="" class="blueForms" method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+          {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ error|escape }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <div class="form-group">
+          <label class="formLabel">Token:</label>
+          <input type="text" name="token" class="form-control" required id="id_token">
+        </div>
+
+        <div class="form-actions">
+          <input class="btn btn-primary btn-large btn-blue btn-block" type="submit" value="Submit">
+        </div>
+      </form>
+
+     </fieldset>
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}

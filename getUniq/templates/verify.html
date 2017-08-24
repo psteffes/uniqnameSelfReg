@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main id="main" class="container">
+
+  <h1 class="text-center sr-only">Social ID Verification</h1>
+  <p id="title" class="text-center lead">Verify Your Identity</p>
+
+  <div class="row">
+    <div id="grid" class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 well well-lg">
+
+     <!--<fieldset class="well well-lg">-->
+      <form id="id-verifyForm" action="" class="blueForms" method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+          {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ error|escape }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <div class="row">
+          <div id="div_id_first_name" class="col-sm-6 form-group">
+            <label class="control-label">First Name:</label>
+            <input type="text" name="first_name" class="textinput textInput form-control" required id="id_first_name" placeholder="First Name" value="{{ form.first_name.value|default_if_none:"" }}">
+            {% if form.first_name.errors %}
+              <div class="help-block">
+                {% for error in form.first_name.errors %}
+                  {{ error|escape }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <div id="div_id_last_name" class="col-sm-6 form-group">
+            <label class="control-label">Last Name:</label>
+            <input type="text" name="last_name" class="textinput textInput form-control" required id="id_last_name" placeholder="Last Name" value="{{ form.last_name.value|default_if_none:"" }}">
+            {% if form.last_name.errors %}
+              <div class="help-block">
+                {% for error in form.last_name.errors %}
+                  {{ error|escape }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="formLabel">Date of Birth:</label>
+          <input type="date" name="birth_date" class="dateinput dateInput form-control" required id="id_birth_date" placeholder="mm/dd/yyyy" value="{{ form.birth_date.value|default_if_none:"" }}">
+          {% if form.birth_date.errors %}
+            <div class="help-block">
+              {% for error in form.birth_date.errors %}
+                {{ error|escape }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          <label class="formLabel">UMID:</label>
+          <input type="text" name="umid" class="textinput textInput form-control" pattern="^\d{8}$" title="An 8-digit number" maxlength="8" required id="id_umid" value="{{ form.umid.value|default_if_none:"" }}">
+          {% if form.umid.errors %}
+            <div class="help-block">
+              {% for error in form.umid.errors %}
+                {{ error|escape }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          <label class="formLabel">Email:</label>
+          <input type="email" name="email" class="textinput textInput form-control" required id="id_email" value="{{ form.email.value|default_if_none:"" }}">
+          {% if form.email.errors %}
+            <div class="help-block">
+              {% for error in form.email.errors %}
+                {{ error|escape }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="form-actions">
+          <input class="btn-lg btn-blue btn-block" type="submit" value="Submit">
+        </div>
+      </form>
+
+     <!--</fieldset>-->
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}

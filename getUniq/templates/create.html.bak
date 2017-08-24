@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main id="main" class="container">
+
+  <h1 class="text-center sr-only">Some Gear</h1>
+  <p id="title" class="text-center lead">Choose your character</p>
+
+  <div class="row">
+    <div id="grid" class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <!--<fieldset>-->
+              <legend class="h4">Uniqname Suggestions</legend>
+              <p>We've provided some suggestions based on your first and last names. For more suggestions, try adding your middle name or a nick name and clicking 'Suggest'</p>
+
+              <div class="row form-group">
+                <div id="div_id_suggest" class="col-sm-6 form-input">
+                  <label class="formLabel">Name:</label>
+                  <input type="text" name="suggest_field" class="textinput textInput form-control" id="id_suggest_field" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
+                </div>
+                <div class="col-sm-4 form-actions">
+                   <button class="btn btn-blue btn-block" id="id_suggest_btn" type="button">Suggest</button>
+                </div>
+              </div>
+
+              <div id="id_suggest_div" class="form-group uniqname-suggestions">
+                Suggestions:
+                <span id="id_suggestion_list">
+                  {% for name in suggestions %}
+                    &nbsp;&nbsp;<a>{{ name }}</a>&nbsp;&nbsp;
+                  {% endfor %}
+                </span>
+              </div>
+                  
+<!--
+              <div id="id_suggest_div">
+                {% for name in suggestions %}
+                  <div class="form-group">
+                    <label class="id-verify-label" for="radio_{{ name }}">
+                      <input type="radio" name="suggestionRadios" id="radio_{{ name }}" value="{{ name }}" onclick="document.getElementById('id_uniqname').value=this.value">
+                      {{ name }}
+                    </label>
+                  </div>
+                {% endfor %}
+              </div>
+-->
+
+            <!--</fieldset>-->
+          <!--panel-body</div>
+        </div>-->
+
+
+        <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
+          {% csrf_token %}
+
+          {% if form.errors %}
+            {% for error in form.non_field_errors %}
+              <div class="alert alert-danger">
+                {{ error|escape }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <div class="row">
+            <div class="col-sm-6 form-group">
+              <label class="formLabel">Desired Uniqname:</label>
+              <div class="input-group">
+                <input type="text" namei="uniqname" class="textinput textInput form-control" id="id_uniqname" required pattern="^[a-zA-Z]{3,8}$">
+                <div class="input-group-addon">@umich.edu</div>
+              </div>
+              <p class="help-block">A-Z only, between 3-8 characters</p>
+            </div>
+
+            <div class="col-sm-3 form-actions">
+              <input class="btn btn-blue btn-block" id="id_check_btn" type="button" value="Check Availability">
+              <!--<button class="btn btn-blue btn-block" id="id_check_btn" type="button">Check Availability</button>-->
+              <!--<input class="btn btn-blue btn-block" type="submit" value="Claim!">-->
+            </div>
+
+            <div class="col-sm-3 form-actions">
+              <input class="btn btn-blue btn-block" id="id_claim_btn" type="submit" value="Claim Uniqname" disabled>
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label class="formLabel">Desired Uniqname:</label>
+             <div class="form-inline">
+              <div class="col-sm-6">
+               <div class="input-group">
+                <input type="text" namei="uniqname" class="textinput textInput form-control" id="id_uniqname" required pattern="^[a-zA-Z]{3,8}$">
+                <div class="input-group-addon">@umich.edu</div>
+               </div>
+               <p class="help-block">A-Z only, between 3-8 characters</p>
+              </div>
+
+                <input class="btn btn-blue" id="id_check_btn" type="button" value="Check Availability">
+              <!--<button class="btn btn-blue btn-block" id="id_check_btn" type="button">Check Availability</button>-->
+              <!--<input class="btn btn-blue btn-block" type="submit" value="Claim!">-->
+
+                <input class="btn btn-blue" id="id_claim_btn" type="submit" value="Claim Uniqname" disabled>
+            </div>
+          </div>
+
+        </form>
+
+      <!--panel-body-->
+      </div>
+     </div>
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}
+
+{% block javascript_page %}
+{% load staticfiles %}
+<script src="{% static 'js/create.js' %}"></script>
+{% endblock javascript_page %}

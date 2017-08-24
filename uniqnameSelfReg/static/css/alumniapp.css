@@ -1,0 +1,352 @@
+/* Standard stuff */
+
+html, body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333333;
+    font-size: 13px;
+    height: 100%;
+    margin: 0
+}
+
+a {
+    color: #2D2D2D;
+    text-decoration: underline;
+    font-weight: bold
+}
+
+p {
+    max-width: 100%;
+    color: #2D2D2D;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto
+}
+
+hr {
+    float: none;
+    width: 100%;
+    position: relative;
+    margin-left: 5px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.0em;
+}
+
+#form {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-collapse: separate;
+}
+
+/* all forms use a buttonbar div containing the action buttons */
+#buttonbar {
+    margin-top: 30px;
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: center
+}
+
+.btnCustom {
+    font-family: Trebuchet MS, sans-serif;
+    border-style: none;
+    border-radius: 5px;
+    padding: 3px;
+    padding: 3px;
+    padding-right: 11px;
+    padding-left: 11px;
+    margin: 9px;
+    margin-right: 7px;
+    margin-left: 7px;
+    text-decoration: none;
+    color: white;
+    background: #3e374c;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #3e374c), color-stop(1, #08070f));
+    background: -moz-linear-gradient(center top, #3e374c 5%, #08070f 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3e374c', endColorstr='#08070f');
+}
+
+.btnCustom:hover {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #08070f), color-stop(1, #3e374c));
+    background: -moz-linear-gradient(center top, #08070f 5%, #3e374c 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#08070f', endColorstr='#3e374c');
+}
+
+.btnCustom:disabled {
+    color: #656565;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #4f485d), color-stop(1, #191820));
+    background: -moz-linear-gradient(center top, #4f485d 5%, #191820 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4f485d', endColorstr='#191820');
+}
+
+/* header stuff */
+#header {
+    /* width: 100%; */
+    margin: 0;
+    background-image: url('../images/header-gradient.gif');
+    z-index: 5;
+    position: relative;
+    /* background:#00274c; */
+    background: #16315F;
+    height: 85px;
+    /* width: 920px; */
+}
+
+#header-company-logo {
+    background-image: url('../images/AccountMgmt_Banner.jpg');
+    /*background: url("/resources/images/AccountMgmt_Banner.jpg");*/
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    width: 100%;
+    float: left;
+    margin: 0 0 0 0;
+    padding: 0;
+    z-index: 1;
+    content: ".";
+    height: 85px;
+    /* width: 920px; */
+}
+
+.clear {
+    clear: both;
+}
+
+/* Footer */
+
+#footer {
+    position: relative;
+    text-align: center;
+    bottom: 0;
+    /* height: 60px; */
+    min-height: 60px;
+    overflow: auto;
+    background-color: #00274C;
+    border-top: 5px solid #FFCF06;
+    color: #FFFFFF;
+    font-size: 0.9em;
+    margin-top: 1.5em;
+    margin: 0px auto;
+    /* width: 922px; */
+}
+
+.infoDiv {
+    padding: 1em;
+    width: 75%;
+}
+
+.fullHeader {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.inline {
+    display: inline;
+}
+
+#errorDiv {
+    background-color: #FEF8B7;
+    border: 2px solid #E1C95F;
+}
+
+.large {
+    margin-left: auto;
+    margin-right: auto;
+    /* background: url("themes/custom/pagebody-bg.png") repeat-y scroll 0 0 transparent; */
+    line-height: 1.5em;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+
+    width: 100%;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+
+#pageHeight {
+    min-height: 650px;
+}
+
+#textWrapper {
+    /* border: 1px solid #ccc; */
+    margin: 3em auto 3em;
+    text-align: center;
+    padding: 0.5em;
+    width: 85%;
+    font-size: large;
+    clear: both;
+    padding-bottom: 60px;
+}
+
+#buttonDiv {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#paddedDiv {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+ul.verticalRadios {
+    list-style-type: none;
+}
+
+.infoDiv .form-group {
+    margin: 1em 2em 1em;
+}
+
+.formLabel {
+    font-weight: bold;
+}
+
+.centeredText {
+    text-align: center;
+}
+
+.error {
+    color: #d44950;
+}
+
+.section {
+    margin: 1em 0;
+}
+
+/* 3 Column Layout */
+.left {
+    width: 260px;
+    float: left;
+    height: 100%;
+}
+
+.center {
+    margin-left: 200px
+}
+
+.right {
+    margin-left: 450px;
+}
+
+/* Password Feedback */
+ul.advice {
+    padding-left: 5px;
+}
+
+ul.advice li {
+    list-style-type: none;
+    margin-bottom: 0.5em;
+    min-height: 16px;
+    padding-left: 25px;
+}
+
+ul.advice li li {
+    background: none repeat scroll 0 0 transparent !important;
+    list-style-type: circle;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+ul.advice li.criteria_checked {
+    background: url('../images/checkbox-checked.png') no-repeat scroll left top transparent;
+    color: #008000;
+}
+
+ul.advice li.criteria_unchecked {
+    background: url('../images/checkbox-unchecked.png') no-repeat scroll left top transparent;
+    color: #000000;
+}
+
+ul.advice li.criteria_failed {
+
+}
+
+ul.advice li.criteria_passed {
+    color: green;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+.reshow {
+    visibility: visible;
+}
+
+.message {
+    display: block;
+    padding: 6px;
+    width: 90%;
+    background-color: inherit;
+    border-radius: 3px;
+}
+
+.message-info {
+    background-color: #DDDDDD;
+}
+
+.message-error {
+    background-color: #FFCD59;
+}
+
+.message-success {
+    background-color: #EFEFEF;
+}
+
+.matchIndicator {
+    color: green;
+}
+
+.strengthIndicator {
+    color: red;
+}
+
+div.criteriaHave {
+    border: 1px solid #BBBBBB;
+    border-radius: 6px 6px 6px 6px;
+    position: absolute;
+    z-index: 1000;
+}
+
+div.criteriaHaveNot {
+    border: 1px solid #BBBBBB;
+    border-radius: 6px 6px 6px 6px;
+    position: absolute;
+    z-index: 1000;
+}
+
+.ui-widget-content {
+    /* background: url('../images/ui-bg_flat_75_ffffff_40x100.png') repeat-x scroll 50% 50% #FFFFFF;*/
+    color: #222222;
+}
+
+.ui-dialog .ui-dialog-content {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    line-height: 1em;
+    overflow: auto;
+    padding: 0.5em 0.5em;
+}
+
+@media (min-width: 992px) {
+    /* Set maximum width consistent to full desktop size */
+    .large, #footer, #header {
+        width: 922px;
+    }
+
+}

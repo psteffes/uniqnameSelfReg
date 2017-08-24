@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main id="main" class="container">
+
+  <h1 class="text-center sr-only">Some Gear</h1>
+  <p id="title" class="text-center lead">Choose your character</p>
+
+  <div class="row">
+    <div id="grid" class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+          <legend class="h4">Uniqname Suggestions</legend>
+          <p>We've provided some suggestions based on your first and last names. For more suggestions, try adding your middle name or a nick name and clicking 'Suggest'</p>
+
+          <div id="suggest_group" class="form-group">
+            <label class="create-label2">Name:</label>
+            <div id="div_id_suggest" class="form-inline">
+              <div class="input-group">
+                <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
+              </div>
+              <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
+            </div>
+          </div>
+
+          <div id="id_suggest_div" class="form-group uniqname-suggestions">
+            Suggestions:
+            <span id="id_suggestion_list">
+              {% if suggestions|length > 1 %}
+                {% for name in suggestions %}
+                  &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="document.getElementById('id_uniqname').value=this.innerHTML">{{ name }}</a>
+                {% endfor %}
+              {% else %}
+                <span class="text-danger">There was a problem generating suggestions</span>
+              {% endif %}
+            </span>
+          </div>
+
+          <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
+            {% csrf_token %}
+
+            {% if form.errors %}
+              {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                  {{ error|escape }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="form-group">
+              <label class="create-label2">Desired Uniqname:</label>
+              <div class="form-inline">
+                <div class="col-sm-6" style="padding-left: 0px">
+                  <div class="input-group">
+                    <input type="text" name="uniqname" class="form-control" id="id_uniqname" required pattern="^[a-zA-Z]{3,8}$">
+                    <span class="input-group-addon">@umich.edu</span>
+                  </div>
+                <div class="help-block">A-Z only, between 3-8 characters</div>
+              </div>
+
+              <input class="btn btn-blue" id="id_check_btn" type="button" value="Check Availability">
+              <input class="btn btn-blue" id="id_claim_btn" type="submit" value="Claim Uniqname" disabled>
+            </div>
+
+          </form>
+
+      <!--panel-body-->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}
+
+{% block javascript_page %}
+{% load staticfiles %}
+<script src="{% static 'js/create.js' %}"></script>
+{% endblock javascript_page %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main id="main" class="container">
+
+  <h1 id="title" class="text-center lead">Confirm Email</h1>
+
+  <div class="row">
+    <div id="grid" class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+
+     <div class="panel panel-default">
+     <div class="panel-body">
+
+      <div id="couBox" class="form-group">
+        <p>An email has been sent to {{ email }}</p>
+        <p>Please follow the instructions in the email to proceed with creating your Uniqname</p>
+      </div>
+
+     </div>
+     </div>
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}
