@@ -13,7 +13,7 @@ import base64
 def oaep_encode(data):
     byte_data = json.dumps(data).encode('utf-8')
 
-    with open('mcuniqclient.pem', mode='rb') as publicfile:
+    with open('certs/mcuniqclient.pem', mode='rb') as publicfile:
         keydata = publicfile.read()
     pubkey = RSA.importKey(keydata)
 
@@ -90,7 +90,12 @@ def find_uniqname(uid):
         
         oaep_encoded = oaep_encode(data)
 
-        r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/find', data)
+        payload = {
+            'name': 'find',
+            'coded': oaep_encoded,
+        }
+
+        r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/find', payload)
 
         try:
             print('response={} json={}'.format(r, r.json()))
@@ -100,9 +105,9 @@ def find_uniqname(uid):
 
     except Exception as e:
         print('find error - {}'.format(e))
-        return False
+        raise
 
-    return True
+    return r.json()['uid']
 
 
 def uniqname_create(dn, uid, umid, source):
