@@ -65,7 +65,7 @@ def verify(request):
                 print('entry={}'.format(entry))
 
                 # mail testing
-                token = generate_confirmation_token('psteffes@umich.edu')
+                token = generate_confirmation_token(entry['umichRegEntityID'])
                 print('token={}'.format(token))
 
                 secure_url = request.build_absolute_uri(reverse('create', args=[token]))
@@ -139,11 +139,11 @@ def create(request, token):
     print(token)
 
     try:
-        email = confirm_token(token)
-        print('email={}'.format(email))
+        umid = confirm_token(token)
+        print('umid={}'.format(umid))
     except:
         print('imposter alert!')
-        messages.error(request, 'The confirmation link is invalid or has expired, please try again.')
+        messages.error(request, 'The confirmation link is invalid or has expired, please verify your identity and try again.')
         return redirect('terms')
 
     if request.method == 'POST':

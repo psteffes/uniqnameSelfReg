@@ -154,7 +154,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
 
 # Requests
-REQUESTS_TIMEOUT_SECONDS = config('REQUESTS_TIMEOUT_SECONDS', default=5)
+REQUESTS_TIMEOUT_SECONDS = config('REQUESTS_TIMEOUT_SECONDS', default=5, cast=int)
 
 # Uniqname Services
 UNIQNAME_SERVICES_CLIENT_CERT = config('UNIQNAME_SERVICES_CLIENT_CERT')

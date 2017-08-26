@@ -4,13 +4,11 @@
 
 <main id="main" class="container">
 
-  <h1 class="text-center sr-only">Social ID Verification</h1>
-  <p id="title" class="text-center lead">Verify Your Identity</p>
+  <h1 id="title" class="text-center lead">Verify Your Identity</h1>
 
   <div class="row">
     <div id="grid" class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 well well-lg">
 
-     <!--<fieldset class="well well-lg">-->
       <form id="id-verifyForm" action="" class="blueForms" method="post">
         {% csrf_token %}
 
@@ -85,7 +83,6 @@
         </div>
       </form>
 
-     <!--</fieldset>-->
 
     </div>
   </div>

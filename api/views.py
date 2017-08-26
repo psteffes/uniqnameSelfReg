@@ -59,9 +59,9 @@ def find_uniqname(request):
 
     if serializer.is_valid():
         print('data={}'.format(serializer.data))
-        found = uniqname_services.find_uniqname(serializer['uid'].value)
-        print('found={}'.format(found))
-        return Response({"message": "Got some data!", "data": request.data})
+        uid = uniqname_services.find_uniqname(serializer['uid'].value)
+        print('api_uid={}'.format(uid))
+        return Response({"message": "Got some data!", "data": request.data, "uid": uid})
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

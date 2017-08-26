@@ -64,7 +64,13 @@ $("#id_confirm_password").keyup(function() {
         $("#id_submit_btn").prop("disabled",true);
     }
 });
-$("#id_password").keyup(function () {
+//$("#id_password").keyup(function () {
+$('#id_password').on('input', function() {
+    if ( $(this).val().length == 0 ) {
+        $("#id_password_help").css("visibility","hidden");
+        return;
+    }
+
     var password1 = $("#id_password").val();
     var password2 = $("#id_confirm_password").val();
     console.log('pw1=' + password1);

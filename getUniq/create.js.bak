@@ -1,21 +1,17 @@
 $("#id_uniqname").on('input', reset_uniqname_check);
-$("a[role='button']").click(function () {
-    $('#id_uniqname').val($(this).html());
-    onSuggestionClick();
-});
+//$("a[role='button']").click(reset_uniqname_check);
 function reset_uniqname_check () {
     $("#id_claim_btn").prop("disabled", true);
-    $("#id_check_btn").removeClass("btn-success btn-danger");
+    $("#id_check_btn").removeClass("btn-success");
     $("#id_check_btn").addClass("btn-blue");
     $("#id_check_btn").html("Check Availability");
     $("#id_check_btn").prop("disabled", false);
 }
-function onSuggestionClick () {
+function checkSuggestion () {
     reset_uniqname_check();
-    checkAvailability();
+    
 }
-$("#id_check_btn").click(checkAvailability);
-function checkAvailability() {
+$("#id_check_btn").click(function () {
     var uid = $("#id_uniqname").val();
     console.log('uid=' + uid);
 
@@ -33,15 +29,12 @@ function checkAvailability() {
             if (data.uid) {
                 console.log('found ' + data.uid);
                 $("#id_claim_btn").prop("disabled", true);
-                $("#id_check_btn").removeClass("btn-blue");
-                $("#id_check_btn").addClass("btn-danger");
-                $("#id_check_btn").html('Not Available <span class="glyphicon glyphicon-remove"</span>');
             }
             else {
                 console.log('no match');
                 $("#id_check_btn").removeClass("btn-blue");
                 $("#id_check_btn").addClass("btn-success");
-                $("#id_check_btn").html('Available <span class="glyphicon glyphicon-ok"</span>');
+                $("#id_check_btn").html("Available!");
                 $("#id_claim_btn").prop("disabled", false);
             }
         },
@@ -50,7 +43,7 @@ function checkAvailability() {
             displayBootstrapError('Something happened');
         },
     });
-}
+});
 function displayBootstrapError(message) {
     container = document.getElementById("alert-container");
     var div = document.createElement("div");
