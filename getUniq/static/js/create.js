@@ -1,3 +1,6 @@
+$(document).ready(function(){
+  $('#tab_create').addClass('active');
+});
 $("#id_uniqname").on('input', reset_uniqname_check);
 $("a[role='button']").click(function () {
     $('#id_uniqname').val($(this).html());

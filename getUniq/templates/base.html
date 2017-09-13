@@ -29,10 +29,11 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
-                <li id="tab1"><a><span class="badge">1</span> Agree to Terms </a></li>
-                <li id="tab2"><a><span class="badge">2</span> Verify Identity </a></li>
-                <li id="tab3"><a><span class="badge">3</span> Choose Uniqname </a></li>
-                <li id="tab4"><a><span class="badge">4</span> Change Password </a></li>
+                <li id="tab_terms"><a><span class="badge">1</span> Agree to Terms </a></li>
+                <li id="tab_verify"><a><span class="badge">2</span> Verify Identity </a></li>
+                <li id="tab_confirm"><a><span class="badge">3</span> Confirm Email </a></li>
+                <li id="tab_create"><a><span class="badge">4</span> Choose Uniqname </a></li>
+                <li id="tab_password"><a><span class="badge">5</span> Change Password </a></li>
               </ul>
 
             </div>
@@ -44,8 +45,8 @@
         <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
         <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        {% block javascript_page %}
-        {% endblock javascript_page %}
+        {% block javascript %}
+        {% endblock javascript %}
     </body>
 
     <footer class="container" role="contentinfo">

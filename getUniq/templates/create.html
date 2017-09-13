@@ -4,7 +4,6 @@
 
 <main id="main" class="container">
 
-  <h1 class="text-center sr-only">Some Gear</h1>
   <p id="title" class="text-center lead">Choose Uniqname</p>
 
   <div class="row">
@@ -82,7 +81,7 @@
 
 {% endblock %}
 
-{% block javascript_page %}
+{% block javascript %}
 {% load staticfiles %}
 <script src="{% static 'js/create.js' %}"></script>
-{% endblock javascript_page %}
+{% endblock javascript %}

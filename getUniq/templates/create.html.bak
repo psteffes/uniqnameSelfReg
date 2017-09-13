@@ -117,7 +117,7 @@
 
 {% endblock %}
 
-{% block javascript_page %}
+{% block javascript %}
 {% load staticfiles %}
 <script src="{% static 'js/create.js' %}"></script>
-{% endblock javascript_page %}
+{% endblock javascript %}

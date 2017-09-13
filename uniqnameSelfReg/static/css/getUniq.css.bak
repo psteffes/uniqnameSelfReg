@@ -8,10 +8,6 @@
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
 
-//input[type=date]:invalid::-webkit-datetime-edit {
-    color: #999;
-}
-
 [class*="col-"] {
     float: left;
     padding: 15px;
@@ -20,41 +16,6 @@
 .password-group {
   padding: 8px;
   margin-bottom: 15px;
-}
-
-.reveal-if-active {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  font-size: 16px;
-  -webkit-transform: scale(0.8);
-          transform: scale(0.8);
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
-}
-.reveal-if-active label {
-  display: block;
-  margin: 0 0 3px 0;
-}
-.reveal-if-active input[type=text] {
-  width: 100%;
-}
-input[type="radio"]:checked ~ .reveal-if-active, input[type="checkbox"]:checked ~ .reveal-if-active {
-  opacity: 1;
-  max-height: 100px;
-  padding: 10px 20px;
-  -webkit-transform: scale(1);
-          transform: scale(1);
-  overflow: visible;
-}
-
-.id-verify-label {
-    min-height: 20px;
-    margin-bottom: 0;
-    padding-left: 10px;
-    cursor: pointer;
-    font-weight: 400;
-    //width: 100%;
 }
 
 hr,
@@ -2358,11 +2319,6 @@ h2 {
     font-weight: 300
 }
 
-.btn {
-    padding: 10px 16px;
-    font-size: 18px
-}
-
 .btn-blue {
     background-color: #40658f
 }
@@ -2490,38 +2446,9 @@ footer .footer-links li {
     }
 }
 
-.banner-no-img {
-    display: block;
-    margin-left: 10px;
-    background-size: 230px 40px;
-    width: 230px;
-    height: 40px;
-    line-height: 40px
-}
-
 .banner-img {
-    background: url(/cosign/img/weblogin.png) no-repeat #00274c;
     display: block;
-    margin-left: 10px;
-    background-size: 230px 40px;
-    width: 230px;
-    height: 40px;
-    line-height: 40px
+    width: 100%;
+    max-width: 820px;
 }
 
-@media only screen and (-moz-min-device-pixel-ratio:1.5),
-only screen and (-o-min-device-pixel-ratio:3/2),
-only screen and (-webkit-min-device-pixel-ratio:1.5),
-only screen and (min-devicepixel-ratio:1.5),
-only screen and (min-resolution:1.5dppx) {
-    .banner-img {
-        background-image: url(/cosign/img/weblogin@2x.png);
-        background-size: 226px 40px
-    }
-
-    .banner-no-img {
-        background-size: 226px 40px
-    }
-}
-
-*/

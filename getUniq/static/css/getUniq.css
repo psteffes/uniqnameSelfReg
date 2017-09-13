@@ -2447,17 +2447,18 @@ footer .footer-links li {
 }
 
 /* uniqnameSelfReg custom */
+/*
 .banner-img {
     display: block;
     width: 100%;
     max-width: 820px;
 }
-
+*/
 .navbar {
     margin-bottom: 0px;
     border-radius: 0px;
 }
-
+/*
 .navbar .navbar-nav {
     display: inline-block;
     float: none;
@@ -2467,3 +2468,4 @@ footer .footer-links li {
 .navbar .navbar-collapse {
     text-align: center;
 }
+*/

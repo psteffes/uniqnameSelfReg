@@ -192,6 +192,7 @@ def create2(request):
         form = UniqnameForm(request.POST)
         if form.is_valid():
             print('form={}'.format(form.cleaned_data))
+            print('would have created uniqname {}'.format(form.cleaned_data['uniqname']))
             return redirect('password')
         else:
             print('form.errors={}'.format(form.errors.as_json(escape_html=False)))

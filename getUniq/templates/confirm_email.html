@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block javascript %}
+<script>
+$(document).ready(function(){
+  $('#tab_confirm').addClass('active');
+});
+</script>
+{% endblock javascript %}
+
 {% block content %}
 
 <main id="main" class="container">
