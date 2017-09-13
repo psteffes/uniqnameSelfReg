@@ -24,8 +24,10 @@
           <div id="suggest_group" class="form-group">
             <label class="create-label2">Name:</label>
             <div id="div_id_suggest" class="form-inline" style="width: 100%;">
+              <div class="form-group">
                 <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
-                <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
+              </div>
+              <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
             </div>
           </div>
 

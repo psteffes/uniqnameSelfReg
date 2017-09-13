@@ -165,7 +165,7 @@ def create(request, token):
             print('something failed')
             messages.error(request, 'There was an issue generating suggestions, please try again.')
             #uniqname_suggestions = ''
-            uniqname_suggestions = ('name1', 'name2', 'name3')
+            uniqname_suggestions = ('name1')
 
         print('do not create yet')
         uid = 'batman'
@@ -206,9 +206,8 @@ def create2(request):
             uniqname_suggestions = get_suggestions(dn, name_parts)
         except:
             print('something failed')
-            messages.error(request, 'There was an issue generating suggestions, please try again.')
-            #uniqname_suggestions = ''
-            uniqname_suggestions = ('name1', 'name2', 'name3')
+            #messages.error(request, 'There was an issue generating suggestions, please try again.')
+            uniqname_suggestions = ''
 
         uid = 'batman'
         umid = '12345678'

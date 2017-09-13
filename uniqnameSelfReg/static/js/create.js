@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  $('#tab2').addClass('active');
+  $('#tab_create').addClass('active');
 });
 $("#id_uniqname").on('input', reset_uniqname_check);
 $("a[role='button']").click(function () {
@@ -98,7 +98,7 @@ $("#id_suggest_btn").click(function() {
             }
         },
         error: function (data) {
-            displayError('There was an error');
+            displayError('Unable to get suggestions, please try again');
         },
         complete: function () {
             //$("#id_suggest_btn").html("Suggest");
@@ -123,11 +123,11 @@ function displaySuggestions(suggestions) {
     }
 }
 function displayError(message) {
-    grid = document.getElementById("grid");
-    var div = document.createElement("div");
-    div.setAttribute('class', 'alert alert-danger alert-dismissable');
-    div.innerHTML = message;
-    grid.insertBefore(div, grid.childNodes[0]);
+    //grid = document.getElementById("grid");
+    //var div = document.createElement("div");
+    //div.setAttribute('class', 'alert alert-danger alert-dismissable');
+    //div.innerHTML = message;
+    //grid.insertBefore(div, grid.childNodes[0]);
 
     var suggest_div = document.getElementById("id_suggestion_list");
     while (suggest_div.hasChildNodes()) {
