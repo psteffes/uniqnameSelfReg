@@ -13,7 +13,7 @@ import requests # test
 
 @api_view(['POST'])
 #def get_token(request, format=None):
-def create_invitation_link(request):
+def activation_link(request):
     """
     Return a user specific link to create or reactivate a uniqname
     """
@@ -21,12 +21,12 @@ def create_invitation_link(request):
     print('serializer={}'.format(serializer))
 
     if serializer.is_valid():
-        print('s.email={}'.format(serializer['identity_dn'].value))
-        token = generate_confirmation_token(serializer['identity_dn'].value)
+        print('umid={}'.format(serializer['umid'].value))
+        token = generate_confirmation_token(serializer['umid'].value)
         print('token={}'.format(token))
-        secure_url = request.build_absolute_uri(reverse('create', args=[token]))
-        print('secure_url={}'.format(secure_url))
-        return Response({"message": "Got some data!", "data": request.data, "secure_url": secure_url})
+        activation_link = request.build_absolute_uri(reverse('create', args=[token]))
+        print('activation_link={}'.format(activation_link))
+        return Response({"activation_link": activation_link})
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 

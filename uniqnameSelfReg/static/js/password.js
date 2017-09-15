@@ -1,60 +1,6 @@
-/*
-$("#id_password").keyup(function(){
-    var ucase = new RegExp("[A-Z]+");
-    var lcase = new RegExp("[a-z]+");
-    var num = new RegExp("[0-9]+");
-    
-    if($("#id_password").val().length >= 9){
-        $("#min_char").removeClass("glyphicon-remove glyphicon-chevron-right");
-        $("#min_char").addClass("glyphicon-ok");
-        $("#min_char").css("color","#00A41E");
-    }else{
-        $("#min_char").removeClass("glyphicon-ok glyphicon-chevron-right");
-        $("#min_char").addClass("glyphicon-remove");
-        $("#min_char").css("color","#FF0004");
-    }
-    
-    if(ucase.test($("#id_password").val())){
-        $("#ucase").removeClass("glyphicon-remove");
-        $("#ucase").addClass("glyphicon-ok");
-        $("#ucase").css("color","#00A41E");
-    }else{
-        $("#ucase").removeClass("glyphicon-ok");
-        $("#ucase").addClass("glyphicon-remove");
-        $("#ucase").css("color","#FF0004");
-    }
-    
-    if(lcase.test($("#id_password").val())){
-        $("#lcase").removeClass("glyphicon-remove");
-        $("#lcase").addClass("glyphicon-ok");
-        $("#lcase").css("color","#00A41E");
-    }else{
-        $("#lcase").removeClass("glyphicon-ok");
-        $("#lcase").addClass("glyphicon-remove");
-        $("#lcase").css("color","#FF0004");
-    }
-    
-    if(num.test($("#id_password").val())){
-        $("#num").removeClass("glyphicon-remove");
-        $("#num").addClass("glyphicon-ok");
-        $("#num").css("color","#00A41E");
-    }else{
-        $("#num").removeClass("glyphicon-ok");
-        $("#num").addClass("glyphicon-remove");
-        $("#num").css("color","#FF0004");
-    }
-    
-    if($("#id_password").val() == $("#id_confirm_password").val()){
-        $("#pwmatch").removeClass("glyphicon-remove");
-        $("#pwmatch").addClass("glyphicon-ok");
-        $("#pwmatch").css("color","#00A41E");
-    }else{
-        $("#pwmatch").removeClass("glyphicon-ok");
-        $("#pwmatch").addClass("glyphicon-remove");
-        $("#pwmatch").css("color","#FF0004");
-    }
+$(document).ready(function(){
+  $('#tab_password').addClass('active');
 });
-*/
 $("#id_confirm_password").keyup(function() {
     if($("#id_password").val() == $("#id_confirm_password").val()){
         $("#id_confirm_help").css("visibility","hidden");
@@ -64,10 +10,11 @@ $("#id_confirm_password").keyup(function() {
         $("#id_submit_btn").prop("disabled",true);
     }
 });
-//$("#id_password").keyup(function () {
-$('#id_password').on('input', function() {
+$('#id_password').on('keyup', function() {
+//$('#id_password').on('input', function() {
     if ( $(this).val().length == 0 ) {
         $("#id_password_help").css("visibility","hidden");
+        resetPWDisplay();
         return;
     }
 
@@ -92,6 +39,31 @@ $('#id_password').on('input', function() {
         },
     });
 });
+function resetPWDisplay() {
+    $("#min_char").removeClass();
+    $("#min_char").addClass("glyphicon glyphicon-chevron-right");
+    $("#min_char").css("color","initial");
+
+    $("#meet3").removeClass();
+    $("#meet3").addClass("glyphicon glyphicon-chevron-right");
+    $("#meet3").css("color","initial");
+
+    $("#lcase").removeClass();
+    $("#lcase").addClass("glyphicon glyphicon-chevron-right");
+    $("#lcase").css("color","initial");
+
+    $("#ucase").removeClass();
+    $("#ucase").addClass("glyphicon glyphicon-chevron-right");
+    $("#ucase").css("color","initial");
+
+    $("#digit").removeClass();
+    $("#digit").addClass("glyphicon glyphicon-chevron-right");
+    $("#digit").css("color","initial");
+
+    $("#punc").removeClass();
+    $("#punc").addClass("glyphicon glyphicon-chevron-right");
+    $("#punc").css("color","initial");
+}
 function updateDisplay(resultInfo) {
     var issue = resultInfo.evaluation.issue;
 
@@ -118,20 +90,20 @@ function updateDisplay(resultInfo) {
 
         if (issue.contains_id('validator.contains.lowercase')) {
             $("#lcase").removeClass("glyphicon-ok");
-            $("#lcase").addClass("glyphicon-menu-right");
+            $("#lcase").addClass("glyphicon-chevron-right");
             $("#lcase").css("color","initial");
         } else {
-            $("#lcase").removeClass("glyphicon-menu-right");
+            $("#lcase").removeClass("glyphicon-chevron-right");
             $("#lcase").addClass("glyphicon-ok");
             $("#lcase").css("color","#00A41E");
         }
 
         if (issue.contains_id('validator.contains.uppercase')) {
             $("#ucase").removeClass("glyphicon-ok");
-            $("#ucase").addClass("glyphicon-triangle-right");
+            $("#ucase").addClass("glyphicon-chevron-right");
             $("#ucase").css("color","initial");
         } else {
-            $("#ucase").removeClass("glyphicon-triangle-right");
+            $("#ucase").removeClass("glyphicon-chevron-right");
             $("#ucase").addClass("glyphicon-ok");
             $("#ucase").css("color","#00A41E");
         }
@@ -168,28 +140,6 @@ function updateDisplay(resultInfo) {
         } else {
             $("#id_password_help").css("visibility","hidden");
         }
-/*
-        if (issue.contains_id('validator.contains.ascending.pattern')) {
-            $("#id_password_help").html("Password must not contain ascending or descending pattern (abcd, 1234, etc)");
-            $("#id_password_help").css("visibility","visible");
-        } else {
-            $("#id_password_help").css("visibility","hidden");
-        }
-
-        if (issue.contains_id('validator.contains.dictionary.word')) {
-            $("#id_password_help").html("Password must not be a word or simple phrase)");
-            $("#id_password_help").css("visibility","visible");
-        } else {
-            $("#id_password_help").css("visibility","hidden");
-        }
-
-        if (issue.contains_id('validator.contains..nameparts.present')) {
-            $("#id_password_help").html("Password must not use parts of your name)");
-            $("#id_password_help").css("visibility","visible");
-        } else {
-            $("#id_password_help").css("visibility","hidden");
-        }
-*/
     }
 }
 Array.prototype.contains_id = function (needle) {

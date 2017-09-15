@@ -6,7 +6,7 @@ from django.template.loader import get_template
 from django.contrib import messages
 
 from .forms import TermsForm, VerifyForm, TokenForm, UniqnameForm, PasswordForm
-from .validate import validate_form_data 
+from .idproof import idproof_form_data 
 from .token import generate_confirmation_token, confirm_token
 from .uniqname_services import get_suggestions, uniqname_create
 
@@ -59,7 +59,7 @@ def verify(request):
             # process the data in form.cleaned_data as required
             #logger.debug('form={}'.format(form.cleaned_data))
             print('form={}'.format(form.cleaned_data))
-            entry = validate_form_data(form)
+            entry = idproof_form_data(form.cleaned_data)
             if entry:
                 #logger.debug('entry={}'.format(entry))
                 print('entry={}'.format(entry))

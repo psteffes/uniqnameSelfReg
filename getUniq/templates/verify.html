@@ -1,13 +1,5 @@
 {% extends "base.html" %}
 
-{% block javascript %}
-<script>
-$(document).ready(function(){
-  $('#tab_verify').addClass('active');
-});
-</script>
-{% endblock javascript %}
-
 {% block content %}
 
 <main id="main" class="container">
@@ -17,7 +9,7 @@ $(document).ready(function(){
   <div class="row">
     <div id="grid" class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 well well-lg">
 
-      <form id="id-verifyForm" action="" class="blueForms" method="post">
+      <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
         {% csrf_token %}
 
         {% if form.errors %}
@@ -65,7 +57,7 @@ $(document).ready(function(){
         </div>
         <div class="form-group">
           <label class="formLabel">UMID:</label>
-          <input type="text" name="umid" class="textinput textInput form-control" pattern="^\d{8}$" title="An 8-digit number" maxlength="8" required id="id_umid" value="{{ form.umid.value|default_if_none:"" }}">
+          <input type="number" id="id_umid" name="umid" class="form-control" required pattern="^\d{8}$" min="0" maxlength="8" value="{{ form.umid.value|default_if_none:"" }}" oninput="enforceMaxLength(this); enforcePattern(this)">
           {% if form.umid.errors %}
             <div class="help-block">
               {% for error in form.umid.errors %}
@@ -87,7 +79,7 @@ $(document).ready(function(){
         </div>
 
         <div class="form-actions">
-          <input class="btn-lg btn-blue btn-block" type="submit" value="Submit">
+          <input id="id_submit_btn" class="btn btn-lg btn-blue btn-block" type="submit" value="Submit" >
         </div>
       </form>
 
@@ -97,3 +89,8 @@ $(document).ready(function(){
 </main>
 
 {% endblock %}
+
+{% block javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/verify.js' %}"></script>
+{% endblock javascript %}

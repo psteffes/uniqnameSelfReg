@@ -18,14 +18,29 @@
       <div class="panel panel-default">
         <div class="panel-body">
 
-          <legend class="h4">Uniqname Suggestions</legend>
+          <!--<legend class="h4">Uniqname Suggestions</legend>
+          <p>We've provided some suggestions based on your first and last names. For more suggestions, try adding your middle name or a nick name and clicking the 'Suggest' button.</p>-->
+          <p>Uniqnames are your unique identifier that you will use to login to services at the University of Michigan. It also functions as your email address. You won't be able to change your uniqname after you claim it, so be sure to pick one you like.</p>
+          <br>
+
+          <legend class="h4">1. Generate a Uniqname</legend>
           <p>We've provided some suggestions based on your first and last names. For more suggestions, try adding your middle name or a nick name and clicking the 'Suggest' button.</p>
+
+          <!--
+          <div id="suggest_group" class="form-group">
+            <label class="create-label2">Name:</label>
+            <div id="div_id_suggest" class="form-inline" style="width: 100%;">
+                <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
+                <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
+            </div>
+          </div>
+          -->
 
           <div id="suggest_group" class="form-group">
             <label class="create-label2">Name:</label>
             <div id="div_id_suggest" class="form-inline" style="width: 100%;">
               <div class="form-group">
-                <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
+                <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" size="40" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
               </div>
               <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
             </div>
@@ -45,6 +60,10 @@
             </span>
           </div>
 
+          <br>
+          <legend class="h4">2. Claim Uniqname</legend>
+          <p>If you click a suggestion above, it will appear in the box below. Alternatively, you can enter your own uniqname and click 'Check Availability' to check it's availability. Once you find a uniqname you are satisfied with, click the 'Claim Uniqname' button to continue.</p>
+
           <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
             {% csrf_token %}
 
@@ -61,7 +80,7 @@
               <div class="form-inline">
                 <div class="col-sm-6" style="padding-left: 0px">
                   <div class="input-group">
-                    <input type="text" name="uniqname" class="form-control" id="id_uniqname" required maxlength="8" pattern="^[a-zA-Z]{3,8}$">
+                    <input type="text" name="uniqname" class="form-control" id="id_uniqname" required maxlength="8" size="50" pattern="^[a-zA-Z]{3,8}$">
                     <span class="input-group-addon">@umich.edu</span>
                   </div>
                 <div class="help-block">A-Z only, between 3-8 characters</div>

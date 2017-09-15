@@ -2,9 +2,10 @@ from rest_framework import serializers
 from django.core.validators import RegexValidator
 
 class TokenSerializer(serializers.Serializer):
-    identity_dn = serializers.CharField(required=True)
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
+    umid = serializers.CharField(
+        required=True,
+        validators=[RegexValidator(r'^[0-9]{8}$', 'Must be an 8 digit number')],
+    )
 
 
 class SuggestionSerializer(serializers.Serializer):

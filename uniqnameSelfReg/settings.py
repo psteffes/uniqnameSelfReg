@@ -146,6 +146,16 @@ LOGGING = {
     },
 }
 
+# Security
+CERT_DIR = config('CERT_DIR', default=BASE_DIR + "/socialIDVerification/certs/")
+
+# ID Proof Mutual Auth
+IDPROOF_URL = config('IDPROOF_URL', default='https://identityproof.dsc.umich.edu/identityproof/search')
+IDPROOF_CERT = CERT_DIR + config('IDPROOF_CERT', default='social-login.dsc.umich.edu.cert')
+IDPROOF_KEY = CERT_DIR + config('IDPROOF_KEY', default='social-login.dsc.umich.edu.key')
+
+# Uniqname Services
+UNIQNAME_SERVICES_CLIENT_CERT = config('UNIQNAME_SERVICES_CLIENT_CERT') 
 
 # Email
 EMAIL_HOST = config('EMAIL_HOST')
@@ -155,9 +165,6 @@ EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
 
 # Requests
 REQUESTS_TIMEOUT_SECONDS = config('REQUESTS_TIMEOUT_SECONDS', default=5, cast=int)
-
-# Uniqname Services
-UNIQNAME_SERVICES_CLIENT_CERT = config('UNIQNAME_SERVICES_CLIENT_CERT')
 
 # Testing messages
 from django.contrib.messages import constants as message_constants
