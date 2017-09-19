@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -26,7 +27,10 @@ def activation_link(request):
         print('token={}'.format(token))
         activation_link = request.build_absolute_uri(reverse('create', args=[token]))
         print('activation_link={}'.format(activation_link))
-        return Response({"activation_link": activation_link})
+        return Response({
+            "activation_link": activation_link,
+            "expiration": settings.TOKEN_EXPIRATION_LENGTH
+        })
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 

@@ -11,7 +11,7 @@ def generate_confirmation_token(email):
     return serializer.dumps(email, salt=settings.SECURITY_CONFIRM_SALT)
 
 
-def confirm_token(token, expiration=300):
+def confirm_token(token, expiration=settings.TOKEN_EXPIRATION_LENGTH):
     serializer = URLSafeTimedSerializer(settings.SECRET_KEY)
     try:
         print('token={}'.format(token))
@@ -25,16 +25,4 @@ def confirm_token(token, expiration=300):
         print('e={}'.format(e))
         raise
     return email
-
-#def generate_confirmation_token(email):
-#    token = '123456'
-#    return token
-
-
-#def confirm_token(token):
-#    print('token={}'.format(token))
-#    if token != '123456':
-#        return False
-#
-#    return True
 

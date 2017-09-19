@@ -169,6 +169,7 @@ def create(request, token):
 
         if 'umichRegUid' in entry:
             print('this is a reactivate')
+            request.session['reactivate'] = True
             request.session['umid'] = umid
             return redirect('reactivate')
 
@@ -212,10 +213,10 @@ def reactivate(request):
 
     print('get={}'.format(request.session.get('agreed_to_terms', 'gear')))
     print('get={}'.format(request.session.get('umid', 'gear')))
-    if request.session.get('umid', False):    # False is the default
-        print('you have a umid')
+    if request.session.get('reactivate', False) and request.session.get('umid', False):    # False is the default
+        print('reactivate and you have a umid')
     else:
-        print('you do not have a umid')
+        print('we do not need to reactivate you')
 
     return render(request, 'reactivate.html')
 
