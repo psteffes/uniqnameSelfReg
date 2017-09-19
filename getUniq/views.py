@@ -163,6 +163,9 @@ def create(request, token):
         else:
             print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
     else:
+        ###
+        entry = mcomm_reg_ldapsearch('umichRegEntityID={}'.format(umid))
+
         dn = 'umichDirectoryID=161-0400-20150128095902514-557,ou=Identities,o=Registry'
         first_name = 'John'
         last_name = 'Doe'
