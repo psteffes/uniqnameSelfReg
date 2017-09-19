@@ -2,7 +2,7 @@ $(document).ready(function(){
   $('#tab_create').addClass('active');
 });
 $("#id_uniqname").on('input', reset_uniqname_check);
-$("a[role='button']").click(function () {
+$("#id_suggestion_list").on('click', "a[role='button']", function() {
     $('#id_uniqname').val($(this).html());
     onSuggestionClick();
 });
@@ -117,7 +117,7 @@ function displaySuggestions(suggestions) {
         suggest_div.appendChild(t);
         var a = document.createElement("a");
         a.setAttribute('role', 'button');
-        a.setAttribute('onClick', "document.getElementById('id_uniqname').value=this.innerHTML");
+        //a.setAttribute('onClick', "document.getElementById('id_uniqname').value=this.innerHTML");
         a.innerHTML = suggestions[i];
         suggest_div.appendChild(a);
     }

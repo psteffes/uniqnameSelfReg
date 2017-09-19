@@ -13,7 +13,7 @@ import base64
 def oaep_encode(data):
     byte_data = json.dumps(data).encode('utf-8')
 
-    with open('certs/mcuniqclient.pem', mode='rb') as publicfile:
+    with open(settings.UNIQNAME_SERVICES_PUBKEY, mode='rb') as publicfile:
         keydata = publicfile.read()
     pubkey = RSA.importKey(keydata)
 

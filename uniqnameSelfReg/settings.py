@@ -82,6 +82,15 @@ DATABASES = {}
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -147,14 +156,15 @@ LOGGING = {
 }
 
 # Security
-CERT_DIR = config('CERT_DIR', default=BASE_DIR + "/socialIDVerification/certs/")
+CERT_DIR = config('CERT_DIR', default=BASE_DIR + "/uniqnameSelfReg/certs/")
 
 # ID Proof Mutual Auth
 IDPROOF_URL = config('IDPROOF_URL', default='https://identityproof.dsc.umich.edu/identityproof/search')
-IDPROOF_CERT = CERT_DIR + config('IDPROOF_CERT', default='social-login.dsc.umich.edu.cert')
-IDPROOF_KEY = CERT_DIR + config('IDPROOF_KEY', default='social-login.dsc.umich.edu.key')
+IDPROOF_CERT = CERT_DIR + config('IDPROOF_CERT', default='accounts.it.umich.edu.cert')
+IDPROOF_KEY = CERT_DIR + config('IDPROOF_KEY', default='accounts.it.umich.edu.key')
 
 # Uniqname Services
+UNIQNAME_SERVICES_PUBKEY = CERT_DIR + config('UNIQNAME_SERVICES_PUBKEY')
 UNIQNAME_SERVICES_CLIENT_CERT = config('UNIQNAME_SERVICES_CLIENT_CERT') 
 
 # Email

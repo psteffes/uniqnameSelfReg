@@ -9,6 +9,7 @@ from .forms import TermsForm, VerifyForm, TokenForm, UniqnameForm, PasswordForm
 from .idproof import idproof_form_data 
 from .token import generate_confirmation_token, confirm_token
 from .uniqname_services import get_suggestions, uniqname_create
+from .utils import getuniq_eligible
 
 import logging
 
@@ -63,6 +64,14 @@ def verify(request):
             if entry:
                 #logger.debug('entry={}'.format(entry))
                 print('entry={}'.format(entry))
+
+                # If the person is not eligible, tell them nicely
+                #if 'umichGetUniqEntitlingRoles' not in entry or entry['umichGetUniqStatus'] != 'STARTED':
+                if not getuniq_eligible(entry):
+                    messages.error(request, 'You are not eligible for an account')
+                    return redirect('terms')
+                else:
+                    print('entry.umichGetUniqEntitlingRoles={}'.format(entry['umichGetUniqEntitlingRoles']))
 
                 # mail testing
                 token = generate_confirmation_token(entry['umichRegEntityID'])
