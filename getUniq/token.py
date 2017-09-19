@@ -11,7 +11,7 @@ def generate_confirmation_token(email):
     return serializer.dumps(email, salt=settings.SECURITY_CONFIRM_SALT)
 
 
-def confirm_token(token, expiration=settings.TOKEN_EXPIRATION_LENGTH):
+def confirm_token(token, expiration=settings.TOKEN_EXPIRATION_SECONDS):
     serializer = URLSafeTimedSerializer(settings.SECRET_KEY)
     try:
         print('token={}'.format(token))

@@ -158,7 +158,7 @@ LOGGING = {
 # Security
 CERT_DIR = config('CERT_DIR', default=BASE_DIR + "/uniqnameSelfReg/certs/")
 
-TOKEN_EXPIRATION_LENGTH = config('TOKEN_EXPIRATION_LENGTH', default='600')
+TOKEN_EXPIRATION_SECONDS = config('TOKEN_EXPIRATION_SECONDS', default='600', cast=int)
 
 # ID Proof Mutual Auth
 IDPROOF_URL = config('IDPROOF_URL', default='https://identityproof.dsc.umich.edu/identityproof/search')

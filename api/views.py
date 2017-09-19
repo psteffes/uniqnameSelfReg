@@ -29,7 +29,7 @@ def activation_link(request):
         print('activation_link={}'.format(activation_link))
         return Response({
             "activation_link": activation_link,
-            "expiration": settings.TOKEN_EXPIRATION_LENGTH
+            "expiration": settings.TOKEN_EXPIRATION_SECONDS
         })
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
