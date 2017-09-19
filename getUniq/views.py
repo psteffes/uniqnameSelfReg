@@ -10,6 +10,7 @@ from .idproof import idproof_form_data
 from .token import generate_confirmation_token, confirm_token
 from .uniqname_services import get_suggestions, uniqname_create
 from .utils import getuniq_eligible
+from .myldap import mcomm_reg_umid_search
 
 import logging
 
@@ -164,7 +165,12 @@ def create(request, token):
             print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
     else:
         ###
-        entry = mcomm_reg_ldapsearch('umichRegEntityID={}'.format(umid))
+        entry = mcomm_reg_umid_search(umid)
+
+        if 'umichRegUid' in entry:
+            print('this is a reactivate')
+            request.session['umid'] = umid
+            return redirect('reactivate')
 
         dn = 'umichDirectoryID=161-0400-20150128095902514-557,ou=Identities,o=Registry'
         first_name = 'John'
@@ -196,6 +202,22 @@ def create(request, token):
 
     print('rendering create.html')
     return render(request, 'create.html', context=context)
+
+
+def reactivate(request):
+    print(request)
+
+    print(request.session)
+    print(request.session.values())
+
+    print('get={}'.format(request.session.get('agreed_to_terms', 'gear')))
+    print('get={}'.format(request.session.get('umid', 'gear')))
+    if request.session.get('umid', False):    # False is the default
+        print('you have a umid')
+    else:
+        print('you do not have a umid')
+
+    return render(request, 'reactivate.html')
 
 
 def create2(request):

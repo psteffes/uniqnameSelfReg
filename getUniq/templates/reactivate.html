@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block javascript %}
+<script>
+$(document).ready(function(){
+  $('#tab_create').addClass('active');
+});
+</script>
+{% endblock javascript %}
+
+{% block content %}
+
+<main id="main" class="container">
+
+  <h1 id="title" class="text-center lead">Reactivate</h1>
+
+  <div class="row">
+    <div id="grid" class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+
+     <div class="panel panel-default">
+     <div class="panel-body">
+
+      <div id="couBox" class="form-group">
+        <p>You already have a uniqname </p>
+        <p>Please click the button to reactivate the uniqname and then continue on to change your password</p>
+      </div>
+
+     </div>
+     </div>
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}
