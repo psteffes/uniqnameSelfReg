@@ -44,6 +44,12 @@ class UniqnameForm(forms.Form):
     )
 
 
+class ReactivateForm(forms.Form):
+    reactivate = forms.BooleanField(
+        required=True,
+    )
+
+
 class PasswordForm(forms.Form):
     password = forms.CharField(
         required=True,

@@ -2,10 +2,40 @@ $(document).ready(function(){
   $('#tab_password').addClass('active');
 });
 $("#id_confirm_password").keyup(function() {
-    if($("#id_password").val() == $("#id_confirm_password").val()){
+/*    if($("#id_password").val() == $("#id_confirm_password").val()){
         $("#id_confirm_help").css("visibility","hidden");
         $("#id_submit_btn").prop("disabled",false);
     }else{
+        $("#id_confirm_help").css("visibility","visible");
+        $("#id_submit_btn").prop("disabled",true);
+    }
+*/
+    var password1 = $("#id_password").val();
+    var password2 = $("#id_confirm_password").val();
+    if( $("#id_password").val() == $("#id_confirm_password").val()){
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/validate_password',
+            dataType: 'json',
+            data: {
+                'password1': password1,
+                'password2': password2,
+            },
+            success: function (data) {
+                console.log('data=' + data);
+                console.log(data.evaluation);
+                console.log(data.evaluation.issue);
+                if (data.evaluation.valid == true) {
+                    $("#id_confirm_help").css("visibility","hidden");
+                    $("#id_submit_btn").prop("disabled",false);
+                } else {
+                    $("#id_confirm_help").css("visibility","visible");
+                    $("#id_submit_btn").prop("disabled",true);
+                }
+            },
+        });
+    } else{
         $("#id_confirm_help").css("visibility","visible");
         $("#id_submit_btn").prop("disabled",true);
     }
@@ -28,8 +58,8 @@ $('#id_password').on('keyup', function() {
         url: '/api/validate_password',
         dataType: 'json',
         data: {
-           'password1': password1,
-           'password2': password2,
+            'password1': password1,
+            'password2': password2,
         },
         success: function (data) {
             console.log('data=' + data);

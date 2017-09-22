@@ -13,7 +13,8 @@ $(document).ready(function(){
 <main id="main" class="container">
 
   <div class="row">
-    <div id="grid" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+    <!--<div id="grid" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">-->
+    <div id="grid" class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
 
      {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
@@ -25,9 +26,7 @@ $(document).ready(function(){
      <div class="panel-body">
 
       <div id="couBox" class="form-group">
-        <p>Welcome to the University of Michigan information technology environment. The University provides many information technology resources for its community. Whenever you use these resources you implicitly agree to abide by the highest standards of responsibility to your colleagues—the faculty, staff, students, alumni and external users who share this environment. Users are required to comply with all University policies and state and federal laws concerning appropriate use of information technology. Non-compliance is considered a serious breach of community standards and may result in disciplinary or legal action. See also:</p>
-        <p><a href="http://www.itd.umich.edu/itpolicies/" target="_blank">Proper Use of Information Resources, Information Technology, and Networks at the University of Michigan</a></p>
-        <p>By clicking on the Accept button below, you agree, as a member of this community, to abide by University of Michigan policy in the use of these resources.</p>
+        <p class="h4">By your use of these resources, you agree to abide by <a href="http://spg.umich.edu/policy/601.07" target="_blank"><b>Responsible Use of Information Resources</b></a>, in addition to all relevant state and federal laws.</p>
       </div>
 
       <form action="" class="blueForms" method="post">

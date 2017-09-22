@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.contrib import messages
 
-from .forms import TermsForm, VerifyForm, TokenForm, UniqnameForm, PasswordForm
+from .forms import TermsForm, VerifyForm, TokenForm, UniqnameForm, ReactivateForm, PasswordForm
 from .idproof import idproof_form_data 
 from .token import generate_confirmation_token, confirm_token
 from .uniqname_services import get_suggestions, uniqname_create
@@ -186,7 +186,6 @@ def create(request, token):
             #uniqname_suggestions = ''
             uniqname_suggestions = ('name1')
 
-        print('do not create yet')
         uid = 'batman'
         umid = '12345678'
         source = 'anonymous'
@@ -217,8 +216,20 @@ def reactivate(request):
         print('reactivate and you have a umid')
     else:
         print('we do not need to reactivate you')
+        return redirect('terms')
 
-    return render(request, 'reactivate.html')
+    if request.method == 'POST':
+        form = ReactivateForm(request.POST)
+        if form.is_valid():
+            print('form is valid')
+            # do the reactivate
+            return redirect('password')
+        else:
+            print('form invalid')
+    else:
+        form = TermsForm()
+
+    return render(request, 'reactivate.html', {'form': form})
 
 
 def create2(request):
@@ -264,3 +275,8 @@ def password(request):
     print(request)
     form = PasswordForm()
     return render(request, 'password.html', {'form': form}) 
+
+
+def otid(request):
+    print(request)
+    return render(request, 'otid.html')

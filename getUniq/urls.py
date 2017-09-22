@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^password/$', views.password, name='password'),
     url(r'^create2/$', views.create2, name='create2'),
     url(r'^confirm_email/$', views.confirm_email, name='confirm_email'),
+    url(r'^otid/$', views.otid, name='otid'),
 ]
