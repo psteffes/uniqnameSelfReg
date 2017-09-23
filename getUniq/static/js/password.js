@@ -1,55 +1,20 @@
 $(document).ready(function(){
   $('#tab_password').addClass('active');
 });
-$("#id_confirm_password").keyup(function() {
-/*    if($("#id_password").val() == $("#id_confirm_password").val()){
-        $("#id_confirm_help").css("visibility","hidden");
-        $("#id_submit_btn").prop("disabled",false);
-    }else{
-        $("#id_confirm_help").css("visibility","visible");
-        $("#id_submit_btn").prop("disabled",true);
-    }
-*/
-    var password1 = $("#id_password").val();
+$('#id_password, #id_confirm_password').keyup(function() {
+    var password1 = $('#id_password').val()
     var password2 = $("#id_confirm_password").val();
-    if( $("#id_password").val() == $("#id_confirm_password").val()){
 
-        $.ajax({
-            type: 'GET',
-            url: '/api/validate_password',
-            dataType: 'json',
-            data: {
-                'password1': password1,
-                'password2': password2,
-            },
-            success: function (data) {
-                console.log('data=' + data);
-                console.log(data.evaluation);
-                console.log(data.evaluation.issue);
-                if (data.evaluation.valid == true) {
-                    $("#id_confirm_help").css("visibility","hidden");
-                    $("#id_submit_btn").prop("disabled",false);
-                } else {
-                    $("#id_confirm_help").css("visibility","visible");
-                    $("#id_submit_btn").prop("disabled",true);
-                }
-            },
-        });
-    } else{
-        $("#id_confirm_help").css("visibility","visible");
-        $("#id_submit_btn").prop("disabled",true);
+    if ( password2.length == 0 ) {
+        $("#id_confirm_help").css("visibility","hidden");
     }
-});
-$('#id_password').on('keyup', function() {
-//$('#id_password').on('input', function() {
-    if ( $(this).val().length == 0 ) {
+
+    if ( password1.length == 0 ) {
         $("#id_password_help").css("visibility","hidden");
         resetPWDisplay();
         return;
     }
 
-    var password1 = $("#id_password").val();
-    var password2 = $("#id_confirm_password").val();
     console.log('pw1=' + password1);
     console.log('pw2=' + password2);
 
@@ -58,6 +23,7 @@ $('#id_password').on('keyup', function() {
         url: '/api/validate_password',
         dataType: 'json',
         data: {
+            'uid': $('#uid').text(),
             'password1': password1,
             'password2': password2,
         },
@@ -162,7 +128,7 @@ function updateDisplay(resultInfo) {
             $("#id_password_help").html("Password must not contain ascending or descending pattern (abcd, 1234, etc)");
             $("#id_password_help").css("visibility","visible");
         } else if (issue.contains_id('validator.contains.dictionary.word')) {
-            $("#id_password_help").html("Password must not be a word or simple phrase)");
+            $("#id_password_help").html("Password must not be a word or simple phrase");
             $("#id_password_help").css("visibility","visible");
         } else if (issue.contains_id('validator.contains.nameparts.present')) {
             $("#id_password_help").html("Password must not use parts of your name)");
@@ -170,6 +136,20 @@ function updateDisplay(resultInfo) {
         } else {
             $("#id_password_help").css("visibility","hidden");
         }
+
+        if ( $('#id_confirm_password').val().length > 0 && issue.contains_id('validator.matches.error') ) {
+            $("#id_confirm_help").css("visibility","visible");
+            $("#id_submit_btn").prop("disabled",true);
+        } else {
+            $("#id_confirm_help").css("visibility","hidden");
+        }
+    }
+
+    if (resultInfo.evaluation.valid == true ) {
+        $("#id_confirm_help").css("visibility","hidden");
+        $("#id_submit_btn").prop("disabled",false);
+    } else {
+        $("#id_submit_btn").prop("disabled",true);
     }
 }
 Array.prototype.contains_id = function (needle) {

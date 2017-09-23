@@ -23,7 +23,7 @@ def activation_link(request):
 
     if serializer.is_valid():
         print('umid={}'.format(serializer['umid'].value))
-        token = generate_confirmation_token(serializer['umid'].value)
+        token = generate_confirmation_token({'umid': serializer['umid'].value})
         print('token={}'.format(token))
         activation_link = request.build_absolute_uri(reverse('create', args=[token]))
         print('activation_link={}'.format(activation_link))
@@ -77,13 +77,15 @@ def validate_password(request):
     """
     print('request={}'.format(request))
     print('pw={}'.format(request.GET.get('password1')))
+    print('apiuid={}'.format(request.GET.get('uid')))
     serializer = PasswordSerializer(data=request.GET)
-    print('serializer={}'.format(serializer))
+    #print('serializer={}'.format(serializer))
 
     if serializer.is_valid():
         print('data={}'.format(serializer.data))
+        print('{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, serializer['uid'].value, serializer['password1'].value, serializer['password2'].value))
         r = requests.get(
-            'https://pwm-dev.dsc.umich.edu/passwordValidation/scrutinizer.json?showDetails=on&uid=batman&password1={}&password2={}'.format(serializer['password1'].value, serializer['password2'].value),
+            '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, serializer['uid'].value, serializer['password1'].value, serializer['password2'].value),
         )
         return Response(r.json())
     else:

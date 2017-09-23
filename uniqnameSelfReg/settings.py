@@ -158,16 +158,19 @@ LOGGING = {
 # Security
 CERT_DIR = config('CERT_DIR', default=BASE_DIR + "/uniqnameSelfReg/certs/")
 
-TOKEN_EXPIRATION_SECONDS = config('TOKEN_EXPIRATION_SECONDS', default='600', cast=int)
+TOKEN_EXPIRATION_SECONDS = config('TOKEN_EXPIRATION_SECONDS', default='3600', cast=int)
 
 # ID Proof Mutual Auth
-IDPROOF_URL = config('IDPROOF_URL', default='https://identityproof.dsc.umich.edu/identityproof/search')
-IDPROOF_CERT = CERT_DIR + config('IDPROOF_CERT', default='accounts.it.umich.edu.cert')
-IDPROOF_KEY = CERT_DIR + config('IDPROOF_KEY', default='accounts.it.umich.edu.key')
+IDPROOF_URL = config('IDPROOF_URL')
+IDPROOF_CERT = CERT_DIR + config('IDPROOF_CERT')
+IDPROOF_KEY = CERT_DIR + config('IDPROOF_KEY')
 
 # Uniqname Services
 UNIQNAME_SERVICES_PUBKEY = CERT_DIR + config('UNIQNAME_SERVICES_PUBKEY')
 UNIQNAME_SERVICES_CLIENT_CERT = config('UNIQNAME_SERVICES_CLIENT_CERT') 
+
+# Password Validation
+PASSWORD_VALIDATION_URL_BASE = config('PASSWORD_VALIDATION_URL_BASE')
 
 # LDAP
 LDAP_URI = config('LDAP_URI')

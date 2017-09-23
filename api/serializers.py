@@ -24,5 +24,9 @@ class UniqnameSerializer(serializers.Serializer):
 
 
 class PasswordSerializer(serializers.Serializer):
+    uid = serializers.CharField(
+        required=True,
+        validators=[RegexValidator(r'^[a-zA-Z]{3,8}$', 'Enter a valid uniqname')],
+    )
     password1 = serializers.CharField(required=True)
     password2 = serializers.CharField(required=False)

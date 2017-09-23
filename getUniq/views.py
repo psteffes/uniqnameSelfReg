@@ -74,14 +74,20 @@ def verify(request):
                 else:
                     print('entry.umichGetUniqEntitlingRoles={}'.format(entry['umichGetUniqEntitlingRoles']))
 
-                # mail testing
-                token = generate_confirmation_token(entry['umichRegEntityID'])
+                # Generate the token and build the secure link
+                #data = [entry['umichRegEntityID'], form.cleaned_data['first_name'], form.cleaned_data['last_name']]
+                data = {
+                    'umid': entry['umichRegEntityID'],
+                    'first_name': form.cleaned_data['first_name'],
+                    'last_name': form.cleaned_data['last_name'],
+                }
+                token = generate_confirmation_token(data)
                 print('token={}'.format(token))
 
                 secure_url = request.build_absolute_uri(reverse('create', args=[token]))
-                #secure_url = reverse('create', args=[token])
                 print('secure_url={}'.format(secure_url))
 
+                # mail testing
                 plaintext = get_template('email.txt')
                 html = get_template('email.html')
                 d = {'secure_url': secure_url}
@@ -113,27 +119,6 @@ def verify(request):
     return render(request, 'verify.html', {'form': form})
 
 
-def confirm(request):
-    print(request)
-
-    if request.method == 'POST':
-        form = TokenForm(request.POST)
-        if form.is_valid():
-            print('form={}'.format(form.cleaned_data))
-            if confirm_token(form.cleaned_data['token']):
-                print('must be them')
-                return redirect('confirmed')
-            else:
-                print('imposter')
-                form.add_error(None, 'Unable to validate token')
-        else:
-            print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
-    else:
-        form = TokenForm()
-
-    return render(request, 'confirm.html', {'form': form})
-
-
 def confirm_email(request):
     print(request)
     email = request.session.get('email', False)
@@ -149,7 +134,9 @@ def create(request, token):
     print(token)
 
     try:
-        umid = confirm_token(token)
+        data = confirm_token(token)
+        print('data={}'.format(data))
+        umid = data['umid']
         print('umid={}'.format(umid))
     except:
         print('imposter alert!')
@@ -160,6 +147,7 @@ def create(request, token):
         form = UniqnameForm(request.POST)
         if form.is_valid():
             print('form={}'.format(form.cleaned_data))
+            request.session['uid'] = form.cleaned_data['uniqname']
             return redirect('password')
         else:
             print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -171,24 +159,31 @@ def create(request, token):
             print('this is a reactivate')
             request.session['reactivate'] = True
             request.session['umid'] = umid
+            request.session['uid'] = entry['umichRegUid'][0]
             return redirect('reactivate')
 
-        dn = 'umichDirectoryID=161-0400-20150128095902514-557,ou=Identities,o=Registry'
-        first_name = 'John'
-        last_name = 'Doe'
-        name_parts = (first_name, last_name)
+        # Kinda ugly, but we don't have name data if the admin app calls the web service
+        dn = entry.entry_dn
+        if 'first_name' in data:
+            first_name = data['first_name']
+        else:
+            first_name = entry['umichRegDisplayGivenName'][0]
+        if 'last_name' in data:
+            last_name = data['last_name']
+        else:
+            last_name = entry['umichRegDisplaySurname'][0]
 
         try:
-            uniqname_suggestions = get_suggestions(dn, name_parts)
+            uniqname_suggestions = get_suggestions(dn, (first_name, last_name))
         except:
             print('something failed')
             messages.error(request, 'There was an issue generating suggestions, please try again.')
-            #uniqname_suggestions = ''
-            uniqname_suggestions = ('name1')
+            uniqname_suggestions = ''
+            #uniqname_suggestions = ('name1')
 
-        uid = 'batman'
-        umid = '12345678'
-        source = 'anonymous'
+        #uid = 'batman'
+        #umid = '12345678'
+        #source = 'anonymous'
         #create = uniqname_create(dn, uid, umid, source)
 
         print('set up the stuff')
@@ -212,8 +207,13 @@ def reactivate(request):
 
     print('get={}'.format(request.session.get('agreed_to_terms', 'gear')))
     print('get={}'.format(request.session.get('umid', 'gear')))
-    if request.session.get('reactivate', False) and request.session.get('umid', False):    # False is the default
-        print('reactivate and you have a umid')
+
+    reactivate = request.session.get('reactivate', False)
+    umid = request.session.get('umid', False)
+    uid = request.session.get('uid', False)
+
+    if reactivate and umid and uid:
+        print('reactivate umid={} uid={}'.format(umid, uid))        
     else:
         print('we do not need to reactivate you')
         return redirect('terms')
@@ -221,15 +221,20 @@ def reactivate(request):
     if request.method == 'POST':
         form = ReactivateForm(request.POST)
         if form.is_valid():
-            print('form is valid')
+            print('form is valid reactivate and send them to password')
             # do the reactivate
             return redirect('password')
         else:
             print('form invalid')
     else:
-        form = TermsForm()
+        form = ReactivateForm()
 
-    return render(request, 'reactivate.html', {'form': form})
+        context = {
+            'form': form,
+            'uid': uid,
+        }
+
+    return render(request, 'reactivate.html', context=context)
 
 
 def create2(request):
@@ -273,8 +278,28 @@ def create2(request):
 
 def password(request):
     print(request)
+    print(request.session)
+    print(request.session.values())
+
+    uid = request.session.get('uid', False)
+
+    if uid:
+        print('session.uid={}'.format(uid))
+    else:
+        print('you do not have a uid you liar')
+        return redirect('terms')
+
     form = PasswordForm()
-    return render(request, 'password.html', {'form': form}) 
+    context = {
+        'uid': uid,
+        'form': form,
+    }
+    return render(request, 'password.html', context=context) 
+
+
+def success(request):
+    print(request)
+    return render(request, 'success.html')
 
 
 def otid(request):
