@@ -2,8 +2,8 @@ from django import forms
 from django.core.validators import RegexValidator
 
 
-class TermsForm(forms.Form):
-    i_agree = forms.BooleanField(
+class AcceptForm(forms.Form):
+    accept = forms.BooleanField(
         required=True
     )
 
@@ -28,6 +28,7 @@ class VerifyForm(forms.Form):
 
     email = forms.EmailField(
         required=True,
+        #validators=[EmailValidator()],
     )
 
 
@@ -44,12 +45,6 @@ class UniqnameForm(forms.Form):
     )
 
 
-class ReactivateForm(forms.Form):
-    reactivate = forms.BooleanField(
-        required=True,
-    )
-
-
 class PasswordForm(forms.Form):
     password = forms.CharField(
         required=True,
@@ -58,3 +53,13 @@ class PasswordForm(forms.Form):
     confirm_password = forms.CharField(
         required=True,
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password")
+        password2 = cleaned_data.get("confirm_password")
+
+        if password1 != password2:
+            raise forms.ValidationError(
+                "Passwords do not meet requirements."
+            )

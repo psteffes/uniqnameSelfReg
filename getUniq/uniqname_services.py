@@ -52,14 +52,13 @@ def get_suggestions(dn, name_parts):
 
         print('data={}'.format(json.dumps(data)))
 
-        oaep_encoded = oaep_encode(data)
-
         payload = {
             'name': 'suggestions',
-            'coded': oaep_encoded,
+            'coded': oaep_encode(data),
         }
 
-        r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/suggestions', payload)
+        #r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/suggestions', payload)
+        r = make_post_request('{}/suggestions'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
 
         # We expect all responses to be json
         try:
@@ -88,14 +87,13 @@ def find_uniqname(uid):
 
         print('data={}'.format(json.dumps(data)))
         
-        oaep_encoded = oaep_encode(data)
-
         payload = {
             'name': 'find',
-            'coded': oaep_encoded,
+            'coded': oaep_encode(data),
         }
 
-        r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/find', payload)
+        #r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/find', payload)
+        r = make_post_request('{}/find'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
 
         try:
             print('response={} json={}'.format(r, r.json()))
@@ -110,28 +108,100 @@ def find_uniqname(uid):
     return r.json()['uid']
 
 
-def uniqname_create(dn, uid, umid, source):
+#def create_uniqname(dn, uid, umid, source):
+def create_uniqname(dn, uid, umid):
     try:
         print('dn={}'.format(dn))
         print('uid={}'.format(uid))
         print('umid={}'.format(umid))
-        print('source={}'.format(source))
+        #print('source={}'.format(source))
 
         data = {
             'dn': dn,
             'uid': uid,
             'umid': umid,
-            'source': source,
+#            'source': source,
         }
 
         print('data={}'.format(json.dumps(data)))
 
-        oaep_encoded = oaep_encode(data)
+        payload = {
+            'name': 'create',
+            'coded': oaep_encode(data),
+        }
+
+        r = make_post_request('{}/create'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
+
+        try:
+            print('response={} json={}'.format(r, r.json()))
+        except:
+            print('Unable to json_decode response={}'.format(r))
+            raise
 
     except Exception as e:
         #logger.warn('Unable to validate identity - {} '.format(e))
         print('create error - {} '.format(e))
-        return False
+        raise
 
     #logger.info('form data has successfully validated')
     return True
+
+
+#def reactivate_uniqname(dn, umid, source):
+def reactivate_uniqname(dn, umid):
+    try:
+        data = {
+            'dn': dn,
+            'umid': umid,
+            #'source': source,
+        }
+
+        print('data={}'.format(json.dumps(data)))
+
+        payload = {
+            'name': 'reactivate',
+            'coded': oaep_encode(data),
+        }
+
+        #r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/reactivate', payload)
+        r = make_post_request('{}/reactivate'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
+
+        try:
+            print('response={} json={}'.format(r, r.json()))
+        except:
+            print('Unable to json_decode response={}'.format(r))
+            raise
+
+    except Exception as e:
+        print('reactivate error - {}'.format(e))
+        raise
+
+    return True
+
+
+def reset_password(uid, password):
+    try:
+        data = {
+            'uid': uid,
+            'password': password,
+        }
+
+        print('data={}'.format(json.dumps(data)))
+
+        payload = {
+            'name': 'resetPassword',
+            'coded': oaep_encode(data),
+        }
+
+        r = make_post_request('{}/resetPassword'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
+
+        try:
+            print('response={} json={}'.format(r, r.json()))
+        except:
+            print('Unable to json_decode resposne={}'.format(r))
+
+    except Exception as e:
+        print('reactivate error - {}'.format(e))
+        raise
+
+    return
