@@ -8,7 +8,7 @@ from django.contrib import messages
 from .forms import AcceptForm, VerifyForm, TokenForm, UniqnameForm, PasswordForm
 from .idproof import idproof_form_data 
 from .token import generate_confirmation_token, confirm_token
-from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname
+from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
 from .utils import getuniq_eligible
 from .myldap import mcomm_reg_umid_search
 
