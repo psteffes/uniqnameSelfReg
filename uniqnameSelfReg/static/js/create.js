@@ -79,6 +79,7 @@ $('#confirm-delete').on('show.bs.modal', function(e) {
 $("#id_suggest_btn").click(function() {
     var name_parts = $("#id_suggest_field").val();
     console.log('name_parts=' + name_parts);
+    console.log('name_parts.trim=' + name_parts.trim());
     name_parts = name_parts.split(/\s+/);
     console.log('name_parts=' + name_parts);
 

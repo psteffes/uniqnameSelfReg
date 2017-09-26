@@ -325,6 +325,3 @@ def success(request):
     return render(request, 'success.html')
 
 
-def otid(request):
-    print(request)
-    return render(request, 'otid.html')
