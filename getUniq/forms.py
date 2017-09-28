@@ -1,6 +1,8 @@
 from django import forms
 from django.core.validators import RegexValidator
+from django.conf import settings
 
+import requests
 
 class AcceptForm(forms.Form):
     accept = forms.BooleanField(
@@ -60,6 +62,16 @@ class PasswordForm(forms.Form):
         password2 = cleaned_data.get("confirm_password")
 
         if password1 != password2:
+            raise forms.ValidationError(
+                "Passwords do not meet requirements."
+            )
+
+        r = requests.get(
+            '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, 'tmp', password1, password2),
+        )
+
+        print(r.json())
+        if r.json()['evaluation']['valid'] == False:
             raise forms.ValidationError(
                 "Passwords do not meet requirements."
             )

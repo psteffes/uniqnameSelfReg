@@ -12,6 +12,9 @@ from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniq
 from .utils import getuniq_eligible
 from .myldap import mcomm_reg_umid_search
 
+#test
+import json
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,11 +23,13 @@ logger = logging.getLogger(__name__)
 def terms(request):
     try:
         print(request)
+        print(request.session.items())
 
         if request.method == 'POST':
             form = AcceptForm(request.POST)
             if form.is_valid():
                 print('form is valid')
+                request.session.flush()
                 request.session['agreed_to_terms'] = True
                 return redirect('verify')
             else:
@@ -40,8 +45,7 @@ def terms(request):
 
 def verify(request):
     print(request)
-    print(request.session)
-    print(request.session.values())
+    print(request.session.items())
 
     if request.session.get('agreed_to_terms', False):    # False is the default
         print('you agreed to our terms')
@@ -64,7 +68,7 @@ def verify(request):
                 print('entry={}'.format(entry))
 
                 # If the person is not eligible, tell them nicely
-                #if 'umichGetUniqEntitlingRoles' not in entry or entry['umichGetUniqStatus'] != 'STARTED':
+                #if 'umichGetUniqEntitlingRoles' not in entry or entry['umichGetUniqStatus'] != 'ELIGIBLE':
                 if not getuniq_eligible(entry):
                     messages.error(request, 'You are not eligible')
                     return redirect('terms')
@@ -99,8 +103,8 @@ def verify(request):
                     html_message=html_content,
                     fail_silently=False,
                 )
-
-                request.session['email'] = email
+                del request.session['agreed_to_terms']
+                request.session['email'] = email 
                 return redirect('confirm_email')
             else:
                 form.add_error(None, 'Unable to validate identity')
@@ -117,9 +121,11 @@ def verify(request):
 
 def confirm_email(request):
     print(request)
+    print(request.session.items())
     email = request.session.get('email', False)
     if email:
         context = {'email': email}
+        #request.session.flush()
         return render(request, 'confirm_email.html', context)
     else:
         return redirect('terms')
@@ -128,6 +134,7 @@ def confirm_email(request):
 def create(request, token):
     print(request)
     print(token)
+    print(request.session.items())
 
     try:
         data = confirm_token(token)
@@ -139,11 +146,14 @@ def create(request, token):
         messages.error(request, 'The confirmation link is invalid or has expired, please verify your identity and try again.')
         return redirect('terms')
 
-    dn = request.session.get('dn', False)
+    # Go away if you've already created a uniqname
+    has_uid = request.session.get('uid', False)
+    if has_uid:
+        return redirect('terms')
 
     if request.method == 'POST':
         form = UniqnameForm(request.POST)
-        if form.is_valid() and dn:
+        if form.is_valid() and request.session.get('dn', False):
             print('form={}'.format(form.cleaned_data))
             request.session['uid'] = form.cleaned_data['uniqname']
             create_uniqname(dn, form.cleaned_data['uniqname'], umid)
@@ -153,6 +163,7 @@ def create(request, token):
     else:
         ###
         entry = mcomm_reg_umid_search(umid)
+        print('type.entry={}'.format(type(entry)))
         dn = entry.entry_dn
         request.session['dn'] = dn
 
@@ -167,6 +178,13 @@ def create(request, token):
             request.session['umid'] = umid
             request.session['uid'] = entry['umichRegUid'][0]
             return redirect('reactivate')
+        else:
+            print('umichreguid not in entry')
+
+        if 'umichRegistryImpound' in entry:
+            print('impounded')
+        else:
+            print('not impounded')
 
         # Kinda ugly, but we don't have name data if the admin app calls the web service
         if 'first_name' in data:
@@ -237,18 +255,15 @@ def test_create(request):
 
 def reactivate(request):
     print(request)
-    print(request.session)
-    print(request.session.values())
-    print('get={}'.format(request.session.get('agreed_to_terms', 'gear')))
-    print('get={}'.format(request.session.get('umid', 'gear')))
+    print(request.session.items())
 
     reactivate = request.session.get('reactivate', False)
     dn = request.session.get('dn', False)
     umid = request.session.get('umid', False)
     uid = request.session.get('uid', False)
 
-    if reactivate and dn and umid:
-        print('reactivate dn={} umid={}'.format(dn, umid))        
+    if reactivate and dn and umid and uid:
+        print('reactivate dn={} umid={} uid={}'.format(dn, umid, uid))        
     else:
         print('we do not need to reactivate you')
         return redirect('terms')
@@ -258,7 +273,8 @@ def reactivate(request):
         if form.is_valid():
             print('form is valid reactivate and send them to password')
             # do the reactivate
-            reactivate_uniqname(dn, umid) 
+            reactivate_uniqname(dn, umid)
+            del request.session['reactivate']
             return redirect('password')
         else:
             print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -275,8 +291,7 @@ def reactivate(request):
 
 def password(request):
     print(request)
-    print(request.session)
-    print(request.session.values())
+    print(request.session.items())
 
     uid = request.session.get('uid', False)
 
@@ -284,7 +299,7 @@ def password(request):
     if uid:
         print('session.uid={}'.format(uid))
     else:
-        print('you do not have a uid you liar')
+        print('you do not have a uid')
         return redirect('terms')
 
     # If this is a POST, verify the form and send them on to the success page if valid
@@ -293,6 +308,7 @@ def password(request):
         if form.is_valid():
             print('set password')
             reset_password(uid, form.cleaned_data['password'])
+            del request.session['uid']
             return redirect('success')
         else:
             print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -322,6 +338,7 @@ def test_password(request):
 
 def success(request):
     print(request)
+    print(request.session.items())
     return render(request, 'success.html')
 
 

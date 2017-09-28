@@ -7,7 +7,7 @@ def getuniq_eligible(entry):
 
     try:
         eligible = False
-        if entry['umichGetUniqStatus'] == 'STARTED' and entry['umichGetUniqEntitlingRoles'] != '':
+        if entry['umichGetUniqStatus'] == 'ELIGIBLE' and entry['umichGetUniqEntitlingRoles'] != '':
             eligible = True
 
     except Exception as e:

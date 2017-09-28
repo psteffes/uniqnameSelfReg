@@ -189,11 +189,11 @@ def reset_password(uid, password):
         print('data={}'.format(json.dumps(data)))
 
         payload = {
-            'name': 'resetPassword',
+            'name': 'passwordReset',
             'coded': oaep_encode(data),
         }
 
-        r = make_post_request('{}/resetPassword'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
+        r = make_post_request('{}/passwordReset'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
 
         try:
             print('response={} json={}'.format(r, r.json()))
