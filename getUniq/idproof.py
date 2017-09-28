@@ -15,10 +15,10 @@ def idproof_form_data(form_cleaned_data):
 
         # Build payload with form data
         payload = {
-            'firstName': form_cleaned_data['first_name'],
-            'lastName': form_cleaned_data['last_name'],
-            'birthdate': form_cleaned_data['birth_date'].strftime('%m/%d/%Y'),
-            'umId': form_cleaned_data['umid'],
+            'first_name': form_cleaned_data['first_name'],
+            'last_name': form_cleaned_data['last_name'],
+            'birth_date': form_cleaned_data['birth_date'].strftime('%m/%d/%Y'),
+            'umid': form_cleaned_data['umid'],
             'email': form_cleaned_data['email'],
         }
         headers = {

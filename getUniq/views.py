@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -21,36 +22,33 @@ logger = logging.getLogger(__name__)
 
 
 def terms(request):
-    try:
-        print(request)
-        print(request.session.items())
+    logger.info(request)
+    logger.debug(request.session.items())
 
-        if request.method == 'POST':
-            form = AcceptForm(request.POST)
-            if form.is_valid():
-                print('form is valid')
-                request.session.flush()
-                request.session['agreed_to_terms'] = True
-                return redirect('verify')
-            else:
-                print('form invalid')
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        form = AcceptForm(request.POST)
+        if form.is_valid():
+            # Flush the session for a clean start
+            request.session.flush()
+            request.session['agreed_to_terms'] = True
+            return redirect('verify')
         else:
-            form = AcceptForm()
-    except Exception as e:
-        print('terms error={}'.format(e))
-        raise
+            logger.warning('invalid AcceptForm')
+    # On a GET or any other request method create a blank form
+    else:
+        form = AcceptForm()
 
     return render(request, 'terms.html', {'form': form})
 
 
 def verify(request):
-    print(request)
-    print(request.session.items())
+    logger.info(request)
+    logger.debug(request.session.items())
 
-    if request.session.get('agreed_to_terms', False):    # False is the default
-        print('you agreed to our terms')
-    else:
-        print('you have not agreed to the terms yet')
+    # Redirect the user to the terms page if they have not accepted them yet
+    if not request.session.get('agreed_to_terms', False):    # False is the default
+        logger.debug('User has not agreed to terms, redirect to terms')
         return redirect('terms')
 
     # if this is a POST request we need to process the form data
@@ -59,34 +57,31 @@ def verify(request):
         form = VerifyForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            #logger.debug('form={}'.format(form.cleaned_data))
-            print('form={}'.format(form.cleaned_data))
+            # process the data in form.cleaned_data as required)
+            logger.debug('form={}'.format(form.cleaned_data))
             entry = idproof_form_data(form.cleaned_data)
             if entry:
-                #logger.debug('entry={}'.format(entry))
-                print('entry={}'.format(entry))
+                logger.debug('entry={}'.format(entry))
 
                 # If the person is not eligible, tell them nicely
-                #if 'umichGetUniqEntitlingRoles' not in entry or entry['umichGetUniqStatus'] != 'ELIGIBLE':
                 if not getuniq_eligible(entry):
-                    messages.error(request, 'You are not eligible')
+                    messages.error(request, settings.INELIGIBLE_ALERT_MSG)
+                    logger.warn('User is not eligible, redirect to terms')
                     return redirect('terms')
-                else:
-                    print('entry.umichGetUniqEntitlingRoles={}'.format(entry['umichGetUniqEntitlingRoles']))
+                #else:
+                #    print('entry.umichGetUniqEntitlingRoles={}'.format(entry['umichGetUniqEntitlingRoles']))
 
                 # Generate the token and build the secure link
-                #data = [entry['umichRegEntityID'], form.cleaned_data['first_name'], form.cleaned_data['last_name']]
                 data = {
-                    'umid': entry['umichRegEntityID'],
+                    'umid': entry['umichRegEntityID'][0],
                     'first_name': form.cleaned_data['first_name'],
                     'last_name': form.cleaned_data['last_name'],
                 }
                 token = generate_confirmation_token(data)
                 secure_url = request.build_absolute_uri(reverse('create', args=[token]))
-                print('secure_url={}'.format(secure_url))
+                logger.debug('secure_url={}'.format(secure_url))
 
-                # mail testing
+                # Send an email to the user with the secure_url to continue
                 plaintext = get_template('email.txt')
                 html = get_template('email.html')
                 d = {'secure_url': secure_url}
@@ -94,7 +89,6 @@ def verify(request):
                 text_content = plaintext.render(d)
                 html_content = html.render(d)
                 email = form.cleaned_data['email']
-
                 send_mail(
                     subject,
                     text_content,
@@ -103,14 +97,18 @@ def verify(request):
                     html_message=html_content,
                     fail_silently=False,
                 )
+                logger.info('Confirmation link successfully sent to {}'.format(email))
+
+                # Update session and send them to confirm_email
                 del request.session['agreed_to_terms']
                 request.session['email'] = email 
                 return redirect('confirm_email')
+            # idVerification failed
             else:
                 form.add_error(None, 'Unable to validate identity')
+        # Form not valid
         else:
-            #logger.warn('form.errors={}'.format(form.errors.as_json(escape_html=False)))
-            print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+            logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -120,71 +118,69 @@ def verify(request):
 
 
 def confirm_email(request):
-    print(request)
-    print(request.session.items())
+    logger.info(request)
+    logger.debug(request.session.items())
     email = request.session.get('email', False)
     if email:
         context = {'email': email}
         #request.session.flush()
         return render(request, 'confirm_email.html', context)
     else:
+        logger.warning('No email address for user, redirect to terms')
         return redirect('terms')
 
 
 def create(request, token):
-    print(request)
-    print(token)
-    print(request.session.items())
+    logger.info(request)
+    logger.debug(token)
+    logger.debug(request.session.items())
 
+    # Validate the token
     try:
         data = confirm_token(token)
-        print('data={}'.format(data))
         umid = data['umid']
-        print('umid={}'.format(umid))
+        logger.debug('data={}'.format(data))
     except:
-        print('imposter alert!')
+        logger.warning('Confirmation link is invalid or expired, redirect to terms')
         messages.error(request, 'The confirmation link is invalid or has expired, please verify your identity and try again.')
         return redirect('terms')
 
     # Go away if you've already created a uniqname
     has_uid = request.session.get('uid', False)
     if has_uid:
+        logger.warning('User already has a uniqname, redirect to terms')
         return redirect('terms')
 
+    # if this is a POST request we need to process the form data
     if request.method == 'POST':
         form = UniqnameForm(request.POST)
-        if form.is_valid() and request.session.get('dn', False):
-            print('form={}'.format(form.cleaned_data))
+        if form.is_valid() and request.session.get('dn', False) and umid:
+            logger.debug('form={}'.format(form.cleaned_data))
             request.session['uid'] = form.cleaned_data['uniqname']
             create_uniqname(dn, form.cleaned_data['uniqname'], umid)
+            logger.info('Created uniqname={}, continue to password')
             return redirect('password')
         else:
-            print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+            logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+    # if a GET (or any other method)
     else:
-        ###
+        form = UniqnameForm()
         entry = mcomm_reg_umid_search(umid)
-        print('type.entry={}'.format(type(entry)))
         dn = entry.entry_dn
-        request.session['dn'] = dn
+        request.session['dn'] = dn    # We need dn to set password
 
-        # If the person is not eligible, tell them nicely
+        # If the user is not eligible, tell them nicely
         if not getuniq_eligible(entry):
-            messages.error(request, 'You are not eligible')
+            messages.error(request, settings.INELIGIBLE_ALERT_MSG)
             return redirect('terms')
 
+        # If user has a uniqname, proceed as reactivate
         if 'umichRegUid' in entry:
-            print('this is a reactivate')
             request.session['reactivate'] = True
             request.session['umid'] = umid
             request.session['uid'] = entry['umichRegUid'][0]
+            logger.info('User has umichRegUid={}, proceed as reactivate'.format(entry['umichRegUid'][0]))
             return redirect('reactivate')
-        else:
-            print('umichreguid not in entry')
-
-        if 'umichRegistryImpound' in entry:
-            print('impounded')
-        else:
-            print('not impounded')
 
         # Kinda ugly, but we don't have name data if the admin app calls the web service
         if 'first_name' in data:
@@ -196,13 +192,12 @@ def create(request, token):
         else:
             last_name = entry['umichRegDisplaySurname'][0]
 
+        # Get uniqname suggestions based on the name data we have
         try:
             uniqname_suggestions = get_suggestions(dn, (first_name, last_name))
         except:
             messages.error(request, 'There was an issue generating suggestions, please try again.')
             uniqname_suggestions = ''
-
-        form = UniqnameForm()
 
     context = {
         'form': form,

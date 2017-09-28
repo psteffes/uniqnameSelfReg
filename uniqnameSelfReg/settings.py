@@ -147,13 +147,20 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'verify': {
+        'getUniq': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'api': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
     },
 }
+
+INELIGIBLE_ALERT_MSG = config('INELIGIBLE_ALERT_MSG')
 
 # Security
 CERT_DIR = config('CERT_DIR', default=BASE_DIR + "/uniqnameSelfReg/certs/")
