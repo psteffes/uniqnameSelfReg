@@ -154,7 +154,8 @@ def create(request, token):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         form = UniqnameForm(request.POST)
-        if form.is_valid() and request.session.get('dn', False) and umid:
+        dn = request.session.get('dn', False)
+        if form.is_valid() and dn and umid:
             logger.debug('form={}'.format(form.cleaned_data))
             request.session['uid'] = form.cleaned_data['uniqname']
             create_uniqname(dn, form.cleaned_data['uniqname'], umid)
