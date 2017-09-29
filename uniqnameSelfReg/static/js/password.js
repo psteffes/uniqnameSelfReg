@@ -15,9 +15,6 @@ $('#id_password, #id_confirm_password').keyup(function() {
         return;
     }
 
-    console.log('pw1=' + password1);
-    console.log('pw2=' + password2);
-
     $.ajax({
         type: 'GET',
         url: '/api/validate_password',
@@ -28,9 +25,6 @@ $('#id_password, #id_confirm_password').keyup(function() {
             'password2': password2,
         },
         success: function (data) {
-            console.log('data=' + data);
-            console.log(data.evaluation);
-            console.log(data.evaluation.issue);
             updateDisplay(data);
         },
     });

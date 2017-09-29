@@ -20,7 +20,6 @@ function onSuggestionClick () {
 $("#id_check_btn").click(checkAvailability);
 function checkAvailability() {
     var uid = $("#id_uniqname").val();
-    console.log('uid=' + uid);
 
     $("#id_check_btn").prop("disabled", true);
 
@@ -32,16 +31,13 @@ function checkAvailability() {
             'uid': uid,
         },
         success: function (data) {
-            console.log(data);
             if (data.uid) {
-                console.log('found ' + data.uid);
                 $("#id_claim_btn").prop("disabled", true);
                 $("#id_check_btn").removeClass("btn-blue");
                 $("#id_check_btn").addClass("btn-danger");
                 $("#id_check_btn").html('Not Available <span class="glyphicon glyphicon-remove"</span>');
             }
             else {
-                console.log('no match');
                 $("#id_check_btn").removeClass("btn-blue");
                 $("#id_check_btn").addClass("btn-success");
                 $("#id_check_btn").html('Available <span class="glyphicon glyphicon-ok"</span>');
@@ -78,10 +74,7 @@ $('#confirm-delete').on('show.bs.modal', function(e) {
 });
 $("#id_suggest_btn").click(function() {
     var name_parts = $("#id_suggest_field").val();
-    console.log('name_parts=' + name_parts);
-    console.log('name_parts.trim=' + name_parts.trim());
     name_parts = name_parts.split(/\s+/);
-    console.log('name_parts=' + name_parts);
 
     //$("#id_suggest_btn").html("<i id='loginSpinner' class='icon icon-spinner icon-lg animate-pulse'></i>&nbspLoading");
     $("#id_suggest_btn").prop("disabled", true);
@@ -96,7 +89,6 @@ $("#id_suggest_btn").click(function() {
             'name_parts': name_parts,
         },
         success: function (data) {
-            console.log(data.suggestions);
             if (data.suggestions.length > 1) {
                 displaySuggestions(data.suggestions);
             }
@@ -119,7 +111,6 @@ function displaySuggestions(suggestions) {
         suggest_div.removeChild(suggest_div.lastChild);
     }
     for (var i=0; i < suggestions.length; i++) {
-        console.log(suggestions[i]);
         var t = document.createTextNode("\n\u00A0\u00A0\u00A0\u00A0");
         suggest_div.appendChild(t);
         var a = document.createElement("a");
@@ -151,7 +142,6 @@ function createRadioElements2(suggestions) {
         suggest_div.removeChild(suggest_div.lastChild);
     }
     for (var i=0; i < suggestions.length; i++) {
-        console.log(suggestions[i]);
         var div = document.createElement("div");
         div.setAttribute('class', 'form-group');
         var label = document.createElement("label");
