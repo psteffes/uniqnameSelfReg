@@ -66,12 +66,11 @@ class PasswordForm(forms.Form):
                 "Passwords do not meet requirements."
             )
 
-        r = requests.get(
-            '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, 'tmp', password1, password2),
-        )
+#        r = requests.get(
+#            '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, 'tmp', password1, password2),
+#        )
 
-        print(r.json())
-        if r.json()['evaluation']['valid'] == False:
-            raise forms.ValidationError(
-                "Passwords do not meet requirements."
-            )
+#        if r.json()['evaluation']['valid'] == False:
+#            raise forms.ValidationError(
+#                "Passwords do not meet requirements."
+#            )

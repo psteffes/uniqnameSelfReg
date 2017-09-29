@@ -1,7 +1,7 @@
 from django.conf import settings
 
 import ldap3
-from ldap3 import Server, Connection, ALL
+from ldap3 import Server, Connection, ALL, MODIFY_REPLACE
 #import logging
 
 #logger = logging.getLogger(__name__)
@@ -31,3 +31,25 @@ def mcomm_reg_umid_search(umid):
         raise
 
     return entry
+
+
+def set_status_complete(dn):
+    try:
+        server = Server(settings.LDAP_URI)
+        conn = Connection(server, settings.LDAP_USERNAME, settings.LDAP_PW, auto_bind=True)
+
+        mod_attrs = {
+            'umichGetUniqStatus': [(MODIFY_REPLACE, ['COMPLETE'])],
+        }
+        result = conn.modify(dn, mod_attrs)
+
+        if conn.modify(dn, mod_attrs):
+            print('Successfully set umichGetUniqStatus=COMPLETE for dn={}'.format(dn))
+        else:
+            print('Error updating umichGetUniqStatus for dn={}, details={}'.format(dn, conn.result))
+
+    except Exception as e:
+        print('error={}'.format(e))
+        raise
+
+    return

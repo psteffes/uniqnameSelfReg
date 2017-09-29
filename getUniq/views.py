@@ -10,8 +10,8 @@ from .forms import AcceptForm, VerifyForm, TokenForm, UniqnameForm, PasswordForm
 from .idproof import idproof_form_data 
 from .token import generate_confirmation_token, confirm_token
 from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
-from .utils import getuniq_eligible
-from .myldap import mcomm_reg_umid_search
+from .utils import getuniq_eligible, validate_passwords
+from .myldap import mcomm_reg_umid_search, set_status_complete
 
 #test
 import json
@@ -68,8 +68,6 @@ def verify(request):
                     messages.error(request, settings.INELIGIBLE_ALERT_MSG)
                     logger.warn('User is not eligible, redirect to terms')
                     return redirect('terms')
-                #else:
-                #    print('entry.umichGetUniqEntitlingRoles={}'.format(entry['umichGetUniqEntitlingRoles']))
 
                 # Generate the token and build the secure link
                 data = {
@@ -159,7 +157,8 @@ def create(request, token):
             logger.debug('form={}'.format(form.cleaned_data))
             request.session['uid'] = form.cleaned_data['uniqname']
             create_uniqname(dn, form.cleaned_data['uniqname'], umid)
-            logger.info('Created uniqname={}, continue to password')
+            #set_status_ineligible(dn)
+            logger.info('Created uniqname={}, continue to password'.format(form.cleaned_data['uniqname']))
             return redirect('password')
         else:
             logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -250,30 +249,31 @@ def test_create(request):
 
 
 def reactivate(request):
-    print(request)
-    print(request.session.items())
+    logger.info(request)
+    logger.debug(request.session.items())
 
     reactivate = request.session.get('reactivate', False)
     dn = request.session.get('dn', False)
     umid = request.session.get('umid', False)
     uid = request.session.get('uid', False)
 
-    if reactivate and dn and umid and uid:
-        print('reactivate dn={} umid={} uid={}'.format(dn, umid, uid))        
-    else:
-        print('we do not need to reactivate you')
+    # Make sure the user should be here
+    if not (reactivate and dn and umid and uid):
+        logger.debug('User does not need to be reactivated, redirecting to terms')
         return redirect('terms')
 
+    # If this is a POST, verify the form and send them on to the success page if valid
     if request.method == 'POST':
         form = AcceptForm(request.POST)
         if form.is_valid():
-            print('form is valid reactivate and send them to password')
             # do the reactivate
             reactivate_uniqname(dn, umid)
+            set_status_ineligible(dn)
             del request.session['reactivate']
+            logger.info('Reactivated uid={}, continue to password'.format(uid))
             return redirect('password')
         else:
-            print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+            logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
     else:
         form = AcceptForm()
 
@@ -286,28 +286,30 @@ def reactivate(request):
 
 
 def password(request):
-    print(request)
-    print(request.session.items())
+    logger.info(request)
+    logger.debug(request.session.items())
 
     uid = request.session.get('uid', False)
 
     # Make sure the user got here from a create or reactivate
-    if uid:
-        print('session.uid={}'.format(uid))
-    else:
-        print('you do not have a uid')
+    if not uid:
+        logger.debug('User does not have a uid, redirecting to terms')
         return redirect('terms')
 
     # If this is a POST, verify the form and send them on to the success page if valid
     if request.method == 'POST':
+        print('request.POST={}'.format(request.POST))
         form = PasswordForm(request.POST)
         if form.is_valid():
-            print('set password')
-            reset_password(uid, form.cleaned_data['password'])
-            del request.session['uid']
-            return redirect('success')
+            if validate_passwords(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
+                reset_password(uid, form.cleaned_data['password'])
+                del request.session['uid']
+                logger.info('Password changed, sending to success page')
+                return redirect('success')
+            else:
+                form.add_error(None, "Passwords do not meet requirements")
         else:
-            print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+            logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
     # GET or any other request generate a blank form
     else:
         form = PasswordForm()
@@ -320,21 +322,34 @@ def password(request):
 
 
 def test_password(request):
+    uid = 'tmp'
+
     if request.method == 'POST':
+        print('request.POST={}'.format(request.POST))
         form = PasswordForm(request.POST)
         if form.is_valid():
-            print('TEST - reset password')
-            return redirect('success')
+            print('call validate_passwords')
+            if validate_passwords(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
+                print('TEST - reset password')
+                return redirect('success')
+            else:
+                print('Passwords do not meet requirements')
+                form.add_error(None, "Passwords do not meet requirements")
         else:
             print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
     else:
         form = PasswordForm()
 
-    return render(request, 'password.html', {'form': form})
+    context = {
+        'uid': uid,
+        'form': form,
+    }
+
+    return render(request, 'password.html', context=context)
 
 def success(request):
-    print(request)
-    print(request.session.items())
+    logger.info(request)
+    logger.debug(request.session.items())
     return render(request, 'success.html')
 
 

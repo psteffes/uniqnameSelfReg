@@ -1,3 +1,6 @@
+from django.conf import settings
+import requests
+
 #import logging
 
 #logger = logging.getLogger(__name__)
@@ -15,3 +18,20 @@ def getuniq_eligible(entry):
         pass
 
     return eligible
+
+
+def validate_passwords(uid, password1, password2):
+
+    try:
+        valid = False
+        r = requests.get(
+            '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, 'uid', password1, password2),
+        )
+
+        if r.json()['evaluation']['valid'] == True:
+            valid = True
+
+    except Exception as e:
+        pass
+
+    return valid
