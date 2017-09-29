@@ -34,6 +34,7 @@ def idproof_form_data(form_cleaned_data):
             data=json.dumps(payload),
             headers=headers,
             cert=cert,
+            timeout=settings.REQUESTS_TIMEOUT_SECONDS,
         )
 
         # We expect all responses to be json
