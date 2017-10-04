@@ -6,11 +6,12 @@ from urllib.parse import quote_plus
 import requests
 import json
 import base64
-#import logging
+import logging
 
-#logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 def oaep_encode(data):
+    """Returns an oaep_encoded string"""
     byte_data = json.dumps(data).encode('utf-8')
 
     with open(settings.UNIQNAME_SERVICES_PUBKEY, mode='rb') as publicfile:
@@ -26,6 +27,7 @@ def oaep_encode(data):
 
 
 def make_post_request(url, payload):
+    """POST to the uniqname_services url. Return the response"""
     headers = {
         'Content-type': 'application/json',
         'Accept': 'application/json',
@@ -40,168 +42,129 @@ def make_post_request(url, payload):
 
 
 def get_suggestions(dn, name_parts):
-
+    """Returns suggestions given by uniqname_services suggestions endpoint"""
     try:
-        print('dn={}'.format(dn))
-        print('name_parts={}'.format(name_parts))
-
         data = {
-            'dn': dn,
+            'dn': dn,     # dn does not seem to add any value to this call
             'nameParts': name_parts,
         }
-
-        print('data={}'.format(json.dumps(data)))
-
         payload = {
             'name': 'suggestions',
             'coded': oaep_encode(data),
         }
-
-        #r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/suggestions', payload)
         r = make_post_request('{}/suggestions'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
 
         # We expect all responses to be json
         try:
-            print('response={} json={}'.format(r, r.json()))
-            print('suggestions={}'.format(r.json()['suggestions']))
-            for name in r.json()['suggestions']:
-                print('name={}'.format(name))
+            logger.info('response={} json={}'.format(r, r.json()))
         except:
-            print('Unable to json_decode response={}'.format(r))
+            logger.error('Unable to json_decode response={}'.format(r))
             raise
 
     except Exception as e:
-        #logger.warn('Unable to validate identity - {} '.format(e))
-        print('get_suggestions error - {} '.format(e))
+        logger.error('e={}'.format(e))
         raise
 
-    #logger.info('form data has successfully validated')
     return r.json()['suggestions']
 
 
 def find_uniqname(uid):
+    """Return uniqname given by uniqname_services find endpoint"""
     try:
         data = {
             'uid': uid,
         }
-
-        print('data={}'.format(json.dumps(data)))
-        
         payload = {
             'name': 'find',
             'coded': oaep_encode(data),
         }
-
-        #r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/find', payload)
         r = make_post_request('{}/find'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
 
+        # We expect all responses to be json
         try:
-            print('response={} json={}'.format(r, r.json()))
+            logger.info('response={} json={}'.format(r, r.json()))
         except:
-            print('Unable to json_decode response={}'.format(r))
+            logger.error('Unable to json_decode response={}'.format(r))
             raise
 
     except Exception as e:
-        print('find error - {}'.format(e))
+        logger.error('e={}'.format(e))
         raise
 
     return r.json()['uid']
 
 
-#def create_uniqname(dn, uid, umid, source):
 def create_uniqname(dn, uid, umid):
+    """Call uniqname-services create endpoint"""
     try:
-        print('dn={}'.format(dn))
-        print('uid={}'.format(uid))
-        print('umid={}'.format(umid))
-        #print('source={}'.format(source))
-
         data = {
             'dn': dn,
             'uid': uid,
             'umid': umid,
-#            'source': source,
         }
-
-        print('data={}'.format(json.dumps(data)))
-
         payload = {
             'name': 'create',
             'coded': oaep_encode(data),
         }
-
         r = make_post_request('{}/create'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
 
+        # We expect all responses to be json
         try:
-            print('response={} json={}'.format(r, r.json()))
+            logger.info('response={} json={}'.format(r, r.json()))
         except:
-            print('Unable to json_decode response={}'.format(r))
+            logger.error('Unable to json_decode response={}'.format(r))
             raise
 
     except Exception as e:
-        #logger.warn('Unable to validate identity - {} '.format(e))
-        print('create error - {} '.format(e))
+        logger.error('e={}'.format(e))
         raise
 
-    #logger.info('form data has successfully validated')
-    return True
 
-
-#def reactivate_uniqname(dn, umid, source):
 def reactivate_uniqname(dn, umid):
+    """Call uniqname-services reactivate endpoint"""
     try:
         data = {
             'dn': dn,
             'umid': umid,
-            #'source': source,
         }
-
-        print('data={}'.format(json.dumps(data)))
-
         payload = {
             'name': 'reactivate',
             'coded': oaep_encode(data),
         }
-
-        #r = make_post_request('https://uniqnameservices-dev.dsc.umich.edu:8443/uniqnameservices-v2/reactivate', payload)
         r = make_post_request('{}/reactivate'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
 
+        # We expect all responses to be json
         try:
-            print('response={} json={}'.format(r, r.json()))
+            logger.info('response={} json={}'.format(r, r.json()))
         except:
-            print('Unable to json_decode response={}'.format(r))
+            logger.error('Unable to json_decode response={}'.format(r))
             raise
 
     except Exception as e:
-        print('reactivate error - {}'.format(e))
+        logger.error('e={}'.format(e))
         raise
-
-    return True
 
 
 def reset_password(uid, password):
+    """Call uniqname-services passwordReset endpoint"""
     try:
         data = {
             'uid': uid,
             'password': password,
         }
-
-        print('data={}'.format(json.dumps(data)))
-
         payload = {
             'name': 'passwordReset',
             'coded': oaep_encode(data),
         }
-
         r = make_post_request('{}/passwordReset'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
 
+        # We expect all responses to be json
         try:
-            print('response={} json={}'.format(r, r.json()))
+            logger.info('response={} json={}'.format(r, r.json()))
         except:
-            print('Unable to json_decode resposne={}'.format(r))
+            logger.error('Unable to json_decode resposne={}'.format(r))
 
     except Exception as e:
-        print('reactivate error - {}'.format(e))
+        logger.error('e={}'.format(e))
         raise
 
-    return

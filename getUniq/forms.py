@@ -47,6 +47,7 @@ class UniqnameForm(forms.Form):
     )
 
 
+# Most validation done in utils.validate_passwords
 class PasswordForm(forms.Form):
     password = forms.CharField(
         required=True,
@@ -66,11 +67,3 @@ class PasswordForm(forms.Form):
                 "Passwords do not meet requirements."
             )
 
-#        r = requests.get(
-#            '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, 'tmp', password1, password2),
-#        )
-
-#        if r.json()['evaluation']['valid'] == False:
-#            raise forms.ValidationError(
-#                "Passwords do not meet requirements."
-#            )

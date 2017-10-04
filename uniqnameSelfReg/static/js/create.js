@@ -1,10 +1,19 @@
+// Update active tab in progress bar
 $(document).ready(function(){
   $('#tab_create').addClass('active');
 });
+// Reset validity if uniqname field changes
 $("#id_uniqname").on('input', reset_uniqname_check);
+
 $("#id_suggestion_list").on('click', "a[role='button']", function() {
-    $('#id_uniqname').val($(this).html());
+    $('#id_uniqname').val($(this).html());    // set uniqname field to clicked suggestion
     onSuggestionClick();
+});
+// Prevent submit via enter in text input
+$("#id_uniqname").on('keypress', function(event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+    }
 });
 function reset_uniqname_check () {
     $("#id_claim_btn").prop("disabled", true);
@@ -135,26 +144,4 @@ function displayError(message) {
     span.setAttribute('class', 'text-danger');
     span.innerHTML = message;
     suggest_div.appendChild(span);
-}
-function createRadioElements2(suggestions) {
-    var suggest_div = document.getElementById("id_suggest_div");
-    while (suggest_div.hasChildNodes()) {
-        suggest_div.removeChild(suggest_div.lastChild);
-    }
-    for (var i=0; i < suggestions.length; i++) {
-        var div = document.createElement("div");
-        div.setAttribute('class', 'form-group');
-        var label = document.createElement("label");
-        label.setAttribute('class', 'id-verify-label');
-        var input = document.createElement("input");
-        input.setAttribute('type', 'radio');
-        input.setAttribute('value', suggestions[i]);
-        input.setAttribute('name', 'suggestionRadios');
-        input.setAttribute('onclick', 'document.getElementById("id_uniqname").value=this.value');
-        var t = document.createTextNode("\n" + suggestions[i]);
-        label.appendChild(input);
-        label.appendChild(t);
-        div.appendChild(label);
-        suggest_div.appendChild(div);
-    }
 }

@@ -10,84 +10,78 @@ from .serializers import TokenSerializer, SuggestionSerializer, UniqnameSerializ
 from getUniq.token import generate_confirmation_token
 from getUniq import uniqname_services
 
-import requests # test
+import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 @api_view(['POST'])
-#def get_token(request, format=None):
 def activation_link(request):
-    """
-    Return a user specific link to create or reactivate a uniqname
-    """
+    """Return a user specific link to create or reactivate a uniqname"""
+    logger.info('<RESTRequest: {} \'{}\' data={}>'.format(request.method, request.path, request.data))
     serializer = TokenSerializer(data=request.data)
-    print('serializer={}'.format(serializer))
 
     if serializer.is_valid():
-        print('umid={}'.format(serializer['umid'].value))
         token = generate_confirmation_token({'umid': serializer['umid'].value})
-        print('token={}'.format(token))
         activation_link = request.build_absolute_uri(reverse('create', args=[token]))
-        print('activation_link={}'.format(activation_link))
-        return Response({
+        response = Response({
             "activation_link": activation_link,
             "expiration": settings.TOKEN_EXPIRATION_SECONDS
         })
     else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    return response
 
 
 @api_view(['POST'])
 def get_suggestions(request):
-    """
-    Call uniqname services suggestions
-    """
-    print(request)
+    """Call uniqname services suggestions"""
+    logger.info('<RESTRequest: {} \'{}\' data={}>'.format(request.method, request.path, request.data))
+    logger.info(dir(request))
     serializer = SuggestionSerializer(data=request.data)
-    print('serializer={}'.format(serializer))
 
     if serializer.is_valid():
-        print('s.values={}'.format(serializer['dn'].value))
         suggestions = uniqname_services.get_suggestions(serializer['dn'].value, serializer['name_parts'].value)
-        return Response({"message": "Got some data!", "data": request.data, "suggestions": suggestions})
+        response = Response({"suggestions": suggestions})
     else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    return response
 
 
 @api_view(['POST'])
 def find_uniqname(request):
-    """
-    Call uniqname services find
-    """
-    print(request)
+    """Call uniqname services find"""
+    logger.info('<RESTRequest: {} \'{}\' data={}>'.format(request.method, request.path, request.data))
     serializer = UniqnameSerializer(data=request.data)
-    print('serializer={}'.format(serializer))
 
     if serializer.is_valid():
-        print('data={}'.format(serializer.data))
         uid = uniqname_services.find_uniqname(serializer['uid'].value)
-        print('api_uid={}'.format(uid))
-        return Response({"message": "Got some data!", "data": request.data, "uid": uid})
+        response = Response({"uid": uid})
     else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    return response
 
 
 @api_view(['GET'])
 def validate_password(request):
-    """
-    Call password validation api
-    """
-    print('request={}'.format(request))
-    print('pw={}'.format(request.GET.get('password1')))
-    print('apiuid={}'.format(request.GET.get('uid')))
+    """Call password validation api"""
+    logger.info('<RESTRequest: {} \'{}\'>'.format(request.method, request.path))
     serializer = PasswordSerializer(data=request.GET)
-    #print('serializer={}'.format(serializer))
 
     if serializer.is_valid():
-        print('data={}'.format(serializer.data))
-        print('{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, serializer['uid'].value, serializer['password1'].value, serializer['password2'].value))
         r = requests.get(
             '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, serializer['uid'].value, serializer['password1'].value, serializer['password2'].value),
         )
-        return Response(r.json())
+        response = Response(r.json())
     else:
-        print('something was not valid')
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    return response
+

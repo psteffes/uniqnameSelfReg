@@ -1,16 +1,10 @@
 from django.conf import settings
 import requests
 
-#import logging
-
-#logger = logging.getLogger(__name__)
-
-# Validate an entry is eligible based on the umichGetUniqname ObjectClass
 def getuniq_eligible(entry):
-
+    """Returns True if user is eligible to use this service"""
     try:
         eligible = False
-        print('umichgetuniqstatus={}'.format(entry['umichGetUniqStatus']))
         if entry['umichGetUniqStatus'][0] == 'ELIGIBLE' and entry['umichGetUniqEntitlingRoles'][0] != '':
             eligible = True
 
@@ -21,7 +15,7 @@ def getuniq_eligible(entry):
 
 
 def validate_passwords(uid, password1, password2):
-
+    """Returns True if passwords are valid"""
     try:
         valid = False
         r = requests.get(

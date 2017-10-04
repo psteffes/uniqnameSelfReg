@@ -1,15 +1,14 @@
 from django.conf import settings
 from itsdangerous import URLSafeTimedSerializer, TimedJSONWebSignatureSerializer
+import logging
 
-#import logging
+logger = logging.getLogger(__name__)
 
-#logger = logging.getLogger(__name__)
-
-
-# Switch to JSONWebSignatures?
 
 def generate_confirmation_token(data):
-    #serializer = URLSafeTimedSerializer(settings.SECRET_KEY)
+    """
+    Generate a JSONWebSignature. Used to send to the user to confirm email address
+    """
     serializer = TimedJSONWebSignatureSerializer(
         settings.SECRET_KEY,
         expires_in = settings.TOKEN_EXPIRATION_SECONDS,
@@ -17,23 +16,22 @@ def generate_confirmation_token(data):
     return serializer.dumps(data, salt=settings.SECURITY_CONFIRM_SALT)
 
 
-#def confirm_token(token):
-#    serializer = URLSafeTimedSerializer(settings.SECRET_KEY)
 def confirm_token(token):
-    serializer = TimedJSONWebSignatureSerializer(
-        settings.SECRET_KEY,
-        expires_in = settings.TOKEN_EXPIRATION_SECONDS,
-    )
+    """
+    Validate a JSONWebSignature. Return the json data
+    """
     try:
-        print('token={}'.format(token))
-        #print('expiration={}'.format(expiration))
+        serializer = TimedJSONWebSignatureSerializer(
+            settings.SECRET_KEY,
+            expires_in = settings.TOKEN_EXPIRATION_SECONDS,
+        )
         data = serializer.loads(
             token,
             salt=settings.SECURITY_CONFIRM_SALT,
-#            max_age=settings.TOKEN_EXPIRATION_SECONDS,
         )
     except Exception as e:
-        print('e={}'.format(e))
+        logger.error('e={}'.format(e))
         raise
+
     return data
 

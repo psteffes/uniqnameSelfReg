@@ -214,11 +214,11 @@ def test_create(request):
     if request.method == 'POST':
         form = UniqnameForm(request.POST)
         if form.is_valid():
-            print('form={}'.format(form.cleaned_data))
-            print('would have created uniqname {}'.format(form.cleaned_data['uniqname']))
+            logger.debug('form={}'.format(form.cleaned_data))
+            logger.debug('would have created uniqname {}'.format(form.cleaned_data['uniqname']))
             return redirect('password')
         else:
-            print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+            logger.debug('form.errors={}'.format(form.errors.as_json(escape_html=False)))
     else:
         dn = 'umichDirectoryID=161-0400-20150128095902514-557,ou=Identities,o=Registry'
         first_name = 'John'
@@ -228,7 +228,7 @@ def test_create(request):
         try:
             uniqname_suggestions = get_suggestions(dn, name_parts)
         except:
-            print('something failed')
+            logger.error('something failed')
             #messages.error(request, 'There was an issue generating suggestions, please try again.')
             uniqname_suggestions = ''
 
@@ -298,7 +298,6 @@ def password(request):
 
     # If this is a POST, verify the form and send them on to the success page if valid
     if request.method == 'POST':
-        print('request.POST={}'.format(request.POST))
         form = PasswordForm(request.POST)
         if form.is_valid():
             if validate_passwords(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
@@ -325,18 +324,17 @@ def test_password(request):
     uid = 'tmp'
 
     if request.method == 'POST':
-        print('request.POST={}'.format(request.POST))
         form = PasswordForm(request.POST)
         if form.is_valid():
-            print('call validate_passwords')
+            logger.debug('call validate_passwords')
             if validate_passwords(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
-                print('TEST - reset password')
+                logger.debug('TEST - reset password')
                 return redirect('success')
             else:
-                print('Passwords do not meet requirements')
+                logger.debug('Passwords do not meet requirements')
                 form.add_error(None, "Passwords do not meet requirements")
         else:
-            print('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+            logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
     else:
         form = PasswordForm()
 

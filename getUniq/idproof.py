@@ -26,7 +26,6 @@ def idproof_form_data(form_cleaned_data):
             'Accept': 'application/json',
         }
         logger.debug('post_url={} payload={}'.format(settings.IDPROOF_URL, json.dumps(payload)))
-        print('post_url={} payload={}'.format(settings.IDPROOF_URL, json.dumps(payload)))
 
         # Make the request
         r = requests.post(
@@ -40,7 +39,6 @@ def idproof_form_data(form_cleaned_data):
         # We expect all responses to be json
         try:
             logger.debug('response={} json={}'.format(r, r.json()))
-            print('response={} json={}'.format(r, r.json()))
         except:
             logger.warn('Unable to json_decode response={}'.format(r))
             raise
@@ -61,6 +59,5 @@ def idproof_form_data(form_cleaned_data):
         logger.error('BaseException={}'.format(e))
         raise
 
-    logger.info('form data has successfully validated')
     return r.json()
 
