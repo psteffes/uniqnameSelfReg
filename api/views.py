@@ -82,6 +82,7 @@ def validate_password(request):
     else:
         response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    # Response from password validation contains sensitive info, so only return status_code
+    logger.info('Return status_code={}'.format(response.status_code))
     return response
 
