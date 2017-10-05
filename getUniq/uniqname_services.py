@@ -115,6 +115,10 @@ def create_uniqname(dn, uid, umid):
             logger.error('Unable to json_decode response={}'.format(r))
             raise
 
+        if r.json()['status'] != 'success':
+            logger.error('Uniqname creation failed')
+            raise
+
     except Exception as e:
         logger.error('e={}'.format(e))
         raise
@@ -140,6 +144,10 @@ def reactivate_uniqname(dn, umid):
             logger.error('Unable to json_decode response={}'.format(r))
             raise
 
+        if r.json()['status'] != 'success':
+            logger.error('Uniqname creation failed')
+            raise
+
     except Exception as e:
         logger.error('e={}'.format(e))
         raise
@@ -163,6 +171,10 @@ def reset_password(uid, password):
             logger.info('response={} json={}'.format(r, r.json()))
         except:
             logger.error('Unable to json_decode resposne={}'.format(r))
+
+        if r.json()['status'] != 'success':
+            logger.error('Uniqname creation failed')
+            raise
 
     except Exception as e:
         logger.error('e={}'.format(e))

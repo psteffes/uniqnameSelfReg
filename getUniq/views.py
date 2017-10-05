@@ -155,8 +155,8 @@ def create(request, token):
         dn = request.session.get('dn', False)
         if form.is_valid() and dn and umid:
             logger.debug('form={}'.format(form.cleaned_data))
-            request.session['uid'] = form.cleaned_data['uniqname']
             create_uniqname(dn, form.cleaned_data['uniqname'], umid)
+            request.session['uid'] = form.cleaned_data['uniqname']
             #set_status_ineligible(dn)
             logger.info('Created uniqname={}, continue to password'.format(form.cleaned_data['uniqname']))
             return redirect('password')
@@ -268,7 +268,7 @@ def reactivate(request):
         if form.is_valid():
             # do the reactivate
             reactivate_uniqname(dn, umid)
-            set_status_ineligible(dn)
+            #set_status_ineligible(dn)
             del request.session['reactivate']
             logger.info('Reactivated uid={}, continue to password'.format(uid))
             return redirect('password')
