@@ -2410,6 +2410,10 @@ footer .footer-links li {
     pointer-events:all;
 }
 
+label a {
+    font-weight: normal;
+}
+
 /*
 .navbar .navbar-nav {
     display: inline-block;

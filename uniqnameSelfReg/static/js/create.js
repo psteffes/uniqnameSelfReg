@@ -94,7 +94,6 @@ $("#id_suggest_btn").click(function() {
         traditional: true,
         dataType: 'json',
         data: {
-            //'dn': 'ou=people,dc=umich,dc=edu',
             'name_parts': name_parts,
         },
         success: function (data) {

@@ -56,7 +56,7 @@
           {% endif %}
         </div>
         <div class="form-group">
-          <label class="formLabel">UMID:</label>
+          <label class="formLabel">UMID (<a href="http://documentation.its.umich.edu/node/668" target="_blank">About your UMID</a>):</label>
           <input type="number" id="id_umid" name="umid" class="form-control" required pattern="^\d{8}$" min="0" maxlength="8" value="{{ form.umid.value|default_if_none:"" }}" oninput="enforceMaxLength(this); enforcePattern(this)">
           {% if form.umid.errors %}
             <div class="help-block">

@@ -65,7 +65,7 @@ def verify(request):
 
                 # If the person is not eligible, tell them nicely
                 if not getuniq_eligible(entry):
-                    messages.error(request, settings.INELIGIBLE_ALERT_MSG)
+                    messages.error(request, 'You are not eligible to set up a uniqname at this time. For details about the process, see <a href="http://documentation.its.umich.edu/node/672" target="_blank">Set Up Your Uniqname and Account</a>. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.')
                     logger.warn('User is not eligible, redirect to terms')
                     return redirect('terms')
 
@@ -140,7 +140,7 @@ def create(request, token):
         logger.debug('data={}'.format(data))
     except:
         logger.warning('Confirmation link is invalid or expired, redirect to terms')
-        messages.error(request, 'The confirmation link is invalid or has expired, please verify your identity and try again.')
+        messages.error(request, 'The link you clicked has expired or is invalid. You can start the process over again below. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.')
         return redirect('terms')
 
     # Go away if you've already created a uniqname

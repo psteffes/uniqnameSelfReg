@@ -3,7 +3,7 @@
 {% block javascript %}
 <script>
 $(document).ready(function(){
-  $('#tab_confirm').addClass('active');
+  $('#tab_email').addClass('active');
 });
 </script>
 {% endblock javascript %}
@@ -12,17 +12,25 @@ $(document).ready(function(){
 
 <main id="main" class="container">
 
-  <h1 id="title" class="text-center lead">Confirm Email</h1>
+  <h1 id="title" class="text-center lead">Check Your Email</h1>
 
   <div class="row">
-    <div id="grid" class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+    <div id="grid" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
 
      <div class="panel panel-default">
      <div class="panel-body">
 
       <div id="couBox" class="form-group">
-        <p>An email has been sent to {{ email }}</p>
-        <p>Please follow the instructions in the email to proceed with creating your Uniqname</p>
+        <p>An email message has just been sent to the email address you provided. Your next steps:</p>
+        <ol>
+          <li>Check your email for a message with the subject line <b>Action Needed: U-M Uniqname & Account Setup.</b></li>
+          <li>Click the link in that email to complete the uniqname and account setup process.</li>
+        </ol> 
+        <p>Please note that the link in the email will expire in one hour.</p>
+        <ul>
+          <li>Don't see the email in your inbox? Check your spam folder.</li>
+          <li>No email? If you do not receive an email within a few minutes, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a> for help.</li>
+        </ul>
       </div>
 
      </div>
