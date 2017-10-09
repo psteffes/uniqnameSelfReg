@@ -12,7 +12,7 @@ $(document).ready(function(){
 
 <main id="main" class="container">
 
-  <h1 id="title" class="text-center lead">Activate</h1>
+  <h1 id="title" class="text-center lead">Reactivate Your Uniqname</h1>
 
   <div class="row">
     <div id="grid" class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
@@ -21,14 +21,13 @@ $(document).ready(function(){
      <div class="panel-body">
 
       <div id="couBox" class="form-group">
-        <p>You already have uniqname "{{ uid }}"</p>
-        <p>Please click the button to activate your account and then continue on to change your password</p>
+        <p>You already have uniqname: {{ uid }}</p>
       </div>
 
       <form action="" class="blueForms" method="post">
         {% csrf_token %}
         <div class="form-actions">
-          <input name="accept" class="btn btn-lg btn-blue btn-block" type="submit" value="Accept"/>
+          <input name="accept" class="btn btn-lg btn-blue btn-block" type="submit" value="Reactivate My Uniqname"/>
         </div>
       </form>
 

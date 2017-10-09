@@ -160,7 +160,6 @@ LOGGING = {
     },
 }
 
-INELIGIBLE_ALERT_MSG = config('INELIGIBLE_ALERT_MSG')
 
 # Security
 CERT_DIR = config('CERT_DIR', default=BASE_DIR + "/uniqnameSelfReg/certs/")
@@ -202,3 +201,6 @@ MESSAGE_TAGS = {
     message_constants.ERROR: 'danger',
 }
 MESSAGE_LEVEL = message_constants.DEBUG
+
+# Error Messages
+INELIGIBLE_ALERT_MSG = 'You are not eligible to set up a uniqname at this time. For details about the process, see <a href="http://documentation.its.umich.edu/node/672" target="_blank">Set Up Your Uniqname and Account</a>. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.'

@@ -85,7 +85,6 @@ $("#id_suggest_btn").click(function() {
     var name_parts = $("#id_suggest_field").val();
     name_parts = name_parts.split(/\s+/);
 
-    //$("#id_suggest_btn").html("<i id='loginSpinner' class='icon icon-spinner icon-lg animate-pulse'></i>&nbspLoading");
     $("#id_suggest_btn").prop("disabled", true);
       
     $.ajax({
@@ -108,7 +107,6 @@ $("#id_suggest_btn").click(function() {
             displayError('Unable to get suggestions, please try again');
         },
         complete: function () {
-            //$("#id_suggest_btn").html("Suggest");
             $("#id_suggest_btn").prop("disabled", false);
         },
     });
@@ -123,18 +121,11 @@ function displaySuggestions(suggestions) {
         suggest_div.appendChild(t);
         var a = document.createElement("a");
         a.setAttribute('role', 'button');
-        //a.setAttribute('onClick', "document.getElementById('id_uniqname').value=this.innerHTML");
         a.innerHTML = suggestions[i];
         suggest_div.appendChild(a);
     }
 }
 function displayError(message) {
-    //grid = document.getElementById("grid");
-    //var div = document.createElement("div");
-    //div.setAttribute('class', 'alert alert-danger alert-dismissable');
-    //div.innerHTML = message;
-    //grid.insertBefore(div, grid.childNodes[0]);
-
     var suggest_div = document.getElementById("id_suggestion_list");
     while (suggest_div.hasChildNodes()) {
         suggest_div.removeChild(suggest_div.lastChild);

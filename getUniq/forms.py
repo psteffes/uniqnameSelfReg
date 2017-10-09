@@ -41,6 +41,10 @@ class TokenForm(forms.Form):
 
 
 class UniqnameForm(forms.Form):
+    name_data = forms.CharField(
+        required=False,
+    )
+
     uniqname = forms.CharField(
         required=True,
         validators=[RegexValidator(r'^[a-zA-Z]{3,8}$', 'Enter a valid uniqname')],

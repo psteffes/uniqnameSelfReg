@@ -65,7 +65,7 @@ def verify(request):
 
                 # If the person is not eligible, tell them nicely
                 if not getuniq_eligible(entry):
-                    messages.error(request, 'You are not eligible to set up a uniqname at this time. For details about the process, see <a href="http://documentation.its.umich.edu/node/672" target="_blank">Set Up Your Uniqname and Account</a>. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.')
+                    messages.error(request, settings.INELIGIBLE_ALERT_MSG)
                     logger.warn('User is not eligible, redirect to terms')
                     return redirect('terms')
 
@@ -155,7 +155,12 @@ def create(request, token):
         dn = request.session.get('dn', False)
         if form.is_valid() and dn and umid:
             logger.debug('form={}'.format(form.cleaned_data))
-            create_uniqname(dn, form.cleaned_data['uniqname'], umid)
+            try:
+                create_uniqname(dn, form.cleaned_data['uniqname'], umid)
+            except:
+                logger.error('Create failed!')
+                messages.error(request, 'YO this failed')
+                return render(request, 'create.html', {'form': form})
             request.session['uid'] = form.cleaned_data['uniqname']
             #set_status_ineligible(dn)
             logger.info('Created uniqname={}, continue to password'.format(form.cleaned_data['uniqname']))
@@ -192,17 +197,18 @@ def create(request, token):
         else:
             last_name = entry['umichRegDisplaySurname'][0]
 
-        # Get uniqname suggestions based on the name data we have
-        try:
-            uniqname_suggestions = get_suggestions(dn, (first_name, last_name))
-        except:
-            messages.error(request, 'There was an issue generating suggestions, please try again.')
-            uniqname_suggestions = ''
+        # Initialize the form with name data
+        form = UniqnameForm({'name_data': '{} {}'.format(first_name, last_name)})
+
+    # Get uniqname suggestions based on the name data we have
+    try:
+        uniqname_suggestions = get_suggestions(dn, (first_name, last_name))
+    except:
+       #messages.error(request, 'There was an issue generating suggestions, please try again.')
+        uniqname_suggestions = ''
 
     context = {
         'form': form,
-        'first_name': first_name,
-        'last_name': last_name,
         'suggestions': uniqname_suggestions,
     }
 
@@ -306,7 +312,7 @@ def password(request):
                 logger.info('Password changed, sending to success page')
                 return redirect('success')
             else:
-                form.add_error(None, "Passwords do not meet requirements")
+                form.add_error(None, "Password does not meet requirements")
         else:
             logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
     # GET or any other request generate a blank form

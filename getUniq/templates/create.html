@@ -18,31 +18,23 @@
       <div class="panel panel-default">
         <div class="panel-body">
 
-          <!--<legend class="h4">Uniqname Suggestions</legend>
-          <p>We've provided some suggestions based on your first and last names. For more suggestions, try adding your middle name or a nick name and clicking the 'Suggest' button.</p>-->
-          <p>Uniqnames are your unique identifier that you will use to login to services at the University of Michigan. It also functions as your email address. You won't be able to change your uniqname after you claim it, so be sure to pick one you like.</p>
+          <p>You will use your uniqname when logging in to U-M websites and services. It appears on your Mcard, your MCommunity Directory profile, and many other records, as well as being part of your U-M email address. It is a permanent part of your U-M record, so choose it with care.</p>
+          <p>Uniqnames must be made up entirely of alphabetic characters and be 3-8 characters long.</p>
           <br>
 
-          <legend class="h4">1. Generate a Uniqname</legend>
-          <p>We've provided some suggestions based on your first and last names. For more suggestions, try adding your middle name or a nick name and clicking the 'Suggest' button.</p>
+          <legend class="h4">Choose from Options We Provide</legend>
+          <p>Type your name, and we'll offer some options based on it for you to choose from. Include your middle name or a nickname to allow for more options.</p>
 
-          <!--
-          <div id="suggest_group" class="form-group">
-            <label class="create-label2">Name:</label>
-            <div id="div_id_suggest" class="form-inline" style="width: 100%;">
-                <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
-                <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
-            </div>
-          </div>
-          -->
+          <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
+            {% csrf_token %}
 
           <div id="suggest_group" class="form-group">
-            <label class="create-label2">Name:</label>
+            <label class="create-label2">Your Name:</label>
             <div id="div_id_suggest" class="form-inline" style="width: 100%;">
               <div class="form-group">
-                <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" size="40" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
+                <input type="text" name="name_data" class="form-control" id="id_suggest_field" size="40" placeholder="Enter name data" value="{{ form.name_data.value|default_if_none:"" }}">
               </div>
-              <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
+              <button class="btn btn-blue" id="id_suggest_btn" type="button">Give Me Options</button>
             </div>
           </div>
 
@@ -61,11 +53,11 @@
           </div>
 
           <br>
-          <legend class="h4">2. Claim Uniqname</legend>
-          <p>If you click a suggestion above, it will appear in the box below. Alternatively, you can enter your own uniqname and click 'Check Availability' to check it's availability. Once you find a uniqname you are satisfied with, click the 'Claim Uniqname' button to continue.</p>
+          <legend class="h4">Or Request Your Own Alternative</legend>
+          <p>Check to see if the uniqname you want is available.</p>
 
-          <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
-            {% csrf_token %}
+          <!--<form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
+            {% csrf_token %}-->
 
             {% if form.errors %}
               {% for error in form.non_field_errors %}
@@ -76,44 +68,43 @@
             {% endif %}
 
             <div id="id_desired_uniqname" class="form-group">
-              <label class="create-label2">Desired Uniqname:</label>
+              <label class="create-label2">Preferred Uniqname:</label>
               <div class="form-inline">
                 <div class="col-sm-6" style="padding-left: 0px">
                   <div class="input-group">
-                    <input type="text" name="uniqname" class="form-control" id="id_uniqname" required maxlength="8" size="50" pattern="^[a-zA-Z]{3,8}$">
+                    <input type="text" name="uniqname" class="form-control" id="id_uniqname" required maxlength="8" size="50" pattern="^[a-zA-Z]{3,8}$" value="{{ form.uniqname.value|default_if_none:"" }}">
                     <span class="input-group-addon">@umich.edu</span>
                   </div>
                 <div class="help-block">A-Z only, between 3-8 characters</div>
               </div>
 
               <button class="btn btn-blue" id="id_check_btn" type="button">Check Availability</button>
-              <!--<button class="btn btn-blue" id="id_claim_btn" type="submit" disabled>Claim Uniqname</button>-->
-              <button class="btn btn-blue" id="id_claim_btn" type="button" data-href="gear" data-toggle="modal" data-target="#confirm-delete" disabled>Claim Uniqname</button>
+              <button class="btn btn-blue" id="id_claim_btn" type="button" data-href="modal" data-toggle="modal" data-target="#confirm-delete" disabled>Set Uniqname</button>
             </div>
 
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="vertical-alignment-helper">
-      <div class="modal-dialog vertical-align-center">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Confirm Submit</h4>
+            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="vertical-alignment-helper">
+                <div class="modal-dialog vertical-align-center">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title" id="myModalLabel">Confirm Submit</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>Choosing a uniqname is irreversible.</p>
+                      <p>Do you want to claim the uniqname <span id="modal-uid"><span></p>
+                    </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-blue btn-ok">Submit</button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="modal-body">
-                <p>Choosing a uniqname is irreversible.</p>
-                <p>Do you want to claim the uniqname <span id="modal-uid"><span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-blue btn-ok">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
 
           </form>
 
-      <!--panel-body-->
+        <!--panel-body-->
         </div>
       </div>
 

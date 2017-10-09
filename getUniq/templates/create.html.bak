@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main id="main" class="container">
+
+  <p id="title" class="text-center lead">Choose Uniqname</p>
+
+  <div class="row">
+    <div id="grid" class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+
+      <div id="alert-container"></div>
+
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+          <!--<legend class="h4">Uniqname Suggestions</legend>
+          <p>We've provided some suggestions based on your first and last names. For more suggestions, try adding your middle name or a nick name and clicking the 'Suggest' button.</p>-->
+          <p>Uniqnames are your unique identifier that you will use to login to services at the University of Michigan. It also functions as your email address. You won't be able to change your uniqname after you claim it, so be sure to pick one you like.</p>
+          <br>
+
+          <legend class="h4">1. Generate a Uniqname</legend>
+          <p>We've provided some suggestions based on your first and last names. For more suggestions, try adding your middle name or a nick name and clicking the 'Suggest' button.</p>
+
+          <!--
+          <div id="suggest_group" class="form-group">
+            <label class="create-label2">Name:</label>
+            <div id="div_id_suggest" class="form-inline" style="width: 100%;">
+                <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
+                <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
+            </div>
+          </div>
+          -->
+
+          <div id="suggest_group" class="form-group">
+            <label class="create-label2">Name:</label>
+            <div id="div_id_suggest" class="form-inline" style="width: 100%;">
+              <div class="form-group">
+                <input type="text" name="suggest_field" class="form-control" id="id_suggest_field" size="40" placeholder="Enter name data" value="{{ first_name|add:" "|add:last_name |default_if_none:"" }}">
+              </div>
+              <button class="btn btn-blue" id="id_suggest_btn" type="button">Suggest</button>
+            </div>
+          </div>
+
+          <div id="id_suggest_div" class="form-group uniqname-suggestions">
+            Suggestions:
+            <span id="id_suggestion_list">
+              {% if suggestions|length > 1 %}
+                {% for name in suggestions %}
+                  <!--&nbsp;&nbsp;&nbsp;&nbsp;<a role="button" onclick="document.getElementById('id_uniqname').value=this.innerHTML">{{ name }}</a>-->
+                  &nbsp;&nbsp;&nbsp;&nbsp;<a role="button">{{ name }}</a>
+                {% endfor %}
+              {% else %}
+                <span class="text-danger">There was a problem generating suggestions</span>
+              {% endif %}
+            </span>
+          </div>
+
+          <br>
+          <legend class="h4">2. Claim Uniqname</legend>
+          <p>If you click a suggestion above, it will appear in the box below. Alternatively, you can enter your own uniqname and click 'Check Availability' to check it's availability. Once you find a uniqname you are satisfied with, click the 'Claim Uniqname' button to continue.</p>
+
+          <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
+            {% csrf_token %}
+
+            {% if form.errors %}
+              {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                  {{ error|escape }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <div id="id_desired_uniqname" class="form-group">
+              <label class="create-label2">Desired Uniqname:</label>
+              <div class="form-inline">
+                <div class="col-sm-6" style="padding-left: 0px">
+                  <div class="input-group">
+                    <input type="text" name="uniqname" class="form-control" id="id_uniqname" required maxlength="8" size="50" pattern="^[a-zA-Z]{3,8}$">
+                    <span class="input-group-addon">@umich.edu</span>
+                  </div>
+                <div class="help-block">A-Z only, between 3-8 characters</div>
+              </div>
+
+              <button class="btn btn-blue" id="id_check_btn" type="button">Check Availability</button>
+              <!--<button class="btn btn-blue" id="id_claim_btn" type="submit" disabled>Claim Uniqname</button>-->
+              <button class="btn btn-blue" id="id_claim_btn" type="button" data-href="gear" data-toggle="modal" data-target="#confirm-delete" disabled>Claim Uniqname</button>
+            </div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+      <div class="modal-dialog vertical-align-center">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Submit</h4>
+            </div>
+            <div class="modal-body">
+                <p>Choosing a uniqname is irreversible.</p>
+                <p>Do you want to claim the uniqname <span id="modal-uid"><span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-blue btn-ok">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+          </form>
+
+      <!--panel-body-->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+{% endblock %}
+
+{% block javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/create.js' %}"></script>
+{% endblock javascript %}
