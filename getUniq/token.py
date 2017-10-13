@@ -80,7 +80,6 @@ def confirm_token(token):
         cipher = AESCipher(key=settings.SECRET_KEY)
         decrypted = cipher.decrypt(data)
     except Exception as e:
-        logger.error('e={}'.format(e))
         raise
 
     return json.loads(decrypted)

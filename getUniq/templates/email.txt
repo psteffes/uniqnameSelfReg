@@ -1,2 +1,17 @@
+Dear {{ first_name }} {{ last_name }},
 
-Hello. Activate your account at {{ secure_url }}
+Thank you for beginning the U-M uniqname and account setup process! Next you'll choose your uniqname and set your password. Then we will set up your account for you.
+
+Click the link below to continue. This link will expire in one hour.
+
+{{ secure_url }}
+
+For information about the setup process, see "Set Up Your Uniqname and Account."
+http://documentation.its.umich.edu/node/672
+
+Questions about your uniqname? Contact the ITS Service Center:
+-- (734) 764-4357 (4-HELP)
+-- 4HELP@umich.edu
+-- http://www.its.umich.edu/help
+
+This is an automated message; please do not reply to this email.

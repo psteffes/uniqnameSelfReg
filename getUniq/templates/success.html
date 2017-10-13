@@ -10,13 +10,28 @@
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
      {% endfor %}
 
-     <h1 class="text-center lead">Success</h1>
+     <h1 class="text-center lead">Your Uniqname Is Set!</h1>
 
      <div class="panel panel-default">
      <div class="panel-body">
 
       <div id="couBox" class="form-group">
-        <p class="h4">You did it!</p>
+        <p><b>Your Uniqname:</b> {% if uid %} {{ uid }} {% endif %}</p>
+
+        <p class="h4"><b>Set Up Security For Your Account</b></p>
+        <p>Visit <a href="https://password.it.umich.edu/pwm/public/" target="_blank">UMICH Account Management</a> to:</p>
+        <ul>
+          <li><a href="http://documentation.its.umich.edu/node/240#security" target="_blank">Set up security questions.</a> If you forget your UMICH password, you can answer your security questions to reset it yourself.</li>
+          <li><a href="http://documentation.its.umich.edu/2fa/how-turn-and-use-two-factor-weblogin" target="_blank">Turn on two-factor for Weblogin.</a> Set up two-factor for an extra layer of security for your U-M account and your personal information in Wolverine Access.</li>
+        </ul>
+
+        <p class="h4"><b>Be Patient While Your U-M Google Account Is Set Up </b></p>
+        <p>It could take as long as 24-48 hours for your new <a href="http://its.umich.edu/communication/collaboration/google/getting-started" target="_blank">Google at U-M</a> account to be set up. If you aren't able to log in right away, please wait a couple of hours and try again.</p>
+        <ul>
+          <li><b>For most people at U-M,</b> a U-M Google account provides access to a full suite of collaboration tools, including Google Mail, Calendar, Drive, Google+, and more. U-M Google Mail and Drive include unlimited storage.</li>
+          <li><b>Incoming medical students, Michigan Medicine employees, and others</b> who must comply with various federal regulations that place <a href="http://cio.umich.edu/policy/sensitive-regulated-data.php" target="_blank">restrictions on how sensitive regulated data is handled</a> receive a U-M Google account that <b>does not</b> include Mail and Calendar. They use an email and calendar service provided by Michigan Medicine instead.</li>
+          <li><b>UM-Flint campus.</b> Those on the Flint campus receive a U-M Google account that does not include Mail and Calendar. They use an email and calendar service provided by Flint Information Technology Services instead.</li>
+        </ul>
       </div>
 
     </div>

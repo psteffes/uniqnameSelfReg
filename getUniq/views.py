@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.contrib import messages
 
-from .forms import AcceptForm, VerifyForm, TokenForm, UniqnameForm, PasswordForm
+from .forms import AcceptForm, VerifyForm, UniqnameForm, PasswordForm
 from .idproof import idproof_form_data 
 from .token import generate_confirmation_token, confirm_token
 from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
@@ -82,17 +82,22 @@ def verify(request):
                 # Send an email to the user with the secure_url to continue
                 plaintext = get_template('email.txt')
                 html = get_template('email.html')
-                d = {'secure_url': secure_url}
-                subject = 'Please confirm your email'
+                d = {
+                    'secure_url': secure_url,
+                    'first_name': form.cleaned_data['first_name'],
+                    'last_name': form.cleaned_data['last_name'],
+                }
+                subject = 'Complete Your U-M Uniqname & Account Setup'
                 text_content = plaintext.render(d)
-                html_content = html.render(d)
-                email = form.cleaned_data['email']
+                #html_content = html.render(d)
+                #email = form.cleaned_data['email']
+                email = 'IAM.Testing@umich.edu'
                 send_mail(
                     subject,
                     text_content,
                     '4help@umich.edu',
                     [email],
-                    html_message=html_content,
+                    #html_message=html_content, # we are not planning on sending an html version of the message
                     fail_silently=False,
                 )
                 logger.info('Confirmation link successfully sent to {}'.format(email))
@@ -101,6 +106,7 @@ def verify(request):
                 del request.session['agreed_to_terms']
                 request.session['email'] = email 
                 return redirect('confirm_email')
+
             # idVerification failed
             else:
                 form.add_error(None, 'Unable to validate identity')
@@ -140,7 +146,7 @@ def create(request, token):
         logger.debug('data={}'.format(data))
     except:
         logger.warning('Confirmation link is invalid or expired, redirect to terms')
-        messages.error(request, 'The link you clicked has expired or is invalid. You can start the process over again below. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.')
+        messages.error(request, settings.INVALID_LINK_ALERT_MSG)
         return redirect('terms')
 
     # Go away if you've already created a uniqname
@@ -159,7 +165,7 @@ def create(request, token):
                 create_uniqname(dn, form.cleaned_data['uniqname'], umid)
             except:
                 logger.error('Create failed!')
-                messages.error(request, 'YO this failed')
+                messages.error(request, settings.UNIQNAME_CREATE_FAILED_ALERT_MSG)
                 return render(request, 'create.html', {'form': form})
             request.session['uid'] = form.cleaned_data['uniqname']
             #set_status_ineligible(dn)
@@ -171,13 +177,16 @@ def create(request, token):
     else:
         form = UniqnameForm()
         entry = mcomm_reg_umid_search(umid)
-        dn = entry.entry_dn
-        request.session['dn'] = dn    # We need dn to set password
 
         # If the user is not eligible, tell them nicely
         if not getuniq_eligible(entry):
             messages.error(request, settings.INELIGIBLE_ALERT_MSG)
             return redirect('terms')
+
+        # Add session variables
+        dn = entry.entry_dn
+        request.session['dn'] = dn    # We need dn to set password
+        request.session['roles'] = entry['umichGetUniqEntitlingRoles'][0]
 
         # If user has a uniqname, proceed as reactivate
         if 'umichRegUid' in entry:
@@ -197,8 +206,6 @@ def create(request, token):
         else:
             last_name = entry['umichRegDisplaySurname'][0]
 
-        # Initialize the form with name data
-        form = UniqnameForm({'name_data': '{} {}'.format(first_name, last_name)})
 
     # Get uniqname suggestions based on the name data we have
     try:
@@ -217,6 +224,8 @@ def create(request, token):
 
 def test_create(request):
 
+    full_name = None
+    uniqname_suggestions = None
     if request.method == 'POST':
         form = UniqnameForm(request.POST)
         if form.is_valid():
@@ -229,26 +238,23 @@ def test_create(request):
         dn = 'umichDirectoryID=161-0400-20150128095902514-557,ou=Identities,o=Registry'
         first_name = 'John'
         last_name = 'Doe'
+        full_name = '{} {}'.format(first_name, last_name)
         name_parts = (first_name, last_name)
 
-        try:
-            uniqname_suggestions = get_suggestions(dn, name_parts)
-        except:
-            logger.error('something failed')
-            #messages.error(request, 'There was an issue generating suggestions, please try again.')
-            uniqname_suggestions = ''
-
-        uid = 'batman'
-        umid = '12345678'
-        source = 'anonymous'
-        #create = uniqname_create(dn, uid, umid, source)
-
+        #form = UniqnameForm({'name_data': '{} {}'.format(first_name, last_name)})
         form = UniqnameForm()
+
+    # Get uniqname suggestions based on the name data we have
+    try:
+        uniqname_suggestions = get_suggestions(dn, (first_name, last_name))
+    except:
+        #messages.error(request, 'There was an issue generating suggestions, please try again.')
+        #uniqname_suggestions = ''
+        pass
 
     context = {
         'form': form,
-        'first_name': first_name,
-        'last_name': last_name,
+        'full_name': full_name,
         'suggestions': uniqname_suggestions,
     }
     return render(request, 'create.html', context=context)
@@ -273,7 +279,12 @@ def reactivate(request):
         form = AcceptForm(request.POST)
         if form.is_valid():
             # do the reactivate
-            reactivate_uniqname(dn, umid)
+            try:
+                reactivate_uniqname(dn, umid)
+            except:
+                logger.error('Reactivate failed!')
+                messages.error(request, settings.UNIQNAME_CREATE_FAILED_ALERT_MSG)
+                return render(request, 'reactivate.html', {'form': form, 'uid': uid})
             #set_status_ineligible(dn)
             del request.session['reactivate']
             logger.info('Reactivated uid={}, continue to password'.format(uid))
@@ -308,7 +319,7 @@ def password(request):
         if form.is_valid():
             if validate_passwords(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
                 reset_password(uid, form.cleaned_data['password'])
-                del request.session['uid']
+                #del request.session['uid']
                 logger.info('Password changed, sending to success page')
                 return redirect('success')
             else:
@@ -354,6 +365,17 @@ def test_password(request):
 def success(request):
     logger.info(request)
     logger.debug(request.session.items())
-    return render(request, 'success.html')
 
+    uid = request.session.get('uid', False)
+
+    # Make sure the user got here from a create or reactivate
+    if not uid:
+        logger.debug('User does not have a uid, redirecting to terms')
+        return redirect('terms')
+
+    context = {
+        'uid': uid,
+    }
+
+    return render(request, 'success.html', context=context)
 

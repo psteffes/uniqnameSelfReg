@@ -78,7 +78,7 @@ function displayBootstrapError(message) {
 $('#id_claim_btn').click(function() {
     $('#modal-uid').text('"' + $('#id_uniqname').val() + '"');
 });
-$('#confirm-delete').on('show.bs.modal', function(e) {
+$('#confirm-submit').on('show.bs.modal', function(e) {
     $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
 });
 $("#id_suggest_btn").click(function() {

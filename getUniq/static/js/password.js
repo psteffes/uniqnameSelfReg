@@ -125,7 +125,7 @@ function updateDisplay(resultInfo) {
             $("#id_password_help").html("Password must not be a word or simple phrase");
             $("#id_password_help").css("visibility","visible");
         } else if (issue.contains_id('validator.contains.nameparts.present')) {
-            $("#id_password_help").html("Password must not use parts of your name)");
+            $("#id_password_help").html("Password must not use parts of your name");
             $("#id_password_help").css("visibility","visible");
         } else {
             $("#id_password_help").css("visibility","hidden");

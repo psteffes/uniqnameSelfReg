@@ -10,6 +10,13 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+class UniqnameServicesError(Exception):
+    """Exception raised if uniqname_services fails or errors"""
+
+    def __init__(self, message):
+        self.message = message
+
+
 def oaep_encode(data):
     """Returns an oaep_encoded string"""
     byte_data = json.dumps(data).encode('utf-8')
@@ -26,18 +33,19 @@ def oaep_encode(data):
     return oaep_encoded
 
 
-def make_post_request(url, payload):
+def make_post_request(url, payload, timeout=settings.REQUESTS_TIMEOUT_SECONDS):
     """POST to the uniqname_services url. Return the response"""
     headers = {
         'Content-type': 'application/json',
         'Accept': 'application/json',
         'Certificate': settings.UNIQNAME_SERVICES_CLIENT_CERT,
     }
+    logger.debug('timeout={}'.format(timeout))
     return requests.post(
         url,
         data=json.dumps(payload),
         headers=headers,
-        timeout=settings.REQUESTS_TIMEOUT_SECONDS,
+        timeout=timeout,
     )
 
 
@@ -106,7 +114,7 @@ def create_uniqname(dn, uid, umid):
             'name': 'create',
             'coded': oaep_encode(data),
         }
-        r = make_post_request('{}/create'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
+        r = make_post_request('{}/create'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload, timeout=105)
 
         # We expect all responses to be json
         try:
@@ -116,8 +124,7 @@ def create_uniqname(dn, uid, umid):
             raise
 
         if r.json()['status'] != 'success':
-            logger.error('Uniqname creation failed')
-            raise
+            raise UniqnameServicesError('Uniqname create failed')
 
     except Exception as e:
         logger.error('e={}'.format(e))
@@ -135,7 +142,7 @@ def reactivate_uniqname(dn, umid):
             'name': 'reactivate',
             'coded': oaep_encode(data),
         }
-        r = make_post_request('{}/reactivate'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload)
+        r = make_post_request('{}/reactivate'.format(settings.UNIQNAME_SERVICES_URL_BASE), payload, timeout=105)
 
         # We expect all responses to be json
         try:
@@ -145,8 +152,7 @@ def reactivate_uniqname(dn, umid):
             raise
 
         if r.json()['status'] != 'success':
-            logger.error('Uniqname creation failed')
-            raise
+            raise UniqnameServicesError('Uniqname reactivation failed')
 
     except Exception as e:
         logger.error('e={}'.format(e))
@@ -173,8 +179,7 @@ def reset_password(uid, password):
             logger.error('Unable to json_decode resposne={}'.format(r))
 
         if r.json()['status'] != 'success':
-            logger.error('Uniqname creation failed')
-            raise
+            raise UniqnameServicesError('passwordReset failed')
 
     except Exception as e:
         logger.error('e={}'.format(e))

@@ -39,7 +39,6 @@ def activation_link(request):
 def get_suggestions(request):
     """Call uniqname services suggestions"""
     logger.info('<RESTRequest: {} \'{}\' data={}>'.format(request.method, request.path, request.data))
-    logger.info(dir(request))
     serializer = SuggestionSerializer(data=request.data)
 
     if serializer.is_valid():

@@ -204,3 +204,5 @@ MESSAGE_LEVEL = message_constants.DEBUG
 
 # Error Messages
 INELIGIBLE_ALERT_MSG = 'You are not eligible to set up a uniqname at this time. For details about the process, see <a href="http://documentation.its.umich.edu/node/672" target="_blank">Set Up Your Uniqname and Account</a>. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.'
+INVALID_LINK_ALERT_MSG = 'The link you clicked has expired or is invalid. You can start the process over again below. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.'
+UNIQNAME_CREATE_FAILED_ALERT_MSG = 'YO this failed'

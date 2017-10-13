@@ -28,11 +28,19 @@
           <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
             {% csrf_token %}
 
+            {% if form.errors %}
+              {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                  {{ error|escape }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
           <div id="suggest_group" class="form-group">
             <label class="create-label2">Your Name:</label>
             <div id="div_id_suggest" class="form-inline" style="width: 100%;">
               <div class="form-group">
-                <input type="text" name="name_data" class="form-control" id="id_suggest_field" size="40" placeholder="Enter name data" value="{{ form.name_data.value|default_if_none:"" }}">
+                <input type="text" name="name_data" class="form-control" id="id_suggest_field" size="40" placeholder="Enter name data" value="{{ full_name|default_if_none:"" }}">
               </div>
               <button class="btn btn-blue" id="id_suggest_btn" type="button">Give Me Options</button>
             </div>
@@ -41,7 +49,7 @@
           <div id="id_suggest_div" class="form-group uniqname-suggestions">
             Suggestions:
             <span id="id_suggestion_list">
-              {% if suggestions|length > 1 %}
+              {% if suggestions and suggestions|length > 1 %}
                 {% for name in suggestions %}
                   <!--&nbsp;&nbsp;&nbsp;&nbsp;<a role="button" onclick="document.getElementById('id_uniqname').value=this.innerHTML">{{ name }}</a>-->
                   &nbsp;&nbsp;&nbsp;&nbsp;<a role="button">{{ name }}</a>
@@ -56,18 +64,7 @@
           <legend class="h4">Or Request Your Own Alternative</legend>
           <p>Check to see if the uniqname you want is available.</p>
 
-          <!--<form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
-            {% csrf_token %}-->
-
-            {% if form.errors %}
-              {% for error in form.non_field_errors %}
-                <div class="alert alert-danger">
-                  {{ error|escape }}
-                </div>
-              {% endfor %}
-            {% endif %}
-
-            <div id="id_desired_uniqname" class="form-group">
+            <div id="id_desired_uniqname" class="form-group {% if form.uniqname.errors %}has-error{% endif %}">
               <label class="create-label2">Preferred Uniqname:</label>
               <div class="form-inline">
                 <div class="col-sm-6" style="padding-left: 0px">
@@ -79,10 +76,10 @@
               </div>
 
               <button class="btn btn-blue" id="id_check_btn" type="button">Check Availability</button>
-              <button class="btn btn-blue" id="id_claim_btn" type="button" data-href="modal" data-toggle="modal" data-target="#confirm-delete" disabled>Set Uniqname</button>
+              <button class="btn btn-blue" id="id_claim_btn" type="button" data-href="modal" data-toggle="modal" data-target="#confirm-submit" disabled>Set Uniqname</button>
             </div>
 
-            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
               <div class="vertical-alignment-helper">
                 <div class="modal-dialog vertical-align-center">
                   <div class="modal-content">
