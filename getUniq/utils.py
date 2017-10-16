@@ -25,7 +25,7 @@ def validate_passwords(uid, password1, password2):
         if r.json()['evaluation']['valid'] == True:
             valid = True
 
-    except Exception as e:
+    except Exception as e:    # pragma: no cover
         pass
 
     return valid

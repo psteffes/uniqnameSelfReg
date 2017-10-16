@@ -26,7 +26,7 @@ class AESCipher(object):
         u_type = type(b''.decode('utf8'))
         if isinstance(data, u_type):
             return data.encode('utf8')
-        return data
+        return data    # pragma: no cover
 
     def _pad(self, s):
         return s + (self.bs - len(s) % self.bs) * AESCipher.str_to_bytes(chr(self.bs - len(s) % self.bs))
@@ -68,19 +68,16 @@ def confirm_token(token):
     """
     Validate a JSONWebSignature. Return the json data
     """
-    try:
-        serializer = TimedJSONWebSignatureSerializer(
-            settings.SECRET_KEY,
-            expires_in = settings.TOKEN_EXPIRATION_SECONDS,
-        )
-        data = serializer.loads(
-            token,
-            salt=settings.SECURITY_CONFIRM_SALT,
-        )
-        cipher = AESCipher(key=settings.SECRET_KEY)
-        decrypted = cipher.decrypt(data)
-    except Exception as e:
-        raise
+    serializer = TimedJSONWebSignatureSerializer(
+        settings.SECRET_KEY,
+        expires_in = settings.TOKEN_EXPIRATION_SECONDS,
+    )
+    data = serializer.loads(
+        token,
+        salt=settings.SECURITY_CONFIRM_SALT,
+    )
+    cipher = AESCipher(key=settings.SECRET_KEY)
+    decrypted = cipher.decrypt(data)
 
     return json.loads(decrypted)
 

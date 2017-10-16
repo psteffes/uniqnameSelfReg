@@ -39,23 +39,23 @@ def idproof_form_data(form_cleaned_data):
         # We expect all responses to be json
         try:
             logger.debug('response={} json={}'.format(r, r.json()))
-        except:
+        except:    # pragma: no cover
             logger.warn('Unable to json_decode response={}'.format(r))
             raise
 
         # Return empty entry (false) for 404, otherwise raise an error
         if r.status_code == 404:
             return False
-        elif r.status_code >= 500:
+        elif r.status_code >= 500:    # pragma: no cover
             raise ValueError('500')
 
         r.raise_for_status()
 
-    except requests.exceptions.HTTPError as e:
+    except requests.exceptions.HTTPError as e:    # pragma: no cover
         logger.error('HTTPError={}'.format(e))
         raise
 
-    except Exception as e:
+    except Exception as e:    # pragma: no cover
         logger.error('BaseException={}'.format(e))
         raise
 

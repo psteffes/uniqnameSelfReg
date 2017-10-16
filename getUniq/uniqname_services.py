@@ -65,11 +65,11 @@ def get_suggestions(dn, name_parts):
         # We expect all responses to be json
         try:
             logger.info('response={} json={}'.format(r, r.json()))
-        except:
+        except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
             raise
 
-    except Exception as e:
+    except Exception as e:    # pragma: no cover
         logger.error('e={}'.format(e))
         raise
 
@@ -91,11 +91,11 @@ def find_uniqname(uid):
         # We expect all responses to be json
         try:
             logger.info('response={} json={}'.format(r, r.json()))
-        except:
+        except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
             raise
 
-    except Exception as e:
+    except Exception as e:    # pragma: no cover
         logger.error('e={}'.format(e))
         raise
 
@@ -119,7 +119,7 @@ def create_uniqname(dn, uid, umid):
         # We expect all responses to be json
         try:
             logger.info('response={} json={}'.format(r, r.json()))
-        except:
+        except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
             raise
 
@@ -147,7 +147,7 @@ def reactivate_uniqname(dn, umid):
         # We expect all responses to be json
         try:
             logger.info('response={} json={}'.format(r, r.json()))
-        except:
+        except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
             raise
 
@@ -175,8 +175,8 @@ def reset_password(uid, password):
         # We expect all responses to be json
         try:
             logger.info('response={} json={}'.format(r, r.json()))
-        except:
-            logger.error('Unable to json_decode resposne={}'.format(r))
+        except:    # pragma: no cover
+            logger.error('Unable to json_decode response={}'.format(r))
 
         if r.json()['status'] != 'success':
             raise UniqnameServicesError('passwordReset failed')

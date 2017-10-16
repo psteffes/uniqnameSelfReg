@@ -23,14 +23,14 @@ def mcomm_reg_umid_search(umid):
         if len(conn.entries) == 1:
             entry = conn.entries[0]
 
-    except Exception as e:
+    except Exception as e:    # pragma: no cover
         logger.error('error={}'.format(e))
         raise
 
     return entry
 
 
-def set_status_complete(dn):
+def set_status_complete(dn):    # pragma: no cover
     try:
         server = Server(settings.LDAP_URI)
         conn = Connection(server, settings.LDAP_USERNAME, settings.LDAP_PW, auto_bind=True)

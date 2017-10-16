@@ -11,7 +11,7 @@ from .idproof import idproof_form_data
 from .token import generate_confirmation_token, confirm_token
 from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
 from .utils import getuniq_eligible, validate_passwords
-from .myldap import mcomm_reg_umid_search, set_status_complete
+from .myldap import mcomm_reg_umid_search
 
 #test
 import json
@@ -90,8 +90,7 @@ def verify(request):
                 subject = 'Complete Your U-M Uniqname & Account Setup'
                 text_content = plaintext.render(d)
                 #html_content = html.render(d)
-                #email = form.cleaned_data['email']
-                email = 'IAM.Testing@umich.edu'
+                email = form.cleaned_data['email']
                 send_mail(
                     subject,
                     text_content,
@@ -155,6 +154,9 @@ def create(request, token):
         logger.warning('User already has a uniqname, redirect to terms')
         return redirect('terms')
 
+    # Required var
+    entry = {}
+
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         form = UniqnameForm(request.POST)
@@ -168,7 +170,6 @@ def create(request, token):
                 messages.error(request, settings.UNIQNAME_CREATE_FAILED_ALERT_MSG)
                 return render(request, 'create.html', {'form': form})
             request.session['uid'] = form.cleaned_data['uniqname']
-            #set_status_ineligible(dn)
             logger.info('Created uniqname={}, continue to password'.format(form.cleaned_data['uniqname']))
             return redirect('password')
         else:
@@ -196,16 +197,20 @@ def create(request, token):
             logger.info('User has umichRegUid={}, proceed as reactivate'.format(entry['umichRegUid'][0]))
             return redirect('reactivate')
 
-        # Kinda ugly, but we don't have name data if the admin app calls the web service
-        if 'first_name' in data:
-            first_name = data['first_name']
-        else:
-            first_name = entry['umichRegDisplayGivenName'][0]
-        if 'last_name' in data:
-            last_name = data['last_name']
-        else:
-            last_name = entry['umichRegDisplaySurname'][0]
-
+    # Kinda ugly, but we don't have name data if the admin app calls the web service
+    if 'first_name' in data:
+        first_name = data['first_name']
+    elif 'umichRegDisplayGivenName' in entry:
+        first_name = entry['umichRegDisplayGivenName'][0]
+    else:
+        first_name = ''
+    if 'last_name' in data:
+        last_name = data['last_name']
+    elif 'umichRegDisplaySurname' in entry:
+        last_name = entry['umichRegDisplaySurname'][0]
+    else:
+        last_name = ''
+    full_name = '{} {}'.format(first_name, last_name)
 
     # Get uniqname suggestions based on the name data we have
     try:
@@ -216,6 +221,7 @@ def create(request, token):
 
     context = {
         'form': form,
+        'full_name': full_name,
         'suggestions': uniqname_suggestions,
     }
 
@@ -285,7 +291,6 @@ def reactivate(request):
                 logger.error('Reactivate failed!')
                 messages.error(request, settings.UNIQNAME_CREATE_FAILED_ALERT_MSG)
                 return render(request, 'reactivate.html', {'form': form, 'uid': uid})
-            #set_status_ineligible(dn)
             del request.session['reactivate']
             logger.info('Reactivated uid={}, continue to password'.format(uid))
             return redirect('password')
