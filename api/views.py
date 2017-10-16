@@ -77,11 +77,16 @@ def validate_password(request):
         r = requests.get(
             '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, serializer['uid'].value, serializer['password1'].value, serializer['password2'].value),
         )
-        response = Response(r.json())
+        r_json = r.json()
+        # Do not return password in the response to the browser
+        try:
+            del r_json['password2']
+        except:
+            pass
+        response = Response(r_json)
     else:
         response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # Response from password validation contains sensitive info, so only return status_code
-    logger.info('Return status_code={}'.format(response.status_code))
+    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
     return response
 
