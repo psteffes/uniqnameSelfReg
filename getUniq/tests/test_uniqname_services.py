@@ -1,6 +1,8 @@
 from django.test import SimpleTestCase
 from ..uniqname_services import get_suggestions, find_uniqname, create_uniqname, reactivate_uniqname, reset_password, UniqnameServicesError
 
+import random
+import string
 import logging
 
 
@@ -11,11 +13,9 @@ class UniqnameServicesTests(SimpleTestCase):
         logging.disable(logging.CRITICAL)
         #pass
 
-
     # Reenable logging
     def tearDown(self):
         logging.disable(logging.NOTSET)
-
 
     # Make sure we get suggestions back
     def test_get_suggestions(self):
@@ -24,20 +24,17 @@ class UniqnameServicesTests(SimpleTestCase):
         result = get_suggestions(dn, name_parts)
         self.assertTrue(len(result) > 2)
 
-
     # uniqname 'test' should exist
     def test_find_uniqname(self):
         uid = 'test'
         result = find_uniqname(uid)
         self.assertEqual(result, uid)
 
-
     # uniqname 'abc123' should not exist
     def test_uniqname_not_found(self):
         uid = 'test123'
         result = find_uniqname(uid)
         self.assertEqual(result, None)
-
 
     # Do not want to test successful create
     def test_failed_create(self):
@@ -48,7 +45,6 @@ class UniqnameServicesTests(SimpleTestCase):
             create_uniqname(dn, uid, umid)
         self.assertEqual(context.exception.message, 'Uniqname create failed')
 
-
     # Do not want to test successful reactivate
     def test_failed_reactivate(self):
         dn = 'umichDirectory=999,ou=Identities,o=Registry'
@@ -57,18 +53,14 @@ class UniqnameServicesTests(SimpleTestCase):
             reactivate_uniqname(dn, umid)
         self.assertEqual(context.exception.message, 'Uniqname reactivation failed')
 
-
     # Test both successful and failed password change
     def test_password_change(self):
-        pw = 'Sup3rS3cret!@'
-
+        # Generate a random password
+        pw = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(55))
         # Test success
-        #result = reset_password('stesting', pw)    # Will raise an error if it fails
+        reset_password('stesting', pw)    # Will raise an error if it fails
 
-        ### Bug is preventing this test from working
         # Test failure
-        #result = reset_password('test123', pw)
-        #print(result)
-        #with self.assertRaises(UniqnameServicesError) as context: 
-        #    reset_password('test123', pw)
-        #self.assertEqual(context.exception.message, 'passwordReset failed')
+        with self.assertRaises(UniqnameServicesError) as context: 
+            reset_password('test123', pw)
+        self.assertEqual(context.exception.message, 'passwordReset failed')

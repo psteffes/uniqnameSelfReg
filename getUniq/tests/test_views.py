@@ -32,6 +32,11 @@ class ViewsTests(SimpleTestCase):
         response = self.client.post(reverse('terms'), data)
         self.assertEqual(response.status_code, 200)
 
+    # confirm_email
+    def test_confirm_email_redirect(self):
+        response = self.client.get(reverse('confirm_email'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/uniqname/terms/')
 
     # This process requires a valid session, so we need to do it all in one big funciton
     # https://code.djangoproject.com/ticket/10899
@@ -66,15 +71,15 @@ class ViewsTests(SimpleTestCase):
         self.assertIn('Unable to validate identity', str(response.content))
         # POST Ineligble user
         data = {
-            'first_name': 'locked',
-            'last_name': 'out',
-            'birth_date': '05/05/5555',
-            'umid': '55555555',
-            'email': 'no@mail.com',
+            'first_name': 'ROBert',
+            'last_name': 'tesTED',
+            'birth_date': '10/19/1980',
+            'umid': '72817970',
+            'email': 'rtested@noemail.com',
         }
-        #response = self.client.post(reverse('verify'), data)
-        #self.assertEqual(response.status_code, 302)
-        #self.assertIn('User is not eligible', response.content)
+        response = self.client.post(reverse('verify'), data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/uniqname/terms/')
         # POST Eligible user
         data = {
             'first_name': 'suZie',
@@ -102,10 +107,17 @@ class ViewsTests(SimpleTestCase):
         # Get the secure url through the API
         response = self.client.post(reverse('activation_link'), data)
         self.assertEqual(response.status_code, 200)
-        response = self.client.get(response.json()['activation_link'])
+        secure_url = response.json()['activation_link']
+        response = self.client.get(secure_url)
         self.assertEqual(response.status_code, 200)
         session = self.client.session
         self.assertTrue(session['dn'])
         self.assertTrue(session['roles'])
-        # POST invalid data
-        
+        # POST invalid form
+        data = {'invalid': 'invalid'}
+        response = self.client.post(secure_url, data)
+        self.assertEqual(response.status_code, 200)
+        # Do not test valid POST which results in create
+        # Without doing a create we can't test the password page
+
+ 

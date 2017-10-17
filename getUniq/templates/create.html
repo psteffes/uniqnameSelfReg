@@ -4,7 +4,7 @@
 
 <main id="main" class="container">
 
-  <p id="title" class="text-center lead">Set Uniqname</p>
+  <h1 id="title" class="text-center lead">Set Uniqname</h1>
 
   <div class="row">
     <div id="grid" class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
@@ -36,22 +36,21 @@
               {% endfor %}
             {% endif %}
 
-          <div id="suggest_group" class="form-group">
-            <label class="create-label2">Your Name:</label>
-            <div id="div_id_suggest" class="form-inline" style="width: 100%;">
+          <div id="suggest-group" class="form-group">
+            <label class="control-label" for="suggest-field">Your Name:</label>
+            <div id="div-suggest" class="form-inline" style="width: 100%;">
               <div class="form-group">
-                <input type="text" name="name_data" class="form-control" id="id_suggest_field" size="40" placeholder="Enter name data" value="{{ full_name|default_if_none:"" }}">
+                <input type="text" name="suggest-field" class="form-control" id="suggest-field" size="40" placeholder="Enter name data" value="{{ full_name|default_if_none:"" }}">
               </div>
-              <button class="btn btn-blue" id="id_suggest_btn" type="button">Give Me Options</button>
+              <button class="btn btn-blue" id="suggest-btn" type="button">Give Me Options</button>
             </div>
           </div>
 
-          <div id="id_suggest_div" class="form-group uniqname-suggestions">
+          <div id="suggest-div" class="form-group uniqname-suggestions">
             Suggestions:
-            <span id="id_suggestion_list">
+            <span id="suggestion-list">
               {% if suggestions and suggestions|length > 1 %}
                 {% for name in suggestions %}
-                  <!--&nbsp;&nbsp;&nbsp;&nbsp;<a role="button" onclick="document.getElementById('id_uniqname').value=this.innerHTML">{{ name }}</a>-->
                   &nbsp;&nbsp;&nbsp;&nbsp;<a role="button">{{ name }}</a>
                 {% endfor %}
               {% else %}
@@ -64,19 +63,19 @@
           <legend class="h4">Or Request Your Own Alternative</legend>
           <p>Check to see if the uniqname you want is available.</p>
 
-            <div id="id_desired_uniqname" class="form-group {% if form.uniqname.errors %}has-error{% endif %}">
-              <label class="create-label2">Preferred Uniqname:</label>
+            <div id="desired-uniqname" class="form-group {% if form.uniqname.errors %}has-error{% endif %}">
+              <label class="control-label" for="uniqname">Preferred Uniqname:</label>
               <div class="form-inline">
                 <div class="col-sm-6" style="padding-left: 0px">
                   <div class="input-group">
-                    <input type="text" name="uniqname" class="form-control" id="id_uniqname" required maxlength="8" size="50" pattern="^[a-zA-Z]{3,8}$" value="{{ form.uniqname.value|default_if_none:"" }}">
+                    <input type="text" name="uniqname" class="form-control" id="uniqname" required maxlength="8" size="50" pattern="^[a-zA-Z]{3,8}$" value="{{ form.uniqname.value|default_if_none:"" }}">
                     <span class="input-group-addon">@umich.edu</span>
                   </div>
                 <div class="help-block">A-Z only, between 3-8 characters</div>
               </div>
 
-              <button class="btn btn-blue" id="id_check_btn" type="button">Check Availability</button>
-              <button class="btn btn-blue" id="id_claim_btn" type="button" data-href="modal" data-toggle="modal" data-target="#confirm-submit" disabled>Set Uniqname</button>
+              <button class="btn btn-blue" id="check-btn" type="button">Check Availability</button>
+              <button class="btn btn-blue" id="claim-btn" type="button" data-href="modal" data-toggle="modal" data-target="#confirm-submit" disabled>Set Uniqname</button>
             </div>
 
             <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

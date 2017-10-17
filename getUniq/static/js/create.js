@@ -1,36 +1,36 @@
 // Update active tab in progress bar
 $(document).ready(function(){
-  $('#tab_create').addClass('active');
+  $('#tab-create').addClass('active');
 });
 // Reset validity if uniqname field changes
-$("#id_uniqname").on('input', reset_uniqname_check);
+$("#uniqname").on('input', reset_uniqname_check);
 
-$("#id_suggestion_list").on('click', "a[role='button']", function() {
-    $('#id_uniqname').val($(this).html());    // set uniqname field to clicked suggestion
+$("#suggestion-list").on('click', "a[role='button']", function() {
+    $('#uniqname').val($(this).html());    // set uniqname field to clicked suggestion
     onSuggestionClick();
 });
 // Prevent submit via enter in text input
-$("#id_uniqname").on('keypress', function(event) {
+$("#uniqname").on('keypress', function(event) {
     if (event.keyCode == 13) {
         event.preventDefault();
     }
 });
 function reset_uniqname_check () {
-    $("#id_claim_btn").prop("disabled", true);
-    $("#id_check_btn").removeClass("btn-success btn-danger");
-    $("#id_check_btn").addClass("btn-blue");
-    $("#id_check_btn").html("Check Availability");
-    $("#id_check_btn").prop("disabled", false);
+    $("#claim-btn").prop("disabled", true);
+    $("#check-btn").removeClass("btn-success btn-danger");
+    $("#check-btn").addClass("btn-blue");
+    $("#check-btn").html("Check Availability");
+    $("#check-btn").prop("disabled", false);
 }
 function onSuggestionClick () {
     reset_uniqname_check();
     checkAvailability();
 }
-$("#id_check_btn").click(checkAvailability);
+$("#check-btn").click(checkAvailability);
 function checkAvailability() {
-    var uid = $("#id_uniqname").val();
+    var uid = $("#uniqname").val();
 
-    $("#id_check_btn").prop("disabled", true);
+    $("#check-btn").prop("disabled", true);
 
     $.ajax({
         type: 'POST',
@@ -41,20 +41,20 @@ function checkAvailability() {
         },
         success: function (data) {
             if (data.uid) {
-                $("#id_claim_btn").prop("disabled", true);
-                $("#id_check_btn").removeClass("btn-blue");
-                $("#id_check_btn").addClass("btn-danger");
-                $("#id_check_btn").html('Not Available <span class="glyphicon glyphicon-remove"</span>');
+                $("#claim-btn").prop("disabled", true);
+                $("#check-btn").removeClass("btn-blue");
+                $("#check-btn").addClass("btn-danger");
+                $("#check-btn").html('Not Available <span class="glyphicon glyphicon-remove"</span>');
             }
             else {
-                $("#id_check_btn").removeClass("btn-blue");
-                $("#id_check_btn").addClass("btn-success");
-                $("#id_check_btn").html('Available <span class="glyphicon glyphicon-ok"</span>');
-                $("#id_claim_btn").prop("disabled", false);
+                $("#check-btn").removeClass("btn-blue");
+                $("#check-btn").addClass("btn-success");
+                $("#check-btn").html('Available <span class="glyphicon glyphicon-ok"</span>');
+                $("#claim-btn").prop("disabled", false);
             }
         },
         error: function () {
-            $("#id_check_btn").prop("disabled", false);
+            $("#check-btn").prop("disabled", false);
             displayBootstrapError('Something happened');
         },
     });
@@ -75,17 +75,17 @@ function displayBootstrapError(message) {
     div.appendChild(t);
     container.insertBefore(div, container.childNodes[0]);
 }
-$('#id_claim_btn').click(function() {
-    $('#modal-uid').text('"' + $('#id_uniqname').val() + '"');
+$('#claim-btn').click(function() {
+    $('#modal-uid').text('"' + $('#uniqname').val() + '"');
 });
 $('#confirm-submit').on('show.bs.modal', function(e) {
     $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
 });
-$("#id_suggest_btn").click(function() {
-    var name_parts = $("#id_suggest_field").val();
+$("#suggest-btn").click(function() {
+    var name_parts = $("#suggest-field").val();
     name_parts = name_parts.split(/\s+/);
 
-    $("#id_suggest_btn").prop("disabled", true);
+    $("#suggest-btn").prop("disabled", true);
       
     $.ajax({
         type: 'POST',
@@ -107,12 +107,12 @@ $("#id_suggest_btn").click(function() {
             displayError('Unable to get suggestions, please try again');
         },
         complete: function () {
-            $("#id_suggest_btn").prop("disabled", false);
+            $("#suggest-btn").prop("disabled", false);
         },
     });
 });
 function displaySuggestions(suggestions) {
-    var suggest_div = document.getElementById("id_suggestion_list");
+    var suggest_div = document.getElementById("suggestion-list");
     while (suggest_div.hasChildNodes()) {
         suggest_div.removeChild(suggest_div.lastChild);
     }
@@ -126,7 +126,7 @@ function displaySuggestions(suggestions) {
     }
 }
 function displayError(message) {
-    var suggest_div = document.getElementById("id_suggestion_list");
+    var suggest_div = document.getElementById("suggestion-list");
     while (suggest_div.hasChildNodes()) {
         suggest_div.removeChild(suggest_div.lastChild);
     }

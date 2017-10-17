@@ -1,16 +1,16 @@
 $(document).ready(function(){
-  $('#tab_password').addClass('active');
+  $('#tab-password').addClass('active');
 });
-$('#id_password, #id_confirm_password').keyup(function() {
-    var password1 = $('#id_password').val()
-    var password2 = $("#id_confirm_password").val();
+$('#password, #confirm-password').keyup(function() {
+    var password1 = $('#password').val()
+    var password2 = $("#confirm-password").val();
 
     if ( password2.length == 0 ) {
-        $("#id_confirm_help").css("visibility","hidden");
+        $("#confirm-help").css("visibility","hidden");
     }
 
     if ( password1.length == 0 ) {
-        $("#id_password_help").css("visibility","hidden");
+        $("#password-help").css("visibility","hidden");
         resetPWDisplay();
         return;
     }
@@ -30,9 +30,9 @@ $('#id_password, #id_confirm_password').keyup(function() {
     });
 });
 function resetPWDisplay() {
-    $("#min_char").removeClass();
-    $("#min_char").addClass("glyphicon glyphicon-chevron-right");
-    $("#min_char").css("color","initial");
+    $("#min-char").removeClass();
+    $("#min-char").addClass("glyphicon glyphicon-chevron-right");
+    $("#min-char").css("color","initial");
 
     $("#meet3").removeClass();
     $("#meet3").addClass("glyphicon glyphicon-chevron-right");
@@ -59,13 +59,13 @@ function updateDisplay(resultInfo) {
 
     if (issue) {
         if (issue.contains_id('javax.validation.constraints.Size.message')) {
-            $("#min_char").removeClass("glyphicon-ok glyphicon-chevron-right");
-            $("#min_char").addClass("glyphicon-remove");
-            $("#min_char").css("color","#FF0004");
+            $("#min-char").removeClass("glyphicon-ok glyphicon-chevron-right");
+            $("#min-char").addClass("glyphicon-remove");
+            $("#min-char").css("color","#FF0004");
         } else {
-            $("#min_char").removeClass("glyphicon-remove glyphicon-chevron-right");
-            $("#min_char").addClass("glyphicon-ok");
-            $("#min_char").css("color","#00A41E");
+            $("#min-char").removeClass("glyphicon-remove glyphicon-chevron-right");
+            $("#min-char").addClass("glyphicon-ok");
+            $("#min-char").css("color","#00A41E");
         }
 
         if (issue.contains_id('validator.rules')) {
@@ -119,31 +119,31 @@ function updateDisplay(resultInfo) {
         }
 
         if (issue.contains_id('validator.contains.ascending.pattern')) {
-            $("#id_password_help").html("Password must not contain ascending or descending pattern (abcd, 1234, etc)");
-            $("#id_password_help").css("visibility","visible");
+            $("#password-help").html("Password must not contain ascending or descending pattern (abcd, 1234, etc)");
+            $("#password-help").css("visibility","visible");
         } else if (issue.contains_id('validator.contains.dictionary.word')) {
-            $("#id_password_help").html("Password must not be a word or simple phrase");
-            $("#id_password_help").css("visibility","visible");
+            $("#password-help").html("Password must not be a word or simple phrase");
+            $("#password-help").css("visibility","visible");
         } else if (issue.contains_id('validator.contains.nameparts.present')) {
-            $("#id_password_help").html("Password must not use parts of your name");
-            $("#id_password_help").css("visibility","visible");
+            $("#password-help").html("Password must not use parts of your name");
+            $("#password-help").css("visibility","visible");
         } else {
-            $("#id_password_help").css("visibility","hidden");
+            $("#password-help").css("visibility","hidden");
         }
 
-        if ( $('#id_confirm_password').val().length > 0 && issue.contains_id('validator.matches.error') ) {
-            $("#id_confirm_help").css("visibility","visible");
-            $("#id_submit_btn").prop("disabled",true);
+        if ( $('#confirm-password').val().length > 0 && issue.contains_id('validator.matches.error') ) {
+            $("#confirm-help").css("visibility","visible");
+            $("#submit-btn").prop("disabled",true);
         } else {
-            $("#id_confirm_help").css("visibility","hidden");
+            $("#confirm-help").css("visibility","hidden");
         }
     }
 
     if (resultInfo.evaluation.valid == true ) {
-        $("#id_confirm_help").css("visibility","hidden");
-        $("#id_submit_btn").prop("disabled",false);
+        $("#confirm-help").css("visibility","hidden");
+        $("#submit-btn").prop("disabled",false);
     } else {
-        $("#id_submit_btn").prop("disabled",true);
+        $("#submit-btn").prop("disabled",true);
     }
 }
 Array.prototype.contains_id = function (needle) {
