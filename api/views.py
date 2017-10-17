@@ -81,7 +81,7 @@ def validate_password(request):
         # Do not return password in the response to the browser
         try:
             del r_json['password2']
-        except:
+        except:    # pragma: no cover
             pass
         response = Response(r_json)
     else:
