@@ -16,8 +16,8 @@ $('#password, #confirm-password').keyup(function() {
     }
 
     $.ajax({
-        type: 'GET',
-        url: '/api/validate_password',
+        type: 'POST',
+        url: '/api/validate_password/',
         dataType: 'json',
         data: {
             'uid': $('#uid').text(),

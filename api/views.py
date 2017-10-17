@@ -67,11 +67,11 @@ def find_uniqname(request):
     return response
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def validate_password(request):
-    """Call password validation api"""
+    """Call pwm password validation api"""
     logger.info('<RESTRequest: {} \'{}\'>'.format(request.method, request.path))
-    serializer = PasswordSerializer(data=request.GET)
+    serializer = PasswordSerializer(data=request.data)
 
     if serializer.is_valid():
         r = requests.get(
@@ -87,6 +87,7 @@ def validate_password(request):
     else:
         response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    # Response json is very chatty so we are not logging it
+    logger.info('Return status_code={}'.format(response.status_code))
     return response
 
