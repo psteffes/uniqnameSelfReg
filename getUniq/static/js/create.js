@@ -4,7 +4,7 @@ $(document).ready(function(){
 });
 // Reset validity if uniqname field changes
 $("#uniqname").on('input', reset_uniqname_check);
-
+// When a user clicks a suggestion
 $("#suggestion-list").on('click', "a[role='button']", function() {
     $('#uniqname').val($(this).html());    // set uniqname field to clicked suggestion
     onSuggestionClick();
@@ -18,7 +18,7 @@ $("#uniqname").on('keypress', function(event) {
 function reset_uniqname_check () {
     $("#claim-btn").prop("disabled", true);
     $("#check-btn").removeClass("btn-success btn-danger");
-    $("#check-btn").addClass("btn-blue");
+    $("#check-btn").addClass("btn-default");
     $("#check-btn").html("Check Availability");
     $("#check-btn").prop("disabled", false);
 }
@@ -29,6 +29,12 @@ function onSuggestionClick () {
 $("#check-btn").click(checkAvailability);
 function checkAvailability() {
     var uid = $("#uniqname").val();
+
+    // validate before going any further
+    if ($("#uniqname")[0].checkValidity() == false) {
+        $('#uniqnameForm').find(':submit').click();
+        return;
+    }
 
     $("#check-btn").prop("disabled", true);
 
@@ -42,12 +48,12 @@ function checkAvailability() {
         success: function (data) {
             if (data.uid) {
                 $("#claim-btn").prop("disabled", true);
-                $("#check-btn").removeClass("btn-blue");
+                $("#check-btn").removeClass("btn-default");
                 $("#check-btn").addClass("btn-danger");
                 $("#check-btn").html('Not Available <span class="glyphicon glyphicon-remove"</span>');
             }
             else {
-                $("#check-btn").removeClass("btn-blue");
+                $("#check-btn").removeClass("btn-default");
                 $("#check-btn").addClass("btn-success");
                 $("#check-btn").html('Available <span class="glyphicon glyphicon-ok"</span>');
                 $("#claim-btn").prop("disabled", false);
@@ -55,7 +61,7 @@ function checkAvailability() {
         },
         error: function () {
             $("#check-btn").prop("disabled", false);
-            displayBootstrapError('Something happened');
+            displayBootstrapError('Sorry, there was a system error—our fault, not yours. Please try again. If the error continues, contact the ITS Service Center at 734-764-HELP (764-4357) or 4HELP@umich.edu.');
         },
     });
 }
@@ -81,7 +87,15 @@ $('#claim-btn').click(function() {
 $('#confirm-submit').on('show.bs.modal', function(e) {
     $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
 });
-$("#suggest-btn").click(function() {
+// Enter key to get suggestions when in suggestion field
+$("#suggest-field").on('keypress', function(event) {
+    if (event.keyCode == 13) {
+        event.preventDefault();
+        getSuggestions();
+    }
+});
+$("#suggest-btn").click(getSuggestions);
+function getSuggestions() {
     var name_parts = $("#suggest-field").val();
     name_parts = name_parts.split(/\s+/);
 
@@ -100,7 +114,7 @@ $("#suggest-btn").click(function() {
                 displaySuggestions(data.suggestions);
             }
             else {
-                displayError('Not enough results returned');
+                displayError('No suggestions available. Add a middle name or nickname, then click <strong>More Suggestions.</strong>');
             }
         },
         error: function (data) {
@@ -110,7 +124,7 @@ $("#suggest-btn").click(function() {
             $("#suggest-btn").prop("disabled", false);
         },
     });
-});
+}
 function displaySuggestions(suggestions) {
     var suggest_div = document.getElementById("suggestion-list");
     while (suggest_div.hasChildNodes()) {

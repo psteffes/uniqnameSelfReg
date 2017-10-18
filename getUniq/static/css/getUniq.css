@@ -1399,7 +1399,7 @@ input[type=radio][disabled] {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    border: 1px solid transparent;
+    //border: 1px solid transparent;    // btn-default needs border
     border-radius: 4px
 }
 
@@ -1441,7 +1441,7 @@ fieldset[disabled] a.btn {
 
 .btn-default {
     color: #333;
-    background-color: #fff
+    background-color: whitesmoke;
 }
 
 .btn-default.focus,

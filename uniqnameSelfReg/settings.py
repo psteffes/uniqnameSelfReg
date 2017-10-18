@@ -205,6 +205,7 @@ MESSAGE_TAGS = {
 MESSAGE_LEVEL = message_constants.DEBUG
 
 # Error Messages
+INVALID_MATCH_MSG = "We're sorry, our system was not able to retrieve your record. Please double check your information and try again. If the retrieval error continues, contact the ITS Service Center at 734-764-HELP (764-4357) or 4HELP@umich.edu."
 INELIGIBLE_ALERT_MSG = 'You are not eligible to set up a uniqname at this time. For details about the process, see <a href="http://documentation.its.umich.edu/node/672" target="_blank">Set Up Your Uniqname and Account</a>. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.'
 INVALID_LINK_ALERT_MSG = 'The link you clicked has expired or is invalid. You can start the process over again below. If you need help, contact the <a href="http://its.umich.edu/help/" target="_blank">ITS Service Center</a>.'
-UNIQNAME_CREATE_FAILED_ALERT_MSG = 'YO this failed'
+RETRY_MSG = 'Sorry, there was a system error—our fault, not yours. Please try again. If the error continues, contact the ITS Service Center at 734-764-HELP (764-4357) or 4HELP@umich.edu.'

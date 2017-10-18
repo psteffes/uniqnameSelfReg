@@ -18,31 +18,27 @@
       <div class="panel panel-default">
         <div class="panel-body">
 
-          <p>You will use your uniqname when logging in to U-M websites and services. It appears on your Mcard, your MCommunity Directory profile, and many other records, as well as being part of your U-M email address. It is a permanent part of your U-M record, so choose it with care.</p>
-          <p>Uniqnames must be made up entirely of alphabetic characters and be 3-8 characters long.</p>
+          <p><strong>Choose carefully!</strong> Your uniqname is a permanent part of your U-M record and your email address (uniqname@umich.edu).</p>
           <br>
 
-          <legend class="h4">Choose from Options We Provide</legend>
-          <p>Type your name, and we'll offer some options based on it for you to choose from. Include your middle name or a nickname to allow for more options.</p>
+          <legend class="h4">Click a suggestion or enter a request</legend>
 
-          <form id="id-verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
-            {% csrf_token %}
-
-            {% if form.errors %}
-              {% for error in form.non_field_errors %}
-                <div class="alert alert-danger">
-                  {{ error|escape }}
-                </div>
-              {% endfor %}
-            {% endif %}
+          {% if form.errors %}
+            {% for error in form.non_field_errors %}
+              <div class="alert alert-danger">
+                {{ error|escape }}
+              </div>
+            {% endfor %}
+          {% endif %}
 
           <div id="suggest-group" class="form-group">
-            <label class="control-label" for="suggest-field">Your Name:</label>
+            <label class="control-label" for="suggest-field">Suggestions are based on:</label>
             <div id="div-suggest" class="form-inline" style="width: 100%;">
               <div class="form-group">
                 <input type="text" name="suggest-field" class="form-control" id="suggest-field" size="40" placeholder="Enter name data" value="{{ full_name|default_if_none:"" }}">
               </div>
-              <button class="btn btn-blue" id="suggest-btn" type="button">Give Me Options</button>
+              <!--<button class="btn btn-blue" id="suggest-btn" type="button">More Suggestions</button>-->
+              <button class="btn btn-default" id="suggest-btn" type="button">Get Suggestions</button>
             </div>
           </div>
 
@@ -51,31 +47,37 @@
             <span id="suggestion-list">
               {% if suggestions and suggestions|length > 1 %}
                 {% for name in suggestions %}
-                  &nbsp;&nbsp;&nbsp;&nbsp;<a role="button">{{ name }}</a>
+                  &nbsp;&nbsp;&nbsp;&nbsp;<a role="button" tabindex="0">{{ name }}</a>
                 {% endfor %}
               {% else %}
-                <span class="text-danger">There was a problem generating suggestions</span>
+                <span class="text-danger">No suggestions available. Add a middle name or nickname, then click <strong>Get Suggestions.</strong></span>
               {% endif %}
             </span>
           </div>
 
           <br>
-          <legend class="h4">Or Request Your Own Alternative</legend>
-          <p>Check to see if the uniqname you want is available.</p>
+
+          <form id="uniqnameForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
+            {% csrf_token %}
 
             <div id="desired-uniqname" class="form-group {% if form.uniqname.errors %}has-error{% endif %}">
-              <label class="control-label" for="uniqname">Preferred Uniqname:</label>
+              <label class="control-label" for="uniqname">I want my uniqname to be:</label>
               <div class="form-inline">
                 <div class="col-sm-6" style="padding-left: 0px">
                   <div class="input-group">
                     <input type="text" name="uniqname" class="form-control" id="uniqname" required maxlength="8" size="50" pattern="^[a-zA-Z]{3,8}$" value="{{ form.uniqname.value|default_if_none:"" }}">
                     <span class="input-group-addon">@umich.edu</span>
                   </div>
-                <div class="help-block">A-Z only, between 3-8 characters</div>
+                <div class="help-block">a-z only, between 3-8 characters</div>
               </div>
 
-              <button class="btn btn-blue" id="check-btn" type="button">Check Availability</button>
-              <button class="btn btn-blue" id="claim-btn" type="button" data-href="modal" data-toggle="modal" data-target="#confirm-submit" disabled>Set Uniqname</button>
+              <button class="btn btn-default" id="check-btn" type="button">Check Availability</button>
+              <!--<button class="btn btn-blue" id="claim-btn" type="button" data-href="modal" data-toggle="modal" data-target="#confirm-submit" disabled>Set Uniqname</button>-->
+            </div>
+
+            <div class="form-actions">
+              <!--<input id="submit-btn" class="btn btn-lg btn-blue btn-block" type="submit" value="Submit" >-->
+              <button class="btn btn-lg btn-blue btn-block" id="claim-btn" type="button" data-href="modal" data-toggle="modal" data-target="#confirm-submit" disabled>Set Uniqname</button>
             </div>
 
             <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

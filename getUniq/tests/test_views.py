@@ -68,7 +68,7 @@ class ViewsTests(SimpleTestCase):
         }
         response = self.client.post(reverse('verify'), data)
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Unable to validate identity', str(response.content))
+        self.assertIn('not able to retrieve your record', str(response.content))
         # POST Ineligble user
         data = {
             'first_name': 'ROBert',

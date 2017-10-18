@@ -108,7 +108,7 @@ def verify(request):
 
             # idVerification failed
             else:
-                form.add_error(None, 'Unable to validate identity')
+                form.add_error(None, settings.INVALID_MATCH_MSG)
         # Form not valid
         else:
             logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -167,7 +167,7 @@ def create(request, token):
                 create_uniqname(dn, form.cleaned_data['uniqname'], umid)
             except:
                 logger.error('Create failed!')
-                messages.error(request, settings.UNIQNAME_CREATE_FAILED_ALERT_MSG)
+                messages.error(request, settings.RETRY_MSG)
                 return render(request, 'create.html', {'form': form})
             request.session['uid'] = form.cleaned_data['uniqname']
             logger.info('Created uniqname={}, continue to password'.format(form.cleaned_data['uniqname']))
