@@ -37,7 +37,7 @@ class VerifyForm(forms.Form):
 class UniqnameForm(forms.Form):
     uniqname = forms.CharField(
         required=True,
-        validators=[RegexValidator(r'^[a-zA-Z]{3,8}$', 'Enter a valid uniqname.')],
+        validators=[RegexValidator(r'^[a-z]{3,8}$', 'Enter a valid uniqname.')],
     )
 
 

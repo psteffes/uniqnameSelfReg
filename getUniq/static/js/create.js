@@ -82,7 +82,7 @@ function displayBootstrapError(message) {
     container.insertBefore(div, container.childNodes[0]);
 }
 $('#claim-btn').click(function() {
-    $('#modal-uid').text('"' + $('#uniqname').val() + '"');
+    $('#modal-uid').text($('#uniqname').val());
 });
 $('#confirm-submit').on('show.bs.modal', function(e) {
     $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));

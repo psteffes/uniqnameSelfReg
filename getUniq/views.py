@@ -255,7 +255,7 @@ def test_create(request):    # pragma: no cover
         uniqname_suggestions = get_suggestions(dn, (first_name, last_name))
     except:
         #messages.error(request, 'There was an issue generating suggestions, please try again.')
-        #uniqname_suggestions = ''
+        uniqname_suggestions = ''
         pass
 
     context = {
@@ -289,7 +289,7 @@ def reactivate(request):
                 reactivate_uniqname(dn, umid)
             except:
                 logger.error('Reactivate failed!')
-                messages.error(request, settings.UNIQNAME_CREATE_FAILED_ALERT_MSG)
+                messages.error(request, settings.RETRY_MSG)
                 return render(request, 'reactivate.html', {'form': form, 'uid': uid})
             del request.session['reactivate']
             logger.info('Reactivated uid={}, continue to password'.format(uid))
@@ -323,7 +323,12 @@ def password(request):
         form = PasswordForm(request.POST)
         if form.is_valid():
             if validate_passwords(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
-                reset_password(uid, form.cleaned_data['password'])
+                try:
+                    reset_password(uid, form.cleaned_data['password'])
+                except:
+                    logger.error('Password reset failed!')
+                    messages.error(request, settings.RETRY_MSG)
+                    return render(request, 'password.html', {'form': form, 'uid': uid})
                 #del request.session['uid']
                 logger.info('Password changed, sending to success page')
                 return redirect('success')

@@ -120,4 +120,10 @@ class ViewsTests(SimpleTestCase):
         # Do not test valid POST which results in create
         # Without doing a create we can't test the password page
 
- 
+    # Make sure the test_ pages are not up
+    #def test_pages_not_up(self): 
+    #    response = self.client.get(reverse('test_create'))
+    #    self.assertEqual(response.status_code, 404)
+    #    response = self.client.get(reverse('test_password'))
+    #    self.assertEqual(response.status_code, 404)
+

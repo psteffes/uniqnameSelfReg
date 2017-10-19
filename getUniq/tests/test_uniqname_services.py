@@ -20,7 +20,7 @@ class UniqnameServicesTests(SimpleTestCase):
     # Make sure we get suggestions back
     def test_get_suggestions(self):
         dn = 'umichDirectoryID=161-0700-20171005021110588-585,ou=Identities,o=Registry'
-        name_parts = ('John', 'Doe')
+        name_parts = ['John', 'Doe']
         result = get_suggestions(dn, name_parts)
         self.assertTrue(len(result) > 2)
 

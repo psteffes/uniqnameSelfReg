@@ -20,6 +20,7 @@ def validate_passwords(uid, password1, password2):
         valid = False
         r = requests.get(
             '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, 'uid', password1, password2),
+            timeout=settings.REQUESTS_TIMEOUT_SECONDS,
         )
 
         if r.json()['evaluation']['valid'] == True:

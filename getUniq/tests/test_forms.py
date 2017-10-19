@@ -69,7 +69,7 @@ class UniqnameFormTests(SimpleTestCase):
 
     # Test validation
     def test_valid_data(self):
-        form = UniqnameForm({'uniqname': 'megaMAN'})
+        form = UniqnameForm({'uniqname': 'megaman'})
         self.assertTrue(form.is_valid())
 
 
@@ -95,6 +95,10 @@ class UniqnameFormTests(SimpleTestCase):
         self.assertEqual(form.errors['uniqname'], ['Enter a valid uniqname.'])
 
         form = UniqnameForm({'uniqname': 'abc!!!'})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['uniqname'], ['Enter a valid uniqname.'])
+
+        form = UniqnameForm({'uniqname': 'abcXYZ'})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['uniqname'], ['Enter a valid uniqname.'])
 
