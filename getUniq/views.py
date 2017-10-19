@@ -228,7 +228,7 @@ def create(request, token):
     return render(request, 'create.html', context=context)
 
 
-def test_create(request):
+def test_create(request):    # pragma: no cover
 
     full_name = None
     uniqname_suggestions = None
@@ -342,7 +342,7 @@ def password(request):
     return render(request, 'password.html', context=context) 
 
 
-def test_password(request):
+def test_password(request):    # pragma: no cover
     uid = 'tmp'
 
     if request.method == 'POST':
