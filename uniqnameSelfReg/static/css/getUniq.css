@@ -7,12 +7,6 @@
 
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
-
-.password-group {
-  padding: 8px;
-  margin-bottom: 15px;
-}
-
 hr,
 img {
     border: 0
@@ -2410,13 +2404,7 @@ label a {
     font-weight: normal;
 }
 
-/*
-.navbar .navbar-nav {
-    display: inline-block;
-    float: none;
-    margin-bottom: -10px;
+.password-group {
+  padding: 8px;
+  margin-bottom: 15px;
 }
-.navbar .navbar-collapse {
-    text-align: center;
-}
-*/

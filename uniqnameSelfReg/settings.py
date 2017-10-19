@@ -91,7 +91,8 @@ CACHES = {
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 14400
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
