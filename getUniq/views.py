@@ -2,13 +2,12 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.core.mail import send_mail
-from django.template.loader import get_template
 from django.contrib import messages
 
 from .forms import AcceptForm, VerifyForm, UniqnameForm, PasswordForm
 from .idproof import idproof_form_data 
 from .token import generate_confirmation_token, confirm_token
+from .email import send_confirm_email
 from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
 from .utils import getuniq_eligible, validate_passwords
 from .myldap import mcomm_reg_umid_search
@@ -59,56 +58,48 @@ def verify(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required)
             logger.debug('form={}'.format(form.cleaned_data))
-            entry = idproof_form_data(form.cleaned_data)
-            if entry:
-                logger.debug('entry={}'.format(entry))
+            try:
+                entry = idproof_form_data(form.cleaned_data)
+                if entry:
+                    logger.debug('entry={}'.format(entry))
 
-                # If the person is not eligible, tell them nicely
-                if not getuniq_eligible(entry):
-                    messages.error(request, settings.INELIGIBLE_ALERT_MSG)
-                    logger.warn('User is not eligible, redirect to terms')
-                    return redirect('terms')
+                    # If the person is not eligible, tell them nicely
+                    if not getuniq_eligible(entry):
+                        messages.error(request, settings.INELIGIBLE_ALERT_MSG)
+                        logger.warn('User is not eligible, redirect to terms')
+                        return redirect('terms')
 
-                # Generate the token and build the secure link
-                data = {
-                    'umid': entry['umichRegEntityID'][0],
-                    'first_name': form.cleaned_data['first_name'],
-                    'last_name': form.cleaned_data['last_name'],
-                }
-                token = generate_confirmation_token(data)
-                secure_url = request.build_absolute_uri(reverse('create', args=[token]))
-                logger.debug('secure_url={}'.format(secure_url))
+                    # Generate the token and build the secure link
+                    data = {
+                        'umid': entry['umichRegEntityID'][0],
+                        'first_name': form.cleaned_data['first_name'],
+                        'last_name': form.cleaned_data['last_name'],
+                    }
+                    token = generate_confirmation_token(data)
+                    secure_url = request.build_absolute_uri(reverse('create', args=[token]))
+                    logger.debug('secure_url={}'.format(secure_url))
 
-                # Send an email to the user with the secure_url to continue
-                plaintext = get_template('email.txt')
-                html = get_template('email.html')
-                d = {
-                    'secure_url': secure_url,
-                    'first_name': form.cleaned_data['first_name'],
-                    'last_name': form.cleaned_data['last_name'],
-                }
-                subject = 'Complete Your U-M Uniqname & Account Setup'
-                text_content = plaintext.render(d)
-                #html_content = html.render(d)
-                email = form.cleaned_data['email']
-                send_mail(
-                    subject,
-                    text_content,
-                    '4help@umich.edu',
-                    [email],
-                    #html_message=html_content, # we are not planning on sending an html version of the message
-                    fail_silently=False,
-                )
-                logger.info('Confirmation link successfully sent to {}'.format(email))
+                    # Send an email to the user with the secure_url to continue
+                    send_confirm_email(
+                        form.cleaned_data['email'],
+                        form.cleaned_data['first_name'],
+                        form.cleaned_data['last_name'],
+                        secure_url,
+                    )
+                    logger.info('Confirmation link successfully sent to {}'.format(form.cleaned_data['email']))
 
-                # Update session and send them to confirm_email
-                del request.session['agreed_to_terms']
-                request.session['email'] = email 
-                return redirect('confirm_email')
+                    # Update session and send them to confirm_email
+                    del request.session['agreed_to_terms']
+                    request.session['email'] = form.cleaned_data['email']
+                    return redirect('confirm_email')
 
-            # idVerification failed
-            else:
-                form.add_error(None, settings.INVALID_MATCH_MSG)
+                # idVerification failed
+                else:
+                    form.add_error(None, settings.INVALID_MATCH_MSG)
+            except Exception as e:
+                logger.error('Something failed! e={}'.format(e))
+                messages.error(request, settings.RETRY_MSG)
+                return render(request, 'verify.html', {'form': form})
         # Form not valid
         else:
             logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -170,6 +161,7 @@ def create(request, token):
                 messages.error(request, settings.RETRY_MSG)
                 return render(request, 'create.html', {'form': form})
             request.session['uid'] = form.cleaned_data['uniqname']
+            request.session['pw_eligible'] = True
             logger.info('Created uniqname={}, continue to password'.format(form.cleaned_data['uniqname']))
             return redirect('password')
         else:
@@ -216,7 +208,7 @@ def create(request, token):
     try:
         uniqname_suggestions = get_suggestions(dn, (first_name, last_name))
     except:
-       #messages.error(request, 'There was an issue generating suggestions, please try again.')
+        #messages.error(request, 'There was an issue generating suggestions, please try again.')
         uniqname_suggestions = ''
 
     context = {
@@ -293,6 +285,7 @@ def reactivate(request):
                 return render(request, 'reactivate.html', {'form': form, 'uid': uid})
             del request.session['reactivate']
             logger.info('Reactivated uid={}, continue to password'.format(uid))
+            request.session['pw_eligible'] = True
             return redirect('password')
         else:
             logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -312,10 +305,16 @@ def password(request):
     logger.debug(request.session.items())
 
     uid = request.session.get('uid', False)
+    pw_eligible = request.session.get('pw_eligible', False)
 
     # Make sure the user got here from a create or reactivate
+    if not pw_eligible:
+        logger.debug('User is not eligible to change password, redirecting to terms')
+        return redirect('terms')
+
+    # Make sure we have a uid
     if not uid:
-        logger.debug('User does not have a uid, redirecting to terms')
+        logger.error('User does not have a uid in the session, redirecting to terms')
         return redirect('terms')
 
     # If this is a POST, verify the form and send them on to the success page if valid
@@ -329,7 +328,7 @@ def password(request):
                     logger.error('Password reset failed!')
                     messages.error(request, settings.RETRY_MSG)
                     return render(request, 'password.html', {'form': form, 'uid': uid})
-                #del request.session['uid']
+                del request.session['pw_eligible']
                 logger.info('Password changed, sending to success page')
                 return redirect('success')
             else:
@@ -377,14 +376,25 @@ def success(request):
     logger.debug(request.session.items())
 
     uid = request.session.get('uid', False)
+    roles = request.session.get('roles', 'none')
 
     # Make sure the user got here from a create or reactivate
     if not uid:
         logger.debug('User does not have a uid, redirecting to terms')
         return redirect('terms')
 
+    student = False
+    employee = False
+    if roles:
+        if 'student' in roles.lower():
+            student = True
+        if 'employee' in roles.lower():
+            employee = True
+
     context = {
         'uid': uid,
+        'employee': employee,
+        'student': student,
     }
 
     return render(request, 'success.html', context=context)

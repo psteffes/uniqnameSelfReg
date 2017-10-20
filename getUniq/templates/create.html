@@ -68,7 +68,7 @@
                     <input type="text" name="uniqname" class="form-control" id="uniqname" required maxlength="8" size="50" pattern="^[a-z]{3,8}$" value="{{ form.uniqname.value|default_if_none:"" }}">
                     <span class="input-group-addon">@umich.edu</span>
                   </div>
-                <div class="help-block">a-z only, between 3-8 characters</div>
+                <div class="help-block">a-z lowercase only, between 3-8 characters</div>
                 </div>
 
               <button class="btn btn-default" id="check-btn" type="button">Check Availability</button>

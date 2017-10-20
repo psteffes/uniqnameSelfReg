@@ -193,6 +193,8 @@ EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
+EMAIL_FROM_ADDRESS = 'IT Accounts <it.accounts@umich.edu>'
+EMAIL_REPLY_TO = 'do-not-reply@umich.edu'
 
 # Requests
 REQUESTS_TIMEOUT_SECONDS = config('REQUESTS_TIMEOUT_SECONDS', default=5, cast=int)

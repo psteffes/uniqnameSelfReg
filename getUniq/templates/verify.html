@@ -12,6 +12,10 @@
       <form id="verifyForm" action="" class="blueForms" method="post" onsubmit="disableSubmitBtn()">
         {% csrf_token %}
 
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+
         {% if form.errors %}
           {% for error in form.non_field_errors %}
             <div class="alert alert-danger">

@@ -53,7 +53,7 @@ def get_suggestions(dn, name_parts):
     """Returns suggestions given by uniqname_services suggestions endpoint"""
     try:
         data = {
-            'dn': dn,     # dn does not seem to add any value to this call
+            #'dn': None,     # This does not seem to be needed
             'nameParts': name_parts,
         }
         payload = {

@@ -4,34 +4,60 @@
 <main id="main" class="container">
 
   <div class="row">
-    <div id="grid" class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+    <div id="grid" class="col-sm-10 col-sm-offset-1 col-xs-12">
 
-     {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-     {% endfor %}
+      {% for message in messages %}
+         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
 
-     <h1 class="text-center lead">Your Uniqname Is Set!</h1>
+      <h1 class="text-center lead">Your Uniqname Is Set!</h1>
 
-     <div class="panel panel-default">
-     <div class="panel-body">
+      <div class="panel panel-default">
+        <div class="panel-body">
 
-      <div id="couBox" class="form-group">
-        <p><b>Your Uniqname:</b> {% if uid %} {{ uid }} {% endif %}</p>
+          <div class="form-group">
+            <p>Please print or save the information below if you would like to refer to it later.</p>
+            <p><strong>Your Uniqname:</strong> {% if uid %} {{ uid }} {% endif %}</p>
 
-        <p class="h4"><b>Set Up Security For Your Account</b></p>
-        <p>Visit <a href="https://password.it.umich.edu/pwm/public/" target="_blank">UMICH Account Management</a> to:</p>
-        <ul>
-          <li><a href="http://documentation.its.umich.edu/node/240#security" target="_blank">Set up security questions.</a> If you forget your UMICH password, you can answer your security questions to reset it yourself.</li>
-          <li><a href="http://documentation.its.umich.edu/2fa/how-turn-and-use-two-factor-weblogin" target="_blank">Turn on two-factor for Weblogin.</a> Set up two-factor for an extra layer of security for your U-M account and your personal information in Wolverine Access.</li>
-        </ul>
+            <div {% if not employee %}hidden{% endif %}>
+              <p class="h4"><strong>Information for New Employees</strong></p>
+              <ul>
+                <li><strong>Verify employment information next.</strong> Watch for an email from the university with a subject line of <i>Verify Information for U-M Employment (ACTION REQUIRED)</i>. Follow the instructions in that email to log in to <a href="https://wolverineaccess.umich.edu/" target="_blank">Wolverine Access</a> and finalize your employment information.</li>
+                <li><strong>You will get U-M computing services on your hire date.</strong> On your official hire date (usually your first day of work), the <a href="http://its.umich.edu/computing/computers-software/standard-computing-services" target="_blank">standard computing services</a> will be set up for you. These include your U-M Goople Apps account and more.</li>
+                <li><strong>Your U-M email is determined by your campus.</strong></li>
+                <ul>
+                  <li><a href="http://its.umich.edu/communication/collaboration/google/getting-started" target="_blank"><strong>U-M Google Mail and Calendar.</strong></a> Used by faculty, staff, and students at UM-Ann Arbor and UM-Dearborn.</li>
+                  <li><a href="https://hits.medicine.umich.edu/communication/collaboration/outlook" target="_blank"><strong>Michigan Medicine Outlook Mail and Calendar.</strong></a> Used by faculty, staff, and students at Michigan Medicine, as well as those in departments that must comply with various federal regulations that place <a href="http://cio.umich.edu/policy/sensitive-regulated-data.php" target="_blank">restrictions on how sensitive regulated data is handled.</a></li>
+                  <li><a href="https://www.umflint.edu/its/its-services-email" target="_blank"><strong>UM-Flint Email and Calendar.</strong></a> Used by faculty, staff, and students at UM-Flint.</li>
+                </ul>
+              </ul>
+            </div>
 
-        <p class="h4"><b>Be Patient While Your U-M Google Account Is Set Up </b></p>
-        <p>It could take as long as 24-48 hours for your new <a href="http://its.umich.edu/communication/collaboration/google/getting-started" target="_blank">Google at U-M</a> account to be set up. If you aren't able to log in right away, please wait a couple of hours and try again.</p>
-        <ul>
-          <li><b>For most people at U-M,</b> a U-M Google account provides access to a full suite of collaboration tools, including Google Mail, Calendar, Drive, Google+, and more. U-M Google Mail and Drive include unlimited storage.</li>
-          <li><b>Incoming medical students, Michigan Medicine employees, and others</b> who must comply with various federal regulations that place <a href="http://cio.umich.edu/policy/sensitive-regulated-data.php" target="_blank">restrictions on how sensitive regulated data is handled</a> receive a U-M Google account that <b>does not</b> include Mail and Calendar. They use an email and calendar service provided by Michigan Medicine instead.</li>
-          <li><b>UM-Flint campus.</b> Those on the Flint campus receive a U-M Google account that does not include Mail and Calendar. They use an email and calendar service provided by Flint Information Technology Services instead.</li>
-        </ul>
+            <div {% if not student %}hidden{% endif %}>
+              <p class="h4"><strong>Information for New Students</strong></p>
+              <ul>
+                <li><strong>Your U-M computing services.</strong> U-M <a href="http://its.umich.edu/computing/computers-software/standard-computing-services" target="_blank">standard computing services</a> are set up for you automatically as soon as your uniqname and account are set up. It may take a few minutes for the setup process to finish. If you can't log in to a U-M service right away, please wait a few minutes and try again.</li>
+                <li><strong>Stop using your Friend account.</strong> The UMICH Friend account that you used to apply to U-M should not be used after your new U-M account is set up.</li>
+                <li><strong>Check your U-M email regularly.</strong> Email is the university's preferred communication medium, and many offices want to begin sharing information with you.</li>
+                <li><strong>Your U-M email is determined by your campus.</strong></li>
+                <ul>
+                  <li><a href="http://its.umich.edu/communication/collaboration/google/getting-started" target="_blank"><strong>U-M Google Mail and Calendar.</strong></a> Used by faculty, staff, and students at UM-Ann Arbor and UM-Dearborn.</li>
+                  <li><a href="https://hits.medicine.umich.edu/communication/collaboration/outlook" target="_blank"><strong>Michigan Medicine Outlook Mail and Calendar.</strong></a> Used by faculty, staff, and students at Michigan Medicine, as well as those in departments that must comply with various federal regulations that place <a href="http://cio.umich.edu/policy/sensitive-regulated-data.php" target="_blank">restrictions on how sensitive regulated data is handled.</a></li>
+                  <li><a href="https://www.umflint.edu/its/its-services-email" target="_blank"><strong>UM-Flint Email and Calendar.</strong></a> Used by faculty, staff, and students at UM-Flint.</li>
+                </ul>
+              </ul>
+            </div>
+
+            <p class="h4"><strong>Set Up Security For Your Account</strong></p>
+            <p>Visit <a href="https://password.it.umich.edu/pwm/public/" target="_blank">UMICH Account Management</a> to:</p>
+            <ul>
+              <li><a href="http://documentation.its.umich.edu/node/240#security" target="_blank">Set up security questions.</a> If you forget your UMICH password, you can answer your security questions to reset it yourself.</li>
+              <li><a href="http://documentation.its.umich.edu/2fa/how-turn-and-use-two-factor-weblogin" target="_blank">Turn on two-factor for Weblogin.</a> Set up two-factor for an extra layer of security for your U-M account and your personal information in Wolverine Access.</li>
+            </ul>
+          </div>
+
+        <!--panel-->
+        </div>
       </div>
 
     </div>
