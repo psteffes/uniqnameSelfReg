@@ -1,5 +1,6 @@
 from django.test import SimpleTestCase
 from django.urls import reverse
+from django.urls.exceptions import NoReverseMatch
 from ..views import terms, verify, confirm_email, create, password, success
 
 import logging
@@ -121,9 +122,7 @@ class ViewsTests(SimpleTestCase):
         # Without doing a create we can't test the password page
 
     # Make sure the test_ pages are not up
-    #def test_pages_not_up(self): 
-    #    response = self.client.get(reverse('test_create'))
-    #    self.assertEqual(response.status_code, 404)
-    #    response = self.client.get(reverse('test_password'))
-    #    self.assertEqual(response.status_code, 404)
+    def test_pages_not_up(self): 
+        self.assertRaises(NoReverseMatch, lambda: reverse('test_create'))
+        self.assertRaises(NoReverseMatch, lambda: reverse('test_password'))
 
