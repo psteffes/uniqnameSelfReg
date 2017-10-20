@@ -5,9 +5,12 @@ $(document).ready(function(){
 // Reset validity if uniqname field changes
 $("#uniqname").on('input', reset_uniqname_check);
 // When a user clicks a suggestion
-$("#suggestion-list").on('click', "a[role='button']", function() {
-    $('#uniqname').val($(this).html());    // set uniqname field to clicked suggestion
-    onSuggestionClick();
+$("#suggestion-list").on('click keypress', "a[role='button']", function(event) {
+    if (event.type == 'click' || event.keyCode == 13) {
+        event.preventDefault();
+        $('#uniqname').val($(this).html());    // set uniqname field to clicked suggestion
+        onSuggestionClick();
+    }
 });
 // Prevent submit via enter in text input
 $("#uniqname").on('keypress', function(event) {
@@ -114,7 +117,7 @@ function getSuggestions() {
                 displaySuggestions(data.suggestions);
             }
             else {
-                displayError('No suggestions available. Add a middle name or nickname, then click <strong>More Suggestions.</strong>');
+                displayError('No suggestions available. Add a middle name or nickname, then click <strong>Get Suggestions.</strong>');
             }
         },
         error: function (data) {
@@ -135,6 +138,7 @@ function displaySuggestions(suggestions) {
         suggest_div.appendChild(t);
         var a = document.createElement("a");
         a.setAttribute('role', 'button');
+        a.setAttribute('tabindex', '0');
         a.innerHTML = suggestions[i];
         suggest_div.appendChild(a);
     }

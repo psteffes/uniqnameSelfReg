@@ -10,6 +10,6 @@ urlpatterns = [
     url(r'^reactivate/$', views.reactivate, name='reactivate'),
     url(r'^password/$', views.password, name='password'),
     url(r'^success/$', views.success, name='success'),
-    #url(r'^test_create/$', views.test_create, name='test_create'),
-    #url(r'^test_password/$', views.test_password, name='test_password'),
+    url(r'^test_create/$', views.test_create, name='test_create'),
+    url(r'^test_password/$', views.test_password, name='test_password'),
 ]
