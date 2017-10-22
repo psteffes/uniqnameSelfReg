@@ -64,7 +64,12 @@ def get_suggestions(dn, name_parts):
 
         # We expect all responses to be json
         try:
-            logger.info('response={} json={}'.format(r, r.json()))
+            r_json = r.json()
+            try:
+                del r_json['password']
+            except:    # pragma: no cover
+                pass
+            logger.info('response={} json={}'.format(r, r_json))
         except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
             raise
@@ -90,7 +95,12 @@ def find_uniqname(uid):
 
         # We expect all responses to be json
         try:
-            logger.info('response={} json={}'.format(r, r.json()))
+            r_json = r.json()
+            try:
+                del r_json['password']
+            except:    # pragma: no cover
+                pass
+            logger.info('response={} json={}'.format(r, r_json))
         except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
             raise
@@ -118,7 +128,12 @@ def create_uniqname(dn, uid, umid):
 
         # We expect all responses to be json
         try:
-            logger.info('response={} json={}'.format(r, r.json()))
+            r_json = r.json()
+            try:
+                del r_json['password']
+            except:    # pragma: no cover
+                pass
+            logger.info('response={} json={}'.format(r, r_json))
         except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
             raise
@@ -146,7 +161,12 @@ def reactivate_uniqname(dn, umid):
 
         # We expect all responses to be json
         try:
-            logger.info('response={} json={}'.format(r, r.json()))
+            r_json = r.json()
+            try:
+                del r_json['password']
+            except:    # pragma: no cover
+                pass
+            logger.info('response={} json={}'.format(r, r_json))
         except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
             raise
@@ -174,7 +194,12 @@ def reset_password(uid, password):
 
         # We expect all responses to be json
         try:
-            logger.info('response={} json={}'.format(r, r.json()))
+            r_json = r.json()
+            try:
+                del r_json['password']
+            except:    # pragma: no cover
+                pass
+            logger.info('response={} json={}'.format(r, r_json))
         except:    # pragma: no cover
             logger.error('Unable to json_decode response={}'.format(r))
 
