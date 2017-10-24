@@ -23,8 +23,8 @@ class UtilTests(SimpleTestCase):
     # Test valid passwords
     def test_valid_pw(self):
         uid = 'test'
-        pw1 = 'Sup3rS3cret!@'
-        pw2 = 'Sup3rS3cret!@'
+        pw1 = '<Sup3r%S3cret!@_[]'
+        pw2 = '<Sup3r%S3cret!@_[]'
         self.assertTrue(validate_passwords(uid, pw1, pw2))
 
     # Test invalid passwords

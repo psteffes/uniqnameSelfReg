@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 from .serializers import TokenSerializer, SuggestionSerializer, UniqnameSerializer, PasswordSerializer
 from getUniq.token import generate_confirmation_token
+from getUniq.utils import validate_passwords
 from getUniq import uniqname_services
 
 import requests
@@ -74,9 +75,16 @@ def validate_password(request):
     serializer = PasswordSerializer(data=request.data)
 
     if serializer.is_valid():
+        params = {
+            'uid': serializer['uid'].value,
+            'password1': serializer['password1'].value,
+            'password2': serializer['password2'].value,
+        }
         r = requests.get(
-            '{}&uid={}&password1={}&password2={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, serializer['uid'].value, serializer['password1'].value, serializer['password2'].value),
-        )
+            settings.PASSWORD_VALIDATION_URL_BASE,
+            params=params,
+            timeout=settings.REQUESTS_TIMEOUT_SECONDS,
+        ) 
         r_json = r.json()
         # Do not return password in the response to the browser
         try:
