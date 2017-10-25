@@ -1,17 +1,15 @@
 from django.conf import settings
 from django.shortcuts import render
 from django.urls import reverse
-
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 from .serializers import TokenSerializer, SuggestionSerializer, UniqnameSerializer, PasswordSerializer
 from getUniq.token import generate_confirmation_token
-from getUniq.utils import validate_passwords
 from getUniq import uniqname_services
 
 import requests
+import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -75,16 +73,17 @@ def validate_password(request):
     serializer = PasswordSerializer(data=request.data)
 
     if serializer.is_valid():
-        params = {
+        payload = {
+            'showDetails': 'on',
             'uid': serializer['uid'].value,
             'password1': serializer['password1'].value,
             'password2': serializer['password2'].value,
         }
-        r = requests.get(
+        r = requests.post(
             settings.PASSWORD_VALIDATION_URL_BASE,
-            params=params,
+            data=payload,
             timeout=settings.REQUESTS_TIMEOUT_SECONDS,
-        ) 
+        )
         r_json = r.json()
         # Do not return password in the response to the browser
         try:

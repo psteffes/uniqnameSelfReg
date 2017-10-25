@@ -139,7 +139,7 @@ function updateDisplay(resultInfo) {
         }
     }
 
-    if (resultInfo.evaluation.valid == true ) {
+    if ( $('#password').val() == $('#confirm-password').val() && resultInfo.evaluation.valid == true) {
         $("#confirm-help").css("visibility","hidden");
         $("#submit-btn").prop("disabled",false);
     } else {

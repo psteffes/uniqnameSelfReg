@@ -137,8 +137,8 @@ class ValidatePasswordTests(SimpleTestCase):
         self.assertFalse(response.json()['evaluation']['valid'])
 
         # Strong password
-        password1 = 'suP3rS3cret!'
-        password2 = 'suP3rS3cret!'
+        password1 = 'suP3rS3cret![]_%'
+        password2 = 'suP3rS3cret![]_%'
         data = {
             'uid': uid,
             'password1': password1,

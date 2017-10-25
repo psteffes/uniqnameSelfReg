@@ -41,7 +41,7 @@ class UniqnameForm(forms.Form):
     )
 
 
-# Most validation done in utils.validate_passwords
+# Most validation done in utils.validate_passwords_final
 class PasswordForm(forms.Form):
     password = forms.CharField(
         required=True,

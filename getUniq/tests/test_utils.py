@@ -1,5 +1,5 @@
 from django.test import SimpleTestCase
-from ..utils import getuniq_eligible, validate_passwords
+from ..utils import getuniq_eligible, validate_passwords_final
 
 
 class UtilTests(SimpleTestCase):
@@ -23,13 +23,13 @@ class UtilTests(SimpleTestCase):
     # Test valid passwords
     def test_valid_pw(self):
         uid = 'test'
-        pw1 = '<Sup3r%S3cret!@_[]'
-        pw2 = '<Sup3r%S3cret!@_[]'
-        self.assertTrue(validate_passwords(uid, pw1, pw2))
+        pw1 = '<Sup3r%S3cret!@_[]%'
+        pw2 = '<Sup3r%S3cret!@_[]%'
+        self.assertTrue(validate_passwords_final(uid, pw1, pw2))
 
     # Test invalid passwords
     def test_invalid_pw(self):
         uid = 'test'
         pw1 = 'secret1'
         pw2 = 'secret2'
-        self.assertFalse(validate_passwords(uid, pw1, pw2))
+        self.assertFalse(validate_passwords_final(uid, pw1, pw2))

@@ -14,18 +14,18 @@ def getuniq_eligible(entry):
     return eligible
 
 
-def validate_passwords(uid, password1, password2):
+def validate_passwords_final(uid, password1, password2):
     """Returns True if passwords are valid"""
     try:
         valid = False
-        params = {
+        payload = {
             'uid': uid,
             'password1': password1,
             'password2': password2,
         }
-        r = requests.get(
+        r = requests.post(
             settings.PASSWORD_VALIDATION_URL_BASE,
-            params=params, 
+            data=payload, 
             timeout=settings.REQUESTS_TIMEOUT_SECONDS,
         )
         if r.json()['evaluation']['valid'] == True:

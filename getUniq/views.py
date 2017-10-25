@@ -9,7 +9,7 @@ from .idproof import idproof_form_data
 from .token import generate_confirmation_token, confirm_token
 from .email import send_confirm_email
 from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
-from .utils import getuniq_eligible, validate_passwords
+from .utils import getuniq_eligible, validate_passwords_final
 from .myldap import mcomm_reg_umid_search
 
 #test
@@ -321,7 +321,7 @@ def password(request):
     if request.method == 'POST':
         form = PasswordForm(request.POST)
         if form.is_valid():
-            if validate_passwords(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
+            if validate_passwords_final(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
                 try:
                     reset_password(uid, form.cleaned_data['password'])
                 except:
@@ -352,8 +352,8 @@ def test_password(request):    # pragma: no cover
     if request.method == 'POST':
         form = PasswordForm(request.POST)
         if form.is_valid():
-            logger.debug('call validate_passwords')
-            if validate_passwords(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
+            logger.debug('call validate_passwords_final')
+            if validate_passwords_final(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
                 logger.debug('TEST - reset password')
                 return redirect('success')
             else:
