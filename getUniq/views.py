@@ -65,8 +65,12 @@ def verify(request):
 
                     # If the person is not eligible, tell them nicely
                     if not getuniq_eligible(entry):
-                        messages.error(request, settings.INELIGIBLE_ALERT_MSG)
-                        logger.warn('User is not eligible, redirect to terms')
+                        if 'umichRegUid' in entry:
+                            messages.error(request, settings.HAS_UNIQNAME_ALERT_MSG.format(entry['umichRegUid'][0]))
+                            logger.warn('User is not eligible and has uid={}, redirect to terms'.format(entry['umichRegUid'][0]))
+                        else:
+                            messages.error(request, settings.INELIGIBLE_ALERT_MSG)
+                            logger.warn('User is not eligible, redirect to terms')
                         return redirect('terms')
 
                     # Generate the token and build the secure link
@@ -173,7 +177,12 @@ def create(request, token):
 
         # If the user is not eligible, tell them nicely
         if not getuniq_eligible(entry):
-            messages.error(request, settings.INELIGIBLE_ALERT_MSG)
+            if 'umichRegUid' in entry:
+                messages.error(request, settings.HAS_UNIQNAME_ALERT_MSG.format(entry['umichRegUid'][0]))
+                logger.warn('User is not eligible and has uid={}, redirect to terms'.format(entry['umichRegUid'][0]))
+            else:
+                messages.error(request, settings.INELIGIBLE_ALERT_MSG)
+                logger.warn('User is not eligible, redirect to terms')
             return redirect('terms')
 
         # Add session variables
