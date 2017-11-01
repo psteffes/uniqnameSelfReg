@@ -14,9 +14,6 @@ def idproof_form_data(form_cleaned_data):
         cert = (settings.IDPROOF_CERT, settings.IDPROOF_KEY)
 
         # Build payload with form data
-        logger.debug('birth_date={}'.format(form_cleaned_data['birth_date']))
-        logger.debug('type={}'.format(type(form_cleaned_data['birth_date'])))
-        logger.debug('strftime={}'.format(form_cleaned_data['birth_date'].strftime('%m/%d/%Y')))
         payload = {
             'first_name': form_cleaned_data['first_name'],
             'last_name': form_cleaned_data['last_name'],
@@ -28,7 +25,7 @@ def idproof_form_data(form_cleaned_data):
             'Content-type': 'application/json',
             'Accept': 'application/json',
         }
-        logger.debug('post_url={} payload={}'.format(settings.IDPROOF_URL, json.dumps(payload, default=str)))
+        logger.debug('post_url={} payload={} timeout={}'.format(settings.IDPROOF_URL, json.dumps(payload, default=str), settings.REQUESTS_TIMEOUT_SECONDS))
 
         # Make the request
         r = requests.post(

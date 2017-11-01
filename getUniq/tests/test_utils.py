@@ -1,8 +1,17 @@
 from django.test import SimpleTestCase
 from ..utils import getuniq_eligible, validate_passwords_final
 
+import logging
 
 class UtilTests(SimpleTestCase):
+
+    # Disable logging
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+
+    # Reenable logging
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
 
     # Test eligible entry
     def test_eligible(self):
