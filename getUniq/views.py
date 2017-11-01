@@ -361,6 +361,7 @@ def test_password(request):    # pragma: no cover
     if request.method == 'POST':
         form = PasswordForm(request.POST)
         if form.is_valid():
+            logger.debug('form={}'.format(form.cleaned_data))
             logger.debug('call validate_passwords_final')
             if validate_passwords_final(uid, form.cleaned_data['password'], form.cleaned_data['confirm_password']):
                 logger.debug('TEST - reset password')
@@ -407,4 +408,5 @@ def success(request):
     }
 
     return render(request, 'success.html', context=context)
+
 

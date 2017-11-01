@@ -45,10 +45,12 @@ class UniqnameForm(forms.Form):
 class PasswordForm(forms.Form):
     password = forms.CharField(
         required=True,
+        strip=False,
     )
 
     confirm_password = forms.CharField(
         required=True,
+        strip=False,
     )
 
     def clean(self):

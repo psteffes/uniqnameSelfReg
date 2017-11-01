@@ -13,7 +13,8 @@ function enforcePattern(element) {
     }
 }
 function disableSubmitBtn() {
-   document.getElementById("submit-btn").classList.remove("btn-blue");
-   document.getElementById("submit-btn").value = "Submitting...";
-   document.getElementById("submit-btn").disabled = true;
+   btn = document.getElementById("submit-btn")
+   btn.classList.remove("btn-blue");
+   btn.value = "Submitting...";
+   btn.disabled = true;
 }

@@ -153,3 +153,9 @@ function displayError(message) {
     span.innerHTML = message;
     suggest_div.appendChild(span);
 }
+function disableSubmitBtn() {
+   btn = document.getElementById("submit-btn")
+   btn.classList.remove("btn-blue");
+   btn.firstChild.data = "Submitting...";
+   btn.disabled = true;
+}
