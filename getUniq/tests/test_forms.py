@@ -13,12 +13,12 @@ class AcceptFormTests(SimpleTestCase):
         form = AcceptForm({'accept': True})
         self.assertTrue(form.is_valid())
 
-
     # Test for required fields
     def test_required_data(self):
         form = AcceptForm({})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['accept'], ['This field is required.'])
+
 
 class VerifyFormTests(SimpleTestCase):
 
@@ -38,7 +38,6 @@ class VerifyFormTests(SimpleTestCase):
         self.assertEqual(form.cleaned_data['umid'], '00123400')
         self.assertEqual(form.cleaned_data['email'], 'megaman@mail.com')
 
-
     # Test for required fields
     def test_required_data(self):
         form = VerifyForm({})
@@ -48,7 +47,6 @@ class VerifyFormTests(SimpleTestCase):
         self.assertEqual(form.errors['birth_date'], ['This field is required.'])
         self.assertEqual(form.errors['umid'], ['This field is required.'])
         self.assertEqual(form.errors['email'], ['This field is required.'])
-
 
     # Test for invalid data
     def test_invalid_data(self):
@@ -64,6 +62,14 @@ class VerifyFormTests(SimpleTestCase):
         self.assertEqual(form.errors['umid'], ['Enter a valid UMID.'])
         self.assertEqual(form.errors['email'], ['Enter a valid email address.'])
 
+    # Test minimum date
+    def test_min_date(self):
+        form = VerifyForm({
+            'birth_date': datetime.date(70, 1, 1),
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['birth_date'], ['Value must be 01/01/1970 or later.'])
+
 
 class UniqnameFormTests(SimpleTestCase):
 
@@ -72,13 +78,11 @@ class UniqnameFormTests(SimpleTestCase):
         form = UniqnameForm({'uniqname': 'megaman'})
         self.assertTrue(form.is_valid())
 
-
     # Test for required fields
     def test_required_data(self):
         form = UniqnameForm({})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['uniqname'], ['This field is required.'])
-
 
     # Test for invalid data
     def test_invalid_data(self):
@@ -107,12 +111,15 @@ class PasswordFormTests(SimpleTestCase):
 
     # Test validation
     def test_valid_data(self):
+        pass1 = ' secret '    # Do not trim spaces
+        pass2 = ' secret '
         form = PasswordForm({
-            'password': 'secret',
-            'confirm_password': 'secret',
+            'password': pass1,
+            'confirm_password': pass2,
         })
         self.assertTrue(form.is_valid())
-
+        self.assertEqual(form.cleaned_data['password'], pass1)
+        self.assertEqual(form.cleaned_data['confirm_password'], pass2)
 
     # Test for required fields
     def test_required_data(self):
@@ -120,7 +127,6 @@ class PasswordFormTests(SimpleTestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['password'], ['This field is required.'])
         self.assertEqual(form.errors['confirm_password'], ['This field is required.'])
-
 
     # Test for invalid data
     def test_invalid_data(self):

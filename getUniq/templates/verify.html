@@ -50,7 +50,7 @@
         </div>
         <div class="form-group {% if form.birth_date.errors %}has-error{% endif %}">
           <label class="control-label" for="birth-date">Date of Birth:</label>
-          <input type="date" name="birth_date" class="form-control" required id="birth-date" placeholder="mm/dd/yyyy" pattern="^\d{1,2}\/\d{1,2}\/\d{4}$" title="mm/dd/yyyy" value="{{ form.birth_date.value|default_if_none:"" }}">
+          <input type="date" name="birth_date" class="form-control" required id="birth-date" placeholder="mm/dd/yyyy" min="1700-01-01" pattern="^\d{1,2}\/\d{1,2}\/\d{4}$" title="mm/dd/yyyy" value="{{ form.birth_date.value|default_if_none:"" }}">
           {% if form.birth_date.errors %}
             <div class="help-block">
               {% for error in form.birth_date.errors %}

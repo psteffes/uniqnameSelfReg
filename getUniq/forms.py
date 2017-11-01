@@ -2,7 +2,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.conf import settings
 
-import requests
+import datetime
 
 class AcceptForm(forms.Form):
     accept = forms.BooleanField(
@@ -33,6 +33,13 @@ class VerifyForm(forms.Form):
         #validators=[EmailValidator()],
     )
 
+    # Make sure birth_date is 01/01/1970 or later - PSOBOSIAM-1533
+    def clean_birth_date(self):
+        data = self.cleaned_data['birth_date']
+        if data < datetime.date(1970, 1, 1):
+            raise forms.ValidationError('Value must be 01/01/1970 or later.')
+        return data
+
 
 class UniqnameForm(forms.Form):
     uniqname = forms.CharField(
@@ -59,7 +66,5 @@ class PasswordForm(forms.Form):
         password2 = cleaned_data.get("confirm_password")
 
         if password1 != password2:
-            raise forms.ValidationError(
-                "Passwords do not meet requirements."
-            )
+            raise forms.ValidationError('Passwords do not meet requirements.')
 
