@@ -30,7 +30,7 @@ def activation_link(request):
     else:
         response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
-    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    logger.info('response.status_code={} response.data={}'.format(response.status_code, response.data))
     return response
 
 
@@ -46,7 +46,7 @@ def get_suggestions(request):
     else:
         response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    logger.info('response.status_code={} response.data={}'.format(response.status_code, response.data))
     return response
 
 
@@ -62,7 +62,7 @@ def find_uniqname(request):
     else:
         response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    logger.info('Return status_code={} response={}'.format(response.status_code, response.data))
+    logger.info('response.status_code={} response.data={}'.format(response.status_code, response.data))
     return response
 
 
@@ -79,6 +79,7 @@ def validate_password(request):
             'password1': serializer['password1'].value,
             'password2': serializer['password2'].value,
         }
+        logger.debug('post_url={} timeout={}'.format(settings.PASSWORD_VALIDATION_URL_BASE, settings.REQUESTS_TIMEOUT_SECONDS))    # Do not log payload
         r = requests.post(
             settings.PASSWORD_VALIDATION_URL_BASE,
             data=payload,
@@ -95,6 +96,6 @@ def validate_password(request):
         response = Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Response json is very chatty so we are not logging it
-    logger.info('Return status_code={}'.format(response.status_code))
+    logger.info('response.status_code={}'.format(response.status_code))
     return response
 

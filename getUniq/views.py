@@ -10,7 +10,7 @@ from .token import generate_confirmation_token, confirm_token
 from .email import send_confirm_email
 from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
 from .utils import getuniq_eligible, validate_passwords_final
-from .myldap import mcomm_reg_umid_search
+from .myldap import mcomm_reg_umid_search, set_status_complete
 
 #test
 import json
@@ -61,8 +61,6 @@ def verify(request):
             try:
                 entry = idproof_form_data(form.cleaned_data)
                 if entry:
-                    logger.debug('entry={}'.format(entry))
-
                     # If the person is not eligible, tell them nicely
                     if not getuniq_eligible(entry):
                         if 'umichRegUid' in entry:
@@ -90,7 +88,7 @@ def verify(request):
                         form.cleaned_data['last_name'],
                         secure_url,
                     )
-                    logger.info('Confirmation link successfully sent to {}'.format(form.cleaned_data['email']))
+                    logger.info('Confirmation link sent to {}'.format(form.cleaned_data['email']))
 
                     # Update session and send them to confirm_email
                     del request.session['agreed_to_terms']
@@ -130,7 +128,6 @@ def confirm_email(request):
 
 def create(request, token):
     logger.info(request)
-    logger.debug(token)
     logger.debug(request.session.items())
 
     # Validate the token
@@ -166,7 +163,8 @@ def create(request, token):
                 return render(request, 'create.html', {'form': form})
             request.session['uid'] = form.cleaned_data['uniqname']
             request.session['pw_eligible'] = True
-            logger.info('Created uniqname={}, continue to password'.format(form.cleaned_data['uniqname']))
+            logger.info('Created uniqname={}'.format(form.cleaned_data['uniqname']))
+            set_status_complete(dn)
             return redirect('password')
         else:
             logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -293,7 +291,8 @@ def reactivate(request):
                 messages.error(request, settings.RETRY_MSG)
                 return render(request, 'reactivate.html', {'form': form, 'uid': uid})
             del request.session['reactivate']
-            logger.info('Reactivated uid={}, continue to password'.format(uid))
+            logger.info('Reactivated uid={}'.format(uid))
+            set_status_complete(dn)
             request.session['pw_eligible'] = True
             return redirect('password')
         else:

@@ -40,7 +40,7 @@ def make_post_request(url, payload, timeout=settings.REQUESTS_TIMEOUT_SECONDS):
         'Accept': 'application/json',
         'Certificate': settings.UNIQNAME_SERVICES_CLIENT_CERT,
     }
-    logger.debug('post_url={} timeout={}'.format(url, timeout))
+    logger.debug('post_url={} timeout={}'.format(url, timeout))    # Do not log payload
     return requests.post(
         url,
         data=json.dumps(payload),

@@ -160,11 +160,12 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'urllib3': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
+        # Verbose request logging
+        #'urllib3': {
+        #    'handlers': ['console'],
+        #    'level': 'DEBUG',
+        #    'propagate': True,
+        #},
     },
 }
 

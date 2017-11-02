@@ -1,6 +1,5 @@
 from django.conf import settings
 import logging
-import ldap3
 from ldap3 import Server, Connection, ALL, MODIFY_REPLACE
 
 logger = logging.getLogger(__name__)
@@ -8,7 +7,8 @@ logger = logging.getLogger(__name__)
 # Search the mcomm identities branch on UMID
 def mcomm_reg_umid_search(umid):
     try:
-        logger.debug('searching for umichRegEntityID={}'.format(umid))
+        entry = ''
+        logger.debug('Searching for umichRegEntityID={}'.format(umid))
         server = Server(settings.LDAP_URI)
         conn = Connection(server, settings.LDAP_USERNAME, settings.LDAP_PW, auto_bind=True)
         conn.search(
@@ -19,19 +19,20 @@ def mcomm_reg_umid_search(umid):
         )
 
         # TODO: check for more than one result returned
-        entry = ''
         if len(conn.entries) == 1:
             entry = conn.entries[0]
+            logger.debug('Found dn={}'.format(entry.entry_dn))
 
+    # Do not re-raise, treat an exception as entry not found
     except Exception as e:    # pragma: no cover
         logger.error('error={}'.format(e))
-        raise
 
     return entry
 
 
-def set_status_complete(dn):    # pragma: no cover
+def set_status_complete(dn):
     try:
+        result = False
         server = Server(settings.LDAP_URI)
         conn = Connection(server, settings.LDAP_USERNAME, settings.LDAP_PW, auto_bind=True)
 
@@ -41,12 +42,12 @@ def set_status_complete(dn):    # pragma: no cover
         result = conn.modify(dn, mod_attrs)
 
         if conn.modify(dn, mod_attrs):
-            logger.info('Successfully set umichGetUniqStatus=COMPLETE for dn={}'.format(dn))
-        else:
+            logger.info('Set umichGetUniqStatus=COMPLETE for dn={}'.format(dn))
+        else:    # pragma: no cover
             logger.error('Error updating umichGetUniqStatus for dn={}, details={}'.format(dn, conn.result))
 
-    except Exception as e:
-        logger.error('error={}'.format(e))
-        raise
+    # Do not re-raise, just fail silently for now
+    except Exception as e:    # pragma: no cover
+        logger.error('Unable to update umichGetUniqStatus, e={}'.format(e))
 
-    return
+    return result
