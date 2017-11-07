@@ -126,8 +126,3 @@ class ViewsTests(SimpleTestCase):
         self.assertRaises(NoReverseMatch, lambda: reverse('test_create'))
         self.assertRaises(NoReverseMatch, lambda: reverse('test_password'))
 
-
-class WatchmanTests(SimpleTestCase):
-    def test_health(self):
-        response = self.client.get(reverse('status'))
-        self.assertEqual(response.status_code, 200)

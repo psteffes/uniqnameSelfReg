@@ -18,4 +18,5 @@ from django.conf.urls import url, include
 urlpatterns = [
     url(r'^uniqname/', include('getUniq.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^health/', include('watchman.urls')),
 ]

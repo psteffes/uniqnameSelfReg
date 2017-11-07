@@ -2,6 +2,8 @@ certifi==2017.7.27.1
 chardet==3.0.4
 coverage==4.4.1
 Django==1.11.3
+django-jsonview==1.1.0
+django-watchman==0.13.1
 djangorestframework==3.6.3
 idna==2.5
 itsdangerous==0.24
