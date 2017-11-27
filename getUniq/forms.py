@@ -33,11 +33,11 @@ class VerifyForm(forms.Form):
         #validators=[EmailValidator()],
     )
 
-    # Make sure birth_date is 01/01/1970 or later - PSOBOSIAM-1533
+    # Make sure birth_date is 01/01/1700 or later - PSOBOSIAM-1533
     def clean_birth_date(self):
         data = self.cleaned_data['birth_date']
-        if data < datetime.date(1970, 1, 1):
-            raise forms.ValidationError('Value must be 01/01/1970 or later.')
+        if data < datetime.date(1700, 1, 1):
+            raise forms.ValidationError('Value must be 01/01/1700 or later.')
         return data
 
 

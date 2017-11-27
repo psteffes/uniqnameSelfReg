@@ -27,14 +27,14 @@ class VerifyFormTests(SimpleTestCase):
         form = VerifyForm({
             'first_name': 'mega',
             'last_name': 'man',
-            'birth_date': datetime.date(2000, 1, 1),
+            'birth_date': datetime.date(1750, 1, 1),    # old but valid date
             'umid': '00123400',    # Test zero trimming
             'email': 'megaman@mail.com',
         })
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data['first_name'], 'mega')
         self.assertEqual(form.cleaned_data['last_name'], 'man')
-        self.assertEqual(form.cleaned_data['birth_date'], datetime.date(2000, 1, 1))
+        self.assertEqual(form.cleaned_data['birth_date'], datetime.date(1750, 1, 1))
         self.assertEqual(form.cleaned_data['umid'], '00123400')
         self.assertEqual(form.cleaned_data['email'], 'megaman@mail.com')
 
@@ -65,10 +65,10 @@ class VerifyFormTests(SimpleTestCase):
     # Test minimum date
     def test_min_date(self):
         form = VerifyForm({
-            'birth_date': datetime.date(70, 1, 1),
+            'birth_date': datetime.date(1600, 1, 1),
         })
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors['birth_date'], ['Value must be 01/01/1970 or later.'])
+        self.assertEqual(form.errors['birth_date'], ['Value must be 01/01/1700 or later.'])
 
 
 class UniqnameFormTests(SimpleTestCase):
