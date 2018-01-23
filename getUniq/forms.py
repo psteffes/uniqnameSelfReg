@@ -68,3 +68,23 @@ class PasswordForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError('Passwords do not meet requirements.')
 
+
+class RecoveryForm(forms.Form):
+    recovery_email = forms.EmailField(
+        required=False,
+        validators=[EmailValidator()],
+    )
+
+    confirm_recovery_email = forms.EmailField(
+        required=False,
+        # don't bother with email validation here, just validate that it's the same as recovery_email
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        recovery1 = cleaned_data.get("recovery_email")
+        recovery2 = cleaned_data.get("confirm_recovery_email")
+
+        if recovery1 != recovery2:
+            raise forms.ValidationError('Email addresses do not match')
+
