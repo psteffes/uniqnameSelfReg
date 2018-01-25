@@ -33,6 +33,6 @@ def add_message_to_queue(uid, email):
         MessageBody=json.dumps(body),
     )
 
-    logger.info('queue_response={}'.format(response))
+    logger.debug('sqs_response={}'.format(response))
     return
 
