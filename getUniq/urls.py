@@ -9,8 +9,9 @@ urlpatterns = [
     url(r'^create/(?P<token>.*)$', views.create, name='create'),
     url(r'^reactivate/$', views.reactivate, name='reactivate'),
     url(r'^password/$', views.password, name='password'),
-    url(r'^recovery/$', views.password, name='recovery'),
+    url(r'^recovery/$', views.recovery, name='recovery'),
     url(r'^success/$', views.success, name='success'),
     #url(r'^test_create/$', views.test_create, name='test_create'),
     #url(r'^test_password/$', views.test_password, name='test_password'),
+    #url(r'^test_recovery/$', views.test_recovery, name='test_recovery'),
 ]

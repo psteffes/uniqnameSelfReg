@@ -32,35 +32,28 @@
               {% endfor %}
             {% endif %}
 
-            <div class="row">
-
-              <div id="div-recovery" class="col-sm-6 col-sm-pull-6 form-group">
-                <div class="form-group">
-                  <label class="control-label" for="recovery">Password recovery email address:</label>
-                  <input type="email" name="recovery" id="recovery" class="textinput textInput form-control">
-                  <span aria-live="polite"><div id="recovery-help" class="text-danger" style="visibility:hidden"></div></span>
-                  {% if form.recovery.errors %}
-                    <div class="help-block">
-                      {% for error in form.recovery.errors %}
-                        {{ error|escape }}
-                      {% endfor %}
-                    </div>
-                  {% endif %}
+            <div class="form-group">
+              <label class="control-label" for="recovery">Password recovery email:</label>
+              <input type="email" name="recovery" id="recovery" class="textinput textInput form-control">
+              {% if form.recovery.errors %}
+                <div class="help-block">
+                  {% for error in form.recovery.errors %}
+                    {{ error|escape }}
+                  {% endfor %}
                 </div>
-                <div id="div-confirm-recovery" class="form-group">
-                  <label class="control-label" for="confirm-recovery">Confirm password recovery email address:</label>
-                  <input type="email" name="confirm_recovery" class="textinput textInput form-control" id="confirm-recovery">
-                  <span aria-live="polite"><div id="confirm-help" class="text-danger" style="visibility:hidden">Email addresses must match</div></span>
-                  {% if form.confirm_recovery.errors %}
-                    <div class="help-block">
-                      {% for error in form.confirm_recovery.errors %}
-                        {{ error|escape }}
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
+              {% endif %}
+            </div>
 
+            <div class="form-group">
+              <label class="control-label" for="confirm-recovery">Confirm password recovery email:</label>
+              <input type="email" name="confirm_recovery" class="textinput textInput form-control" id="confirm-recovery">
+              {% if form.confirm_recovery.errors %}
+                <div class="help-block">
+                  {% for error in form.confirm_recovery.errors %}
+                    {{ error|escape }}
+                  {% endfor %}
+                </div>
+              {% endif %}
             </div>
 
             <div class="form-actions">
@@ -70,12 +63,11 @@
             <span id="uid" hidden>{{ uid|default_if_none:"" }}</span>
           </form>
 
-        <!--panel-->
-        </div>
-      </div>
+        </div><!--panel-body-->
+      </div><!--panel-default-->
 
-    </div>
-  </div>
+    </div> <!--grid-->
+  </div><!--row-->
 </main>
 
 {% endblock %}
