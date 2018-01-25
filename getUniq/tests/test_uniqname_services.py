@@ -64,3 +64,4 @@ class UniqnameServicesTests(SimpleTestCase):
         with self.assertRaises(UniqnameServicesError) as context: 
             reset_password('test123', pw)
         self.assertEqual(context.exception.message, 'passwordReset failed')
+

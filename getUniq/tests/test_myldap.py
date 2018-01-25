@@ -41,3 +41,4 @@ class updateStatusTests(SimpleTestCase):
     def test_set_status_complete(self):
         dn = 'umichDirectoryID=161-0700-20171016024233439-535,ou=Identities,o=Registry'
         self.assertTrue(set_status_complete(dn))
+

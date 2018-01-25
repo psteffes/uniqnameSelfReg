@@ -3,6 +3,7 @@ from ..aws_sqs import add_message_to_queue
 
 import logging
 
+
 class SQSTests(SimpleTestCase):
 
     # Disable logging

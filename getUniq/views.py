@@ -12,9 +12,6 @@ from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniq
 from .utils import getuniq_eligible, validate_passwords_final
 from .myldap import mcomm_reg_umid_search, set_status_complete
 
-#test
-import json
-
 import logging
 
 logger = logging.getLogger(__name__)

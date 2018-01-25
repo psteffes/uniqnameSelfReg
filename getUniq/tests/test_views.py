@@ -5,6 +5,7 @@ from ..views import terms, verify, confirm_email, create, password, success
 
 import logging
 
+
 class ViewsTests(SimpleTestCase):
 
     # Disable logging
@@ -15,7 +16,6 @@ class ViewsTests(SimpleTestCase):
     # Reenable logging
     def tearDown(self):
         logging.disable(logging.NOTSET)
-
 
     # Terms
     def test_get_terms(self):
@@ -100,7 +100,6 @@ class ViewsTests(SimpleTestCase):
         response = self.client.get(reverse('confirm_email'))
         self.assertEqual(response.status_code, 200)
 
-
     # New session can be used after confirming email, so lets start a new function
     def test_through_success(self):
         # Create
@@ -126,8 +125,3 @@ class ViewsTests(SimpleTestCase):
         self.assertRaises(NoReverseMatch, lambda: reverse('test_create'))
         self.assertRaises(NoReverseMatch, lambda: reverse('test_password'))
 
-
-class WatchmanTests(SimpleTestCase):
-    def test_health(self):
-        response = self.client.get(reverse('status'))
-        self.assertEqual(response.status_code, 200)

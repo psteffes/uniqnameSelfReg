@@ -11,11 +11,9 @@ class IDProofTests(SimpleTestCase):
     def setUp(self):
         logging.disable(logging.CRITICAL)
 
-
     # Reenable logging
     def tearDown(self):
         logging.disable(logging.NOTSET)
-
 
     # Test requests to id-verification-api
     def test_match(self):
@@ -29,7 +27,6 @@ class IDProofTests(SimpleTestCase):
         result = idproof_form_data(data)
         self.assertIn(result['umichRegEntityID'][0], '89109177')
 
-
     # Test a failed match
     def test_no_match(self):
         data = {
@@ -41,3 +38,4 @@ class IDProofTests(SimpleTestCase):
         }
         result = idproof_form_data(data)
         self.assertEqual(result, False)
+

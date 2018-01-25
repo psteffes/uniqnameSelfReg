@@ -3,6 +3,7 @@ from ..utils import getuniq_eligible, validate_passwords_final
 
 import logging
 
+
 class UtilTests(SimpleTestCase):
 
     # Disable logging
@@ -42,3 +43,4 @@ class UtilTests(SimpleTestCase):
         pw1 = 'secret1'
         pw2 = 'secret2'
         self.assertFalse(validate_passwords_final(uid, pw1, pw2))
+
