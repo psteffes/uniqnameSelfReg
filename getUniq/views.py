@@ -437,7 +437,6 @@ def test_recovery(request):     # pragme: no cover
         form = RecoveryForm(request.POST)
         if request.POST.get("skip-btn"):
             # User hit skip button, log it and move on to success page
-            del request.session['set_recovery']
             logger.info('User skipped password recovery email, sending to success page')
             return redirect('success')
         elif request.POST.get("submit-btn"):
