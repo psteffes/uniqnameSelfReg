@@ -206,6 +206,12 @@ EMAIL_REPLY_TO = config('EMAIL_REPLY_TO', default='do-not-reply@umich.edu')
 # Requests
 REQUESTS_TIMEOUT_SECONDS = config('REQUESTS_TIMEOUT_SECONDS', default=5, cast=int)
 
+# AWS
+AWS_REGION = config('AWS_REGION', default='us-east-2')
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_QUEUE_NAME = config('AWS_QUEUE_NAME')
+
 # Testing messages
 from django.contrib.messages import constants as message_constants
 MESSAGE_TAGS = {
