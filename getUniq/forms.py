@@ -1,5 +1,5 @@
 from django import forms
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, validate_email
 from django.conf import settings
 
 import datetime
@@ -70,21 +70,20 @@ class PasswordForm(forms.Form):
 
 
 class RecoveryForm(forms.Form):
-    recovery_email = forms.EmailField(
+    recovery = forms.EmailField(
         required=False,
-        validators=[EmailValidator()],
     )
 
-    confirm_recovery_email = forms.EmailField(
+    confirm_recovery = forms.EmailField(
         required=False,
-        # don't bother with email validation here, just validate that it's the same as recovery_email
     )
 
     def clean(self):
         cleaned_data = super().clean()
-        recovery1 = cleaned_data.get("recovery_email")
-        recovery2 = cleaned_data.get("confirm_recovery_email")
+        recovery1 = cleaned_data.get("recovery")
+        recovery2 = cleaned_data.get("confirm_recovery")
 
+        validate_email(recovery1) # will raise forms.ValidationError if the address is invalid
         if recovery1 != recovery2:
             raise forms.ValidationError('Email addresses do not match')
 

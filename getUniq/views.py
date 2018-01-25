@@ -425,6 +425,39 @@ def recovery(request):
     }
     return render(request, 'recovery.html', context=context) 
 
+# ***
+def test_recovery(request):     # pragme: no cover
+    uid = 'tmp'
+
+    # If this is a POST, see which submit button they selected and do the appropriate thing
+    if request.method == 'POST':
+        form = RecoveryForm(request.POST)
+        if request.POST.get("skip-btn"):
+            # User hit skip button, log it and move on to success page
+            del request.session['set_recovery']
+            logger.info('User skipped password recovery email, sending to success page')
+            return redirect('success')
+        elif request.POST.get("submit-btn"):
+            # User hit submit button, set the recovery email
+            if form.is_valid():
+                # *** set the recovery email (in a try block, see above)
+                logger.info('Password recovery email set, sending to success page')
+                return redirect('success')
+            else:
+                logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+        else:
+            # Unhandled POST submit, we shouldn't get here, but if we do, log it and redisplay form
+            logger.warning('Unknown submission method for POST, redisplaying form')
+            form = RecoveryForm()
+    else:
+        # GET or any other request generate a blank form
+        form = RecoveryForm()
+
+    context = {
+        'uid': uid,
+        'form': form,
+    }
+    return render(request, 'recovery.html', context=context) 
 
 def success(request):
     logger.info(request)
