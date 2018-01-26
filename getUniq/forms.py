@@ -74,16 +74,23 @@ class RecoveryForm(forms.Form):
         required=False,
     )
 
-    confirm_recovery = forms.EmailField(
+    confirmrecovery = forms.EmailField(
         required=False,
     )
 
     def clean(self):
         cleaned_data = super().clean()
         recovery1 = cleaned_data.get("recovery")
-        recovery2 = cleaned_data.get("confirm_recovery")
+        recovery2 = cleaned_data.get("confirmrecovery")
 
         validate_email(recovery1) # will raise forms.ValidationError if the address is invalid
         if recovery1 != recovery2:
             raise forms.ValidationError('Email addresses do not match')
 
+        # Email validation already assures us of one and only one @ in the cleaned data
+        full_domain = recovery1.split('@')[1]
+        domain_parts = full_domain.split('.')
+        registered_domain = domain_parts[-2] + '.' + domain_parts[-1]
+        blacklist = settings.RECOVERY_EMAIL_DISALLOWED_DOMAINS
+        if registered_domain in blacklist:
+            raise forms.ValidationError(registered_domain+' email addresses are not allowed for password recovery')

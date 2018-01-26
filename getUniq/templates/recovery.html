@@ -45,11 +45,11 @@
             </div>
 
             <div class="form-group">
-              <label class="control-label" for="confirm-recovery">Confirm password recovery email:</label>
-              <input type="email" name="confirm_recovery" class="textinput textInput form-control" id="confirm-recovery">
-              {% if form.confirm_recovery.errors %}
+              <label class="control-label" for="confirmrecovery">Confirm password recovery email:</label>
+              <input type="email" name="confirmrecovery" class="textinput textInput form-control" id="confirmrecovery">
+              {% if form.confirmrecovery.errors %}
                 <div class="help-block">
-                  {% for error in form.confirm_recovery.errors %}
+                  {% for error in form.confirmrecovery.errors %}
                     {{ error|escape }}
                   {% endfor %}
                 </div>
@@ -57,7 +57,7 @@
             </div>
 
             <div class="form-actions">
-              <button name="submit-btn" value="submit-btn" class="btn btn-lg btn-blue btn-block" type="submit" disabled>Set Address</button>
+              <button name="submit-btn" value="submit-btn" id="submit-btn" class="btn btn-lg btn-blue btn-block" type="submit" disabled>Set Address</button>
               <button name="skip-btn" value="skip-btn" class="btn btn-lg btn-blue btn-block" type="submit">Skip</button>
             </div>
             <span id="uid" hidden>{{ uid|default_if_none:"" }}</span>
