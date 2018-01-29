@@ -11,6 +11,7 @@ from .email import send_confirm_email
 from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
 from .utils import getuniq_eligible, validate_passwords_final
 from .myldap import mcomm_reg_umid_search, set_status_complete
+from .aws_sqs import add_message_to_queue
 
 import logging
 
@@ -376,7 +377,7 @@ def test_password(request):    # pragma: no cover
 
     return render(request, 'password.html', context=context)
 
-# ***
+
 def recovery(request):
     logger.info(request)
     logger.debug(request.session.items())
@@ -398,14 +399,26 @@ def recovery(request):
     if request.method == 'POST':
         form = RecoveryForm(request.POST)
         if request.POST.get("skip-btn"):
-            # User hit skip button, log it and move on to success page
+            # User hit skip button. Queue a blank email address so it knows to set the date attribute
+            # to a year from now.
+            try:
+                add_message_to_queue(uid, '')
+            except:
+                logger.error('Queuing of blank recovery email failed!')
+                messages.error(request, settings.RETRY_MSG)
+                return render(request, 'recovery.html', {'form': form, 'uid': uid})
             del request.session['set_recovery']
             logger.info('User skipped password recovery email, sending to success page')
             return redirect('success')
         elif request.POST.get("submit-btn"):
             # User hit submit button, set the recovery email
             if form.is_valid():
-                # *** set the recovery email (in a try block, see above)
+                try:
+                    add_message_to_queue(uid, form.cleaned_data['recovery'])
+                except:
+                    logger.error('Queuing of recovery email failed!')
+                    messages.error(request, settings.RETRY_MSG)
+                    return render(request, 'recovery.html', {'form': form, 'uid': uid})
                 del request.session['set_recovery']
                 logger.info('Password recovery email set, sending to success page')
                 return redirect('success')
@@ -425,7 +438,7 @@ def recovery(request):
     }
     return render(request, 'recovery.html', context=context) 
 
-# ***
+
 def test_recovery(request):     # pragme: no cover
     uid = 'tmp'
 
@@ -433,13 +446,25 @@ def test_recovery(request):     # pragme: no cover
     if request.method == 'POST':
         form = RecoveryForm(request.POST)
         if request.POST.get("skip-btn"):
-            # User hit skip button, log it and move on to success page
+            # User hit skip button. Queue a blank email address so it knows to set the date attribute
+            # to a year from now.
+            try:
+                add_message_to_queue(uid, '')
+            except:
+                logger.error('Queuing of blank recovery email failed!')
+                messages.error(request, settings.RETRY_MSG)
+                return render(request, 'recovery.html', {'form': form, 'uid': uid})
             logger.info('User skipped password recovery email, sending to success page')
             return redirect('success')
         elif request.POST.get("submit-btn"):
             # User hit submit button, set the recovery email
             if form.is_valid():
-                # *** set the recovery email (in a try block, see above)
+                try:
+                    add_message_to_queue(uid, form.cleaned_data['recovery'])
+                except:
+                    logger.error('Queuing of recovery email failed!')
+                    messages.error(request, settings.RETRY_MSG)
+                    return render(request, 'recovery.html', {'form': form, 'uid': uid})
                 logger.info('Password recovery email set, sending to success page')
                 return redirect('success')
             else:
