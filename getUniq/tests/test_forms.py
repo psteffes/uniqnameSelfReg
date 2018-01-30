@@ -1,5 +1,5 @@
 from django.test import SimpleTestCase
-from ..forms import AcceptForm, VerifyForm, UniqnameForm, PasswordForm
+from ..forms import AcceptForm, VerifyForm, UniqnameForm, PasswordForm, RecoveryForm
 
 import datetime
 
@@ -138,3 +138,40 @@ class PasswordFormTests(SimpleTestCase):
         self.assertEqual(form.errors['__all__'], ['Passwords do not meet requirements.'])
 
 
+class RecoveryFormTests(SimpleTestCase):
+
+    # Test validation
+    def test_valid_data(self):
+        recov1 = 'foo@bar.baz'
+        recov2 = 'foo@bar.baz'
+        form = RecoveryForm({
+            'recovery': recov1,
+            'confirmrecovery': recov2,
+        })
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['recovery'],recov1)
+        self.assertEqual(form.cleaned_data['confirmrecovery'],recov2)
+
+    # No required fields
+
+    # Test for invalid data
+    def test_invalid_data(self):
+        form = RecoveryForm({
+            'recovery': 'thisdoes@bar.baz',
+            'confirmrecovery': 'notmatch@bar.baz'
+        })
+        self.assertFalse(form.is_valid())
+        try:
+            form.clean()
+            self.fail('ValidationError should have been raised')
+        # For some reason ValidationError is not recognized as an exception here, so just catch
+        # all of 'em and look for the right message.
+        except Exception as e:
+            self.assertEqual('Email addresses do not match', e.message)
+
+        form = RecoveryForm({
+            'recovery': 'notvalid',
+            'confirmrecovery': 'notvalid'
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['__all__'], ['Enter a valid email address.'])
