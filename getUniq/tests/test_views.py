@@ -39,7 +39,7 @@ class ViewsTests(SimpleTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/uniqname/terms/')
 
-    # This process requires a valid session, so we need to do it all in one big funciton
+    # This process requires a valid session, so we need to do it all in one big function
     # https://code.djangoproject.com/ticket/10899
     def test_through_confirm_email(self):
         # Terms
@@ -119,9 +119,11 @@ class ViewsTests(SimpleTestCase):
         self.assertEqual(response.status_code, 200)
         # Do not test valid POST which results in create
         # Without doing a create we can't test the password page
+        # And without testing the password page we can't test the recovery email page
 
     # Make sure the test_ pages are not up
     def test_pages_not_up(self): 
         self.assertRaises(NoReverseMatch, lambda: reverse('test_create'))
         self.assertRaises(NoReverseMatch, lambda: reverse('test_password'))
+        self.assertRaises(NoReverseMatch, lambda: reverse('test_recovery'))
 
