@@ -4,13 +4,14 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 
-from .forms import AcceptForm, VerifyForm, UniqnameForm, PasswordForm
+from .forms import AcceptForm, VerifyForm, UniqnameForm, PasswordForm, RecoveryForm
 from .idproof import idproof_form_data 
 from .token import generate_confirmation_token, confirm_token
 from .email import send_confirm_email
 from .uniqname_services import get_suggestions, create_uniqname, reactivate_uniqname, reset_password
 from .utils import getuniq_eligible, validate_passwords_final
 from .myldap import mcomm_reg_umid_search, set_status_complete
+from .aws_sqs import add_message_to_queue
 
 import logging
 
@@ -322,7 +323,7 @@ def password(request):
         logger.error('User does not have a uid in the session, redirecting to terms')
         return redirect('terms')
 
-    # If this is a POST, verify the form and send them on to the success page if valid
+    # If this is a POST, verify the form and send them on to the recovery email page if valid
     if request.method == 'POST':
         form = PasswordForm(request.POST)
         if form.is_valid():
@@ -334,8 +335,9 @@ def password(request):
                     messages.error(request, settings.RETRY_MSG)
                     return render(request, 'password.html', {'form': form, 'uid': uid})
                 del request.session['pw_eligible']
-                logger.info('Password changed, sending to success page')
-                return redirect('success')
+                request.session['set_recovery'] = True # flag it's OK to proceed to next stage
+                logger.info('Password changed, sending to recovery email page')
+                return redirect('recovery')
             else:
                 form.add_error(None, "Password does not meet requirements")
         else:
@@ -374,6 +376,112 @@ def test_password(request):    # pragma: no cover
     }
 
     return render(request, 'password.html', context=context)
+
+
+def recovery(request):
+    logger.info(request)
+    logger.debug(request.session.items())
+
+    uid = request.session.get('uid', False)
+    set_recovery = request.session.get('set_recovery', False)
+
+    # Make sure the user got here after setting their password
+    if not set_recovery:
+        logger.debug('User did not set password, redirecting to terms')
+        return redirect('terms')
+
+    # Make sure we have a uid
+    if not uid:
+        logger.error('User does not have a uid in the session, redirecting to terms')
+        return redirect('terms')
+
+    # If this is a POST, see which submit button they selected and do the appropriate thing
+    if request.method == 'POST':
+        form = RecoveryForm(request.POST)
+        if request.POST.get("skip-btn"):
+            # User hit skip button. Queue a blank email address so it knows to set the date attribute
+            # to a year from now.
+            try:
+                add_message_to_queue(uid, '')
+            except:
+                logger.error('Queuing of blank recovery email failed!')
+                messages.error(request, settings.RETRY_MSG)
+                return render(request, 'recovery.html', {'form': form, 'uid': uid})
+            del request.session['set_recovery']
+            logger.info('User skipped password recovery email, sending to success page')
+            return redirect('success')
+        elif request.POST.get("submit-btn"):
+            # User hit submit button, set the recovery email
+            if form.is_valid():
+                try:
+                    add_message_to_queue(uid, form.cleaned_data['recovery'])
+                except:
+                    logger.error('Queuing of recovery email failed!')
+                    messages.error(request, settings.RETRY_MSG)
+                    return render(request, 'recovery.html', {'form': form, 'uid': uid})
+                del request.session['set_recovery']
+                logger.info('Password recovery email set, sending to success page')
+                return redirect('success')
+            else:
+                logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+        else:
+            # Unhandled POST submit, we shouldn't get here, but if we do, log it and redisplay form
+            logger.warning('Unknown submission method for POST, redisplaying form')
+            form = RecoveryForm()
+    else:
+        # GET or any other request generate a blank form
+        form = RecoveryForm()
+
+    context = {
+        'uid': uid,
+        'form': form,
+    }
+    return render(request, 'recovery.html', context=context) 
+
+
+def test_recovery(request):     # pragme: no cover
+    uid = 'tmp'
+
+    # If this is a POST, see which submit button they selected and do the appropriate thing
+    if request.method == 'POST':
+        form = RecoveryForm(request.POST)
+        if request.POST.get("skip-btn"):
+            # User hit skip button. Queue a blank email address so it knows to set the date attribute
+            # to a year from now.
+            try:
+                add_message_to_queue(uid, '')
+            except:
+                logger.error('Queuing of blank recovery email failed!')
+                messages.error(request, settings.RETRY_MSG)
+                return render(request, 'recovery.html', {'form': form, 'uid': uid})
+            logger.info('User skipped password recovery email, sending to success page')
+            return redirect('success')
+        elif request.POST.get("submit-btn"):
+            # User hit submit button, set the recovery email
+            if form.is_valid():
+                try:
+                    add_message_to_queue(uid, form.cleaned_data['recovery'])
+                except:
+                    logger.error('Queuing of recovery email failed!')
+                    messages.error(request, settings.RETRY_MSG)
+                    return render(request, 'recovery.html', {'form': form, 'uid': uid})
+                logger.info('Password recovery email set, sending to success page')
+                return redirect('success')
+            else:
+                logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+        else:
+            # Unhandled POST submit, we shouldn't get here, but if we do, log it and redisplay form
+            logger.warning('Unknown submission method for POST, redisplaying form')
+            form = RecoveryForm()
+    else:
+        # GET or any other request generate a blank form
+        form = RecoveryForm()
+
+    context = {
+        'uid': uid,
+        'form': form,
+    }
+    return render(request, 'recovery.html', context=context) 
 
 def success(request):
     logger.info(request)

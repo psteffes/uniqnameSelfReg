@@ -1,5 +1,5 @@
 from django import forms
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, validate_email
 from django.conf import settings
 
 import datetime
@@ -68,3 +68,29 @@ class PasswordForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError('Passwords do not meet requirements.')
 
+
+class RecoveryForm(forms.Form):
+    recovery = forms.EmailField(
+        required=False,
+    )
+
+    confirmrecovery = forms.EmailField(
+        required=False,
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        recovery1 = cleaned_data.get("recovery")
+        recovery2 = cleaned_data.get("confirmrecovery")
+
+        validate_email(recovery1) # will raise forms.ValidationError if the address is invalid
+        if recovery1 != recovery2:
+            raise forms.ValidationError('Email addresses do not match')
+
+        # Email validation already assures us of one and only one @ in the cleaned data
+        full_domain = recovery1.split('@')[1]
+        domain_parts = full_domain.split('.')
+        registered_domain = domain_parts[-2] + '.' + domain_parts[-1]
+        blacklist = settings.RECOVERY_EMAIL_DISALLOWED_DOMAINS
+        if registered_domain in blacklist:
+            raise forms.ValidationError(registered_domain+' email addresses are not allowed for password recovery')

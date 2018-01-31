@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main id="main" class="container">
+
+  <h1 id="title" class="text-center lead">Set Password Recovery Email Address</h1>
+
+  <div class="row">
+    <div id="grid" class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+          <p>Enter the email address to receive password recovery email messages.  This will only be used 
+            when you request recovery of a forgotten UMICH password.  It can be the same as the
+            verification email address you entered earlier, or it can be a different address.</p>
+
+          <form id="id-recoveryForm" action="" class="blueForms" method="post" autocomplete="off">
+            {% csrf_token %}
+
+            {% if form.errors %}
+              {% for error in form.non_field_errors %}
+                <div class="alert alert-danger alert-dismissable">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  {{ error|escape }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="form-group">
+              <label class="control-label" for="recovery">Password recovery email:</label>
+              <input type="email" name="recovery" id="recovery" class="textinput textInput form-control">
+              {% if form.recovery.errors %}
+                <div class="help-block">
+                  {% for error in form.recovery.errors %}
+                    {{ error|escape }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="confirmrecovery">Confirm password recovery email:</label>
+              <input type="email" name="confirmrecovery" class="textinput textInput form-control" id="confirmrecovery">
+              {% if form.confirmrecovery.errors %}
+                <div class="help-block">
+                  {% for error in form.confirmrecovery.errors %}
+                    {{ error|escape }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-actions">
+              <button name="submit-btn" value="submit-btn" id="submit-btn" class="btn btn-lg btn-blue btn-block" type="submit" disabled>Set Address</button>
+              <button name="skip-btn" value="skip-btn" class="btn btn-lg btn-blue btn-block" type="submit">Skip</button>
+            </div>
+            <span id="uid" hidden>{{ uid|default_if_none:"" }}</span>
+          </form>
+
+        </div><!--panel-body-->
+      </div><!--panel-default-->
+
+    </div> <!--grid-->
+  </div><!--row-->
+</main>
+
+{% endblock %}
+
+{% block javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/recovery.js' %}"></script>
+{% endblock javascript %}
