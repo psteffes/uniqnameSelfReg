@@ -202,6 +202,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
 EMAIL_FROM_ADDRESS = config('EMAIL_FROM_ADDRESS', default='IT Accounts <it.accounts@umich.edu>')
 EMAIL_REPLY_TO = config('EMAIL_REPLY_TO', default='do-not-reply@umich.edu')
+RECOVERY_EMAIL_DISALLOWED_DOMAINS = config('RECOVERY_EMAIL_DISALLOWED_DOMAINS')
 
 # Requests
 REQUESTS_TIMEOUT_SECONDS = config('REQUESTS_TIMEOUT_SECONDS', default=5, cast=int)
