@@ -446,14 +446,7 @@ def test_recovery(request):     # pragme: no cover
     if request.method == 'POST':
         form = RecoveryForm(request.POST)
         if request.POST.get("skip-btn"):
-            # User hit skip button. Queue a blank email address so it knows to set the date attribute
-            # to a year from now.
-            try:
-                add_message_to_queue(uid, '')
-            except:
-                logger.error('Queuing of blank recovery email failed!')
-                messages.error(request, settings.RETRY_MSG)
-                return render(request, 'recovery.html', {'form': form, 'uid': uid})
+            # User hit skip button. Just log it and move on.
             logger.info('User skipped password recovery email, sending to success page')
             return redirect('success')
         elif request.POST.get("submit-btn"):
