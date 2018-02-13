@@ -13,13 +13,13 @@
         {% csrf_token %}
 
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+          <div class="alert alert-{{ message.tags }}">{{ message|safe }}</div>
         {% endfor %}
 
         {% if form.errors %}
           {% for error in form.non_field_errors %}
             <div class="alert alert-danger">
-              {{ error|escape }}
+              {{ error|safe }}
             </div>
           {% endfor %}
         {% endif %}
