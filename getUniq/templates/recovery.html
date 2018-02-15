@@ -4,7 +4,7 @@
 
 <main id="main" class="container">
 
-  <h1 id="title" class="text-center lead">Set Password Recovery Email Address</h1>
+  <h1 id="title" class="text-center lead">Set Account Recovery Information</h1>
 
   <div class="row">
     <div id="grid" class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
@@ -16,9 +16,28 @@
       <div class="panel panel-default">
         <div class="panel-body">
 
-          <p>Enter the email address to receive password recovery email messages.  This will only be used 
-            when you request recovery of a forgotten UMICH password.  It can be the same as the
-            verification email address you entered earlier, or it can be a different address.</p>
+          <p>If you forget your UMICH password and need to reset it, a password reset code will be sent to you at the non-UMICH email address you provide. If you want it as a text message sent to your mobile phone instead, see <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">text message instructions.</a></p>
+
+          <div class="collapse" id="collapseExample">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <p><strong>To Get a Text to Your Phone</strong></p>
+                <p>You will need:</p>
+                <ul>
+                  <li>Your 10-digit phone number.</li>
+                  <li>Your <a href="http://www.emailtextmessages.com/" target="_blank">cellular carrier's email-to-SMS address.</a></li>
+                </ul>
+                <p>Enter the address in this format: <strong>your10digitphonenumber@yourcarrierSMSaddress</strong><br>
+                (where you have substituted your actual 10-digit phone number for <strong>your10digitphonenumber</strong> and your carrier's actual email-to-SMS address for <strong>yourcarrierSMSaddress</strong>).</p>
+                <p>Examples:</p>
+                <ul>
+                  <li>5555555555@vtext.com for Verizon</li>
+                  <li>5555555555@messaging.sprintpcs.com for Sprint</li>
+                  <li>5555555555@txt.att.net for AT&T</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
           <form id="id-recoveryForm" action="" class="blueForms" method="post" autocomplete="off">
             {% csrf_token %}
@@ -33,7 +52,7 @@
             {% endif %}
 
             <div class="form-group">
-              <label class="control-label" for="recovery">Password recovery email:</label>
+              <label class="control-label" for="recovery">Non-UMICH Email:</label>
               <input type="email" name="recovery" id="recovery" class="textinput textInput form-control">
               {% if form.recovery.errors %}
                 <div class="help-block">
@@ -45,7 +64,7 @@
             </div>
 
             <div class="form-group">
-              <label class="control-label" for="confirmrecovery">Confirm password recovery email:</label>
+              <label class="control-label" for="confirmrecovery">Confirm Non-UMICH Email:</label>
               <input type="email" name="confirmrecovery" class="textinput textInput form-control" id="confirmrecovery">
               {% if form.confirmrecovery.errors %}
                 <div class="help-block">
@@ -57,7 +76,7 @@
             </div>
 
             <div class="form-actions">
-              <button name="submit-btn" value="submit-btn" id="submit-btn" class="btn btn-lg btn-blue btn-block" type="submit" disabled>Set Address</button>
+              <button name="submit-btn" value="submit-btn" id="submit-btn" class="btn btn-lg btn-blue btn-block" type="submit" disabled>Set Account Recovery</button>
               </p>
               <button name="skip-btn" value="skip-btn" type="submit" class="btn-link">Remind Me Later</button>
             </div>
