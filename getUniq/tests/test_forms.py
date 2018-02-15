@@ -1,4 +1,5 @@
 from django.test import SimpleTestCase
+from django.forms import ValidationError
 from ..forms import AcceptForm, VerifyForm, UniqnameForm, PasswordForm, RecoveryForm
 
 import datetime
@@ -160,14 +161,9 @@ class RecoveryFormTests(SimpleTestCase):
             'recovery': 'thisdoes@bar.baz',
             'confirmrecovery': 'notmatch@bar.baz'
         })
+
         self.assertFalse(form.is_valid())
-        try:
-            form.clean()
-            self.fail('ValidationError should have been raised')
-        # For some reason ValidationError is not recognized as an exception here, so just catch
-        # all of 'em and look for the right message.
-        except Exception as e:
-            self.assertEqual('Email addresses do not match', e.message)
+        self.assertEqual(form.errors['__all__'], ['Email addresses do not match'])
 
         form = RecoveryForm({
             'recovery': 'notvalid',
@@ -175,3 +171,32 @@ class RecoveryFormTests(SimpleTestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['__all__'], ['Enter a valid email address.'])
+
+    # Test blacklisted domains
+    def test_blacklist_data(self):
+        domain = 'umich.edu'
+        email = 'hello@{}'.format(domain)
+        form = RecoveryForm({
+            'recovery': email,
+            'confirmrecovery': email,
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['__all__'], ['{} email addresses are not allowed for password recovery'.format(domain)])
+
+        domain = 'umflint.edu'
+        email = 'hello@{}'.format(domain)
+        form = RecoveryForm({
+            'recovery': email,
+            'confirmrecovery': email,
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['__all__'], ['{} email addresses are not allowed for password recovery'.format(domain)])
+
+        domain = 'umdearborn.edu'
+        email = 'hello@{}'.format(domain)
+        form = RecoveryForm({
+            'recovery': email,
+            'confirmrecovery': email,
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['__all__'], ['{} email addresses are not allowed for password recovery'.format(domain)])
