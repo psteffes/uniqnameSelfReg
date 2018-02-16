@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^success/$', views.success, name='success'),
     #url(r'^test_create/$', views.test_create, name='test_create'),
     #url(r'^test_password/$', views.test_password, name='test_password'),
-    url(r'^test_recovery/$', views.test_recovery, name='test_recovery'),
+    #url(r'^test_recovery/$', views.test_recovery, name='test_recovery'),
 ]
