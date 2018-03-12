@@ -6,7 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def add_message_to_queue(uid, email):
+def add_message_to_queue(uid, email, phone):
 
     aws_region            = settings.AWS_REGION
     aws_access_key_id     = settings.AWS_ACCESS_KEY_ID
@@ -24,9 +24,10 @@ def add_message_to_queue(uid, email):
     body = {
         'uid': uid,
         'recovery_email': email,
+        'recovery_phone': phone,
     }
 
-    logger.info('Adding uid={} recovery_email={} to {}'.format(uid, email, aws_queue_name))
+    logger.info('Adding uid={} recovery_email={} recovery_phone={} to {}'.format(uid, email, phone, aws_queue_name))
     response = queue.send_message(
         QueueUrl=queue.url,
         DelaySeconds=10,

@@ -18,4 +18,5 @@ class SQSTests(SimpleTestCase):
     def test_add_message(self):
         uid = 'thisisatest'
         email = 'fake@fakemail.com'
-        response = add_message_to_queue(uid, email)
+        phone = '1234567890'
+        response = add_message_to_queue(uid, email, phone)
