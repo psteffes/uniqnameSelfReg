@@ -16,28 +16,7 @@
       <div class="panel panel-default">
         <div class="panel-body">
 
-          <p>If you forget your UMICH password and need to reset it, a password reset code will be sent to you at the non-UMICH email address you provide. If you want it as a text message sent to your mobile phone instead, see <a data-toggle="collapse" href="#collapseSMSInfo" role="button" aria-expanded="false" aria-controls="collapseSMSInfo">text message instructions.</a></p>
-
-          <div class="collapse" id="collapseSMSInfo">
-            <div class="panel panel-default">
-              <div class="panel-body">
-                <p><strong>To Get a Text to Your Phone</strong></p>
-                <p>You will need:</p>
-                <ul>
-                  <li>Your 10-digit phone number.</li>
-                  <li>Your <a href="http://www.emailtextmessages.com/" target="_blank">cellular carrier's email-to-SMS address.</a></li>
-                </ul>
-                <p>Enter the address in this format: <strong>your10digitphonenumber@yourcarrierSMSaddress</strong><br>
-                (where you have substituted your actual 10-digit phone number for <strong>your10digitphonenumber</strong> and your carrier's actual email-to-SMS address for <strong>yourcarrierSMSaddress</strong>).</p>
-                <p>Examples:</p>
-                <ul>
-                  <li>5555555555@vtext.com for Verizon</li>
-                  <li>5555555555@messaging.sprintpcs.com for Sprint</li>
-                  <li>5555555555@txt.att.net for AT&T</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <p>If you forget your UMICH password and need to reset it, a password reset code can be sent to you by text or email (non-UMICH email address). </p>
 
           <form id="id-recoveryForm" action="" class="blueForms" method="post" autocomplete="off">
             {% csrf_token %}
@@ -69,6 +48,30 @@
               {% if form.confirmrecovery.errors %}
                 <div class="help-block">
                   {% for error in form.confirmrecovery.errors %}
+                    {{ error|escape }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="sms">SMS telephone number:</label>
+              <input type="tel" name="sms" id="sms" class="textinput textInput form-control" placeholder="(nnn) nnn-nnnn">
+              {% if form.sms.errors %}
+                <div class="help-block">
+                  {% for error in form.sms.errors %}
+                    {{ error|escape }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="control-label" for="confirmsms">Confirm SMS telephone number:</label>
+              <input type="tel" name="confirmsms" class="textinput textInput form-control" id="confirmsms" placeholder="(nnn) nnn-nnnn">
+              {% if form.confirmsms.errors %}
+                <div class="help-block">
+                  {% for error in form.confirmsms.errors %}
                     {{ error|escape }}
                   {% endfor %}
                 </div>

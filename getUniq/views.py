@@ -401,19 +401,21 @@ def recovery(request):
         if request.POST.get("skip-btn"):
             # User hit skip button. Just log it and move on.
             del request.session['set_recovery']
-            logger.info('User skipped password recovery email, sending to success page')
+            logger.info('User skipped password recovery page, sending to success page')
             return redirect('success')
         elif request.POST.get("submit-btn"):
-            # User hit submit button, set the recovery email
+            # User hit submit button, set the recovery email and/or SMS
             if form.is_valid():
                 try:
-                    add_message_to_queue(uid, form.cleaned_data['recovery'])
-                except:
-                    logger.error('Queuing of recovery email failed!')
+                    add_message_to_queue(uid, form.cleaned_data["recovery"], form.cleaned_data["sms"])
+                except Exception as e:
+                    logger.error('Queuing of recovery email and/or SMS number failed')
+                    logger.error('Exception: '+format(e))
                     messages.error(request, settings.RETRY_MSG)
                     return render(request, 'recovery.html', {'form': form, 'uid': uid})
                 del request.session['set_recovery']
-                logger.info('Password recovery email set, sending to success page')
+                logger.info('Password recovery email and/or SMS number set')
+                logger.info('Redirecting to success page')
                 return redirect('success')
             else:
                 logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
@@ -432,7 +434,7 @@ def recovery(request):
     return render(request, 'recovery.html', context=context) 
 
 
-def test_recovery(request):     # pragme: no cover
+def test_recovery(request):     # pragma: no cover
     uid = 'tmp'
 
     # If this is a POST, see which submit button they selected and do the appropriate thing
@@ -440,27 +442,27 @@ def test_recovery(request):     # pragme: no cover
         form = RecoveryForm(request.POST)
         if request.POST.get("skip-btn"):
             # User hit skip button. Just log it and move on.
-            logger.info('User skipped password recovery email, sending to success page')
+            logger.info('User skipped pass recovery page, sending to success page')
             return redirect('success')
         elif request.POST.get("submit-btn"):
-            # User hit submit button, set the recovery email
+            # User hit submit button, set the recovery email and/or SMS
             if form.is_valid():
                 try:
-                    add_message_to_queue(uid, form.cleaned_data['recovery'])
-                except:
-                    logger.error('Queuing of recovery email failed!')
+                    add_message_to_queue(uid, form.cleaned_data["recovery"], form.cleaned_data["sms"])
+                except Exception as e:
+                    logger.error('Queuing of recovery email and/or SMS number failed')
+                    logger.error('Exception: '+format(e))
                     messages.error(request, settings.RETRY_MSG)
                     return render(request, 'recovery.html', {'form': form, 'uid': uid})
-                logger.info('Password recovery email set, sending to success page')
+                logger.info('Password recovery email and/or SMS number set')
+                logger.info('Redirecting to success page')
                 return redirect('success')
-            else:
+            else: # not a valid form
                 logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
-        else:
-            # Unhandled POST submit, we shouldn't get here, but if we do, log it and redisplay form
+        else: # Unhandled POST submit, we shouldn't get here, but if we do, log it and redisplay form
             logger.warning('Unknown submission method for POST, redisplaying form')
             form = RecoveryForm()
-    else:
-        # GET or any other request generate a blank form
+    else: # if GET or any other request generate a blank form
         form = RecoveryForm()
 
     context = {

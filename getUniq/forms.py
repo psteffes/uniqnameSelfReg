@@ -70,6 +70,7 @@ class PasswordForm(forms.Form):
 
 
 class RecoveryForm(forms.Form):
+
     recovery = forms.EmailField(
         required=False,
     )
@@ -78,19 +79,51 @@ class RecoveryForm(forms.Form):
         required=False,
     )
 
+    sms = forms.CharField(
+        required=False,
+    )
+
+    confirmsms = forms.CharField(
+        required=False,
+    )
+
     def clean(self):
         cleaned_data = super().clean()
         recovery1 = cleaned_data.get("recovery")
         recovery2 = cleaned_data.get("confirmrecovery")
+        sms1 = cleaned_data.get("sms")
+        sms2 = cleaned_data.get("confirmsms")
 
-        validate_email(recovery1) # will raise forms.ValidationError if the address is invalid
+        # Validate email address if given
+
         if recovery1 != recovery2:
             raise forms.ValidationError('Email addresses do not match')
 
-        # Email validation already assures us of one and only one @ in the cleaned data
-        full_domain = recovery1.split('@')[1]
-        domain_parts = full_domain.split('.')
-        registered_domain = domain_parts[-2] + '.' + domain_parts[-1]
-        blacklist = settings.RECOVERY_EMAIL_DISALLOWED_DOMAINS
-        if registered_domain in blacklist:
-            raise forms.ValidationError(registered_domain+' email addresses are not allowed for password recovery')
+        if recovery1 != "":
+            validate_email(recovery1) # will raise forms.ValidationError if the address is invalid
+            # Email validation already assures us of one and only one @ in the cleaned data
+            full_domain = recovery1.split('@')[1]
+            domain_parts = full_domain.split('.')
+            registered_domain = domain_parts[-2] + '.' + domain_parts[-1]
+            blacklist = settings.RECOVERY_EMAIL_DISALLOWED_DOMAINS
+            if registered_domain in blacklist:
+                raise forms.ValidationError(registered_domain+' email addresses are not allowed for password recovery')
+
+        # Validate SMS if given
+
+        # remove non-digits
+        sms1=''.join(i for i in sms1 if i.isdigit())
+        sms2=''.join(i for i in sms2 if i.isdigit())
+
+        # ***
+        cleaned_data["sms"] = sms1
+        cleaned_data["confirmsms"] = sms2
+        # ***
+
+        if sms1 != sms2:
+            raise forms.ValidationError('SMS phone numbers do not match')
+
+        if sms1 != "":
+            if len(sms1) != 10:
+                raise forms.ValidationError('SMS phone number must be 10 digits')
+
