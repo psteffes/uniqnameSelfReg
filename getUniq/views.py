@@ -398,12 +398,7 @@ def recovery(request):
     # If this is a POST, see which submit button they selected and do the appropriate thing
     if request.method == 'POST':
         form = RecoveryForm(request.POST)
-        if request.POST.get("skip-btn"):
-            # User hit skip button. Just log it and move on.
-            del request.session['set_recovery']
-            logger.info('User skipped password recovery page, sending to success page')
-            return redirect('success')
-        elif request.POST.get("submit-btn"):
+        if request.POST.get("submit-btn"):
             # User hit submit button, set the recovery email and/or SMS
             if form.is_valid():
                 try:
@@ -440,11 +435,7 @@ def test_recovery(request):     # pragma: no cover
     # If this is a POST, see which submit button they selected and do the appropriate thing
     if request.method == 'POST':
         form = RecoveryForm(request.POST)
-        if request.POST.get("skip-btn"):
-            # User hit skip button. Just log it and move on.
-            logger.info('User skipped pass recovery page, sending to success page')
-            return redirect('success')
-        elif request.POST.get("submit-btn"):
+        if request.POST.get("submit-btn"):
             # User hit submit button, set the recovery email and/or SMS
             if form.is_valid():
                 try:
