@@ -94,6 +94,11 @@ class RecoveryForm(forms.Form):
         sms1 = cleaned_data.get("sms")
         sms2 = cleaned_data.get("confirmsms")
 
+        # Make sure either SMS or email are there
+
+        if (recovery1 == "") and (sms1 == ""):
+            raise forms.ValidationError('You must enter either an email address or a mobile phone number')
+
         # Validate email address if given
 
         if recovery1 != recovery2:

@@ -1,9 +1,11 @@
 $(document).ready(function(){
   $('#tab-recovery').addClass('active');
+  $("#submit-btn").prop("disabled",true);
 });
 $('#recovery, #confirmrecovery').keyup(function() {
     var recovery1 = $('#recovery').val();
     var recovery2 = $("#confirmrecovery").val();
+    var sms1 = $('#sms').val();
     if ( recovery2.length == 0 ) {
         $("#confirm-help").css("visibility","hidden");
     }
@@ -16,10 +18,14 @@ $('#recovery, #confirmrecovery').keyup(function() {
     } else {
         $("#submit-btn").prop("disabled",true);
     }
+    if ( recovery1.length == 0 && sms1.length == 0) {
+      $("#submit-btn").prop("disabled",true);
+    }
 });
 $('#sms, #confirmsms').keyup(function() {
     var sms1 = $('#sms').val();
     var sms2 = $("#confirmsms").val();
+    var recovery1 = $('#recovery').val();
     if ( sms2.length == 0 ) {
         $("#confirmsms-help").css("visibility","hidden");
     }
@@ -31,6 +37,9 @@ $('#sms, #confirmsms').keyup(function() {
         $("#submit-btn").prop("disabled",false);
     } else {
         $("#submit-btn").prop("disabled",true);
+    }
+    if ( recovery1.length == 0 && sms1.length == 0) {
+      $("#submit-btn").prop("disabled",true);
     }
 });
 $("input[type='tel']").each(function(){
@@ -44,7 +53,9 @@ $("input[type='tel']").each(function(){
       var area = input.substr(0, 3);
       var pre = input.substr(3, 3);
       var tel = input.substr(6, 4);
-      if (area.length < 3) {
+      if (area.length == 0) {
+        output = ""
+      } else if (area.length < 3) {
         output = "(" + area;
       } else if (area.length == 3 && pre.length < 3) {
         output = "(" + area + ")" + " " + pre;
