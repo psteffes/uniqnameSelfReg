@@ -401,8 +401,9 @@ def recovery(request):
         if request.POST.get("submit-btn"):
             # User hit submit button, set the recovery email and/or SMS
             if form.is_valid():
+                na_sms = "+1"+form.cleaned_data["sms"]
                 try:
-                    add_message_to_queue(uid, form.cleaned_data["recovery"], form.cleaned_data["sms"])
+                    add_message_to_queue(uid, form.cleaned_data["recovery"], na_sms)
                 except Exception as e:
                     logger.error('Queuing of recovery email and/or SMS number failed')
                     logger.error('Exception: '+format(e))
@@ -438,8 +439,9 @@ def test_recovery(request):     # pragma: no cover
         if request.POST.get("submit-btn"):
             # User hit submit button, set the recovery email and/or SMS
             if form.is_valid():
+                na_sms = "+1"+form.cleaned_data["sms"]
                 try:
-                    add_message_to_queue(uid, form.cleaned_data["recovery"], form.cleaned_data["sms"])
+                    add_message_to_queue(uid, form.cleaned_data["recovery"], na_sms)
                 except Exception as e:
                     logger.error('Queuing of recovery email and/or SMS number failed')
                     logger.error('Exception: '+format(e))

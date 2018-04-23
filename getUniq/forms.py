@@ -119,11 +119,8 @@ class RecoveryForm(forms.Form):
         # remove non-digits
         sms1=''.join(i for i in sms1 if i.isdigit())
         sms2=''.join(i for i in sms2 if i.isdigit())
-
-        # ***
         cleaned_data["sms"] = sms1
         cleaned_data["confirmsms"] = sms2
-        # ***
 
         if sms1 != sms2:
             raise forms.ValidationError('SMS phone numbers do not match')
