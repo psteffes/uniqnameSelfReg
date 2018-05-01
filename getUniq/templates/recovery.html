@@ -35,7 +35,7 @@
               <div class="input-group">
                 <span class="input-group-addon">
                 <span class="glyphicon glyphicon-phone"></span>&nbsp;&nbsp;+1</span>
-                <input type="tel" name="sms" id="sms" class="textinput textInput form-control" placeholder="(nnn) nnn-nnnn">
+                <input type="tel" name="sms" id="sms" class="textinput textInput form-control" placeholder="(nnn) nnn-nnnn" value="{{ sms }}">
                 {% if form.sms.errors %}
                   <div class="help-block">
                     {% for error in form.sms.errors %}
@@ -51,7 +51,7 @@
               <div class="input-group">
                 <span class="input-group-addon">
                 <span class="glyphicon glyphicon-phone"></span>&nbsp;&nbsp;+1</span>
-                <input type="tel" name="confirmsms" class="textinput textInput form-control" id="confirmsms" placeholder="(nnn) nnn-nnnn">
+                <input type="tel" name="confirmsms" class="textinput textInput form-control" id="confirmsms" placeholder="(nnn) nnn-nnnn" value="{{ confirmsms }}">
                 {% if form.confirmsms.errors %}
                   <div class="help-block">
                     {% for error in form.confirmsms.errors %}
@@ -64,7 +64,8 @@
 
             <div class="form-group">
               <label class="control-label" for="recovery">Non-UMICH Email:</label>
-              <input type="email" name="recovery" id="recovery" class="textinput textInput form-control">
+              <!-- *** -->
+              <input type="email" name="recovery" id="recovery" class="textinput textInput form-control" value="{{ recovery }}">
               {% if form.recovery.errors %}
                 <div class="help-block">
                   {% for error in form.recovery.errors %}
@@ -76,7 +77,7 @@
 
             <div class="form-group">
               <label class="control-label" for="confirmrecovery">Confirm Non-UMICH Email:</label>
-              <input type="email" name="confirmrecovery" class="textinput textInput form-control" id="confirmrecovery">
+              <input type="email" name="confirmrecovery" class="textinput textInput form-control" id="confirmrecovery" value="{{ confirmrecovery }}">
               {% if form.confirmrecovery.errors %}
                 <div class="help-block">
                   {% for error in form.confirmrecovery.errors %}
@@ -87,7 +88,7 @@
             </div>
 
             <div class="form-actions">
-              <button name="submit-btn" value="submit-btn" id="submit-btn" class="btn btn-lg btn-blue btn-block" type="submit" disabled>Set Account Recovery</button>
+              <button name="submit-btn" value="submit-btn" id="submit-btn" class="btn btn-lg btn-blue btn-block" type="submit">Set Account Recovery</button>
             </div>
             <span id="uid" hidden>{{ uid|default_if_none:"" }}</span>
           </form>

@@ -408,13 +408,30 @@ def recovery(request):
                     logger.error('Queuing of recovery email and/or SMS number failed')
                     logger.error('Exception: '+format(e))
                     messages.error(request, settings.RETRY_MSG)
-                    return render(request, 'recovery.html', {'form': form, 'uid': uid})
+                    context = {
+                        'uid': uid,
+                        'form': form,
+                        'recovery': form.data["recovery"],
+                        'confirmrecovery': form.data["confirmrecovery"],
+                        'sms': form.data["sms"],
+                        'confirmsms': form.data["confirmsms"],
+                    }
+                    return render(request, 'recovery.html', context=context)
                 del request.session['set_recovery']
                 logger.info('Password recovery email and/or SMS number set')
                 logger.info('Redirecting to success page')
                 return redirect('success')
             else:
                 logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+                context = {
+                    'uid': uid,
+                    'form': form,
+                    'recovery': form.data["recovery"],
+                    'confirmrecovery': form.data["confirmrecovery"],
+                    'sms': form.data["sms"],
+                    'confirmsms': form.data["confirmsms"],
+                }
+                return render(request, 'recovery.html', context=context) 
         else:
             # Unhandled POST submit, we shouldn't get here, but if we do, log it and redisplay form
             logger.warning('Unknown submission method for POST, redisplaying form')
@@ -426,6 +443,10 @@ def recovery(request):
     context = {
         'uid': uid,
         'form': form,
+        'recovery': '',
+        'confirmrecovery': '',
+        'sms': '',
+        'confirmsms': '',
     }
     return render(request, 'recovery.html', context=context) 
 
@@ -446,12 +467,29 @@ def test_recovery(request):     # pragma: no cover
                     logger.error('Queuing of recovery email and/or SMS number failed')
                     logger.error('Exception: '+format(e))
                     messages.error(request, settings.RETRY_MSG)
-                    return render(request, 'recovery.html', {'form': form, 'uid': uid})
+                    context = {
+                        'uid': uid,
+                        'form': form,
+                        'recovery': form.data["recovery"],
+                        'confirmrecovery': form.data["confirmrecovery"],
+                        'sms': form.data["sms"],
+                        'confirmsms': form.data["confirmsms"],
+                    }
+                    return render(request, 'recovery.html', context=context)
                 logger.info('Password recovery email and/or SMS number set')
                 logger.info('Redirecting to success page')
                 return redirect('success')
             else: # not a valid form
                 logger.warning('form.errors={}'.format(form.errors.as_json(escape_html=False)))
+                context = {
+                    'uid': uid,
+                    'form': form,
+                    'recovery': form.data["recovery"],
+                    'confirmrecovery': form.data["confirmrecovery"],
+                    'sms': form.data["sms"],
+                    'confirmsms': form.data["confirmsms"],
+                }
+                return render(request, 'recovery.html', context=context) 
         else: # Unhandled POST submit, we shouldn't get here, but if we do, log it and redisplay form
             logger.warning('Unknown submission method for POST, redisplaying form')
             form = RecoveryForm()
@@ -461,6 +499,10 @@ def test_recovery(request):     # pragma: no cover
     context = {
         'uid': uid,
         'form': form,
+        'recovery': '',
+        'confirmrecovery': '',
+        'sms': '',
+        'confirmsms': '',
     }
     return render(request, 'recovery.html', context=context) 
 

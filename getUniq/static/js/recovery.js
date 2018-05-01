@@ -1,6 +1,5 @@
 $(document).ready(function(){
   $('#tab-recovery').addClass('active');
-  $("#submit-btn").prop("disabled",true);
 });
 $('#recovery, #confirmrecovery').keyup(function() {
     var recovery1 = $('#recovery').val();
@@ -14,13 +13,7 @@ $('#recovery, #confirmrecovery').keyup(function() {
     }
     if ( recovery1 == recovery2 && recovery1.length > 0) {
         $("#confirm-help").css("visibility","hidden");
-        $("#submit-btn").prop("disabled",false);
-    } else {
-        $("#submit-btn").prop("disabled",true);
-    }
-    if ( recovery1.length == 0 && sms1.length == 0) {
-      $("#submit-btn").prop("disabled",true);
-    }
+    } 
 });
 $('#sms, #confirmsms').keyup(function() {
     var sms1 = $('#sms').val();
@@ -34,13 +27,6 @@ $('#sms, #confirmsms').keyup(function() {
     }
     if ( sms1 == sms2 && sms1.length > 0) {
         $("#confirmsms-help").css("visibility","hidden");
-        $("#submit-btn").prop("disabled",false);
-    } else {
-        $("#submit-btn").prop("disabled",true);
-    }
-    if ( recovery1.length == 0 && sms1.length == 0) {
-      $("#submit-btn").prop("disabled",true);
-    }
 });
 $("input[type='tel']").each(function(){
   $(this).on("change keyup paste", function (e) {

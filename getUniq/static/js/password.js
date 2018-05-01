@@ -133,7 +133,6 @@ function updateDisplay(resultInfo) {
 
         if ( $('#confirm-password').val().length > 0 && issue.contains_id('validator.matches.error') ) {
             $("#confirm-help").css("visibility","visible");
-            $("#submit-btn").prop("disabled",true);
         } else {
             $("#confirm-help").css("visibility","hidden");
         }
@@ -141,10 +140,7 @@ function updateDisplay(resultInfo) {
 
     if ( $('#password').val() == $('#confirm-password').val() && resultInfo.evaluation.valid == true) {
         $("#confirm-help").css("visibility","hidden");
-        $("#submit-btn").prop("disabled",false);
-    } else {
-        $("#submit-btn").prop("disabled",true);
-    }
+    } 
 }
 Array.prototype.contains_id = function (needle) {
     for (i in this) {
