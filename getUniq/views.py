@@ -401,7 +401,10 @@ def recovery(request):
         if request.POST.get("submit-btn"):
             # User hit submit button, set the recovery email and/or SMS
             if form.is_valid():
-                na_sms = "+1"+form.cleaned_data["sms"]
+                if form.cleaned_data["sms"] != "":
+                    na_sms = "+1"+form.cleaned_data["sms"]
+                else:
+                    na_sms = ""
                 try:
                     add_message_to_queue(uid, form.cleaned_data["recovery"], na_sms)
                 except Exception as e:
@@ -460,7 +463,10 @@ def test_recovery(request):     # pragma: no cover
         if request.POST.get("submit-btn"):
             # User hit submit button, set the recovery email and/or SMS
             if form.is_valid():
-                na_sms = "+1"+form.cleaned_data["sms"]
+                if form.cleaned_data["sms"] != "":
+                    na_sms = "+1"+form.cleaned_data["sms"]
+                else:
+                    na_sms = ""
                 try:
                     add_message_to_queue(uid, form.cleaned_data["recovery"], na_sms)
                 except Exception as e:
