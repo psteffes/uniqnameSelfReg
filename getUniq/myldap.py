@@ -41,7 +41,8 @@ def set_status_complete(dn):
         }
         result = conn.modify(dn, mod_attrs)
 
-        if conn.modify(dn, mod_attrs):
+        # conn.modify returns True if successful
+        if result:
             logger.info('Set umichGetUniqStatus=COMPLETE for dn={}'.format(dn))
         else:    # pragma: no cover
             logger.error('Error updating umichGetUniqStatus for dn={}, details={}'.format(dn, conn.result))
