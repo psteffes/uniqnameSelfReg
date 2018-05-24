@@ -9,19 +9,25 @@ def mcomm_reg_umid_search(umid):
     try:
         entry = ''
         logger.debug('Searching for umichRegEntityID={}'.format(umid))
-        server = Server(settings.LDAP_URI)
-        conn = Connection(server, settings.LDAP_USERNAME, settings.LDAP_PW, auto_bind=True)
-        conn.search(
-            'ou=Identities,o=Registry',
-            '(umichRegEntityID={})'.format(umid),
-            attributes=['*'],
-            time_limit=settings.LDAP_TIME_LIMIT,
-        )
 
-        # TODO: check for more than one result returned
-        if len(conn.entries) == 1:
-            entry = conn.entries[0]
-            logger.debug('Found dn={}'.format(entry.entry_dn))
+        with Connection(
+            Server(settings.LDAP_URI),
+            settings.LDAP_USERNAME,
+            settings.LDAP_PW,
+            auto_bind=True,
+        ) as conn:
+
+            conn.search(
+                'ou=Identities,o=Registry',
+                '(umichRegEntityID={})'.format(umid),
+                attributes=['*'],
+                time_limit=settings.LDAP_TIME_LIMIT,
+            )
+
+            # TODO: check for more than one result returned
+            if len(conn.entries) == 1:
+                entry = conn.entries[0]
+                logger.debug('Found dn={}'.format(entry.entry_dn))
 
     # Do not re-raise, treat an exception as entry not found
     except Exception as e:    # pragma: no cover
@@ -33,19 +39,24 @@ def mcomm_reg_umid_search(umid):
 def set_status_complete(dn):
     try:
         result = False
-        server = Server(settings.LDAP_URI)
-        conn = Connection(server, settings.LDAP_USERNAME, settings.LDAP_PW, auto_bind=True)
 
-        mod_attrs = {
-            'umichGetUniqStatus': [(MODIFY_REPLACE, ['COMPLETE'])],
-        }
-        result = conn.modify(dn, mod_attrs)
+        with Connection(
+            Server(settings.LDAP_URI),
+            settings.LDAP_USERNAME,
+            settings.LDAP_PW,
+            auto_bind=True,
+        ) as conn:
 
-        # conn.modify returns True if successful
-        if result:
-            logger.info('Set umichGetUniqStatus=COMPLETE for dn={}'.format(dn))
-        else:    # pragma: no cover
-            logger.error('Error updating umichGetUniqStatus for dn={}, details={}'.format(dn, conn.result))
+            mod_attrs = {
+                'umichGetUniqStatus': [(MODIFY_REPLACE, ['COMPLETE'])],
+            }
+            result = conn.modify(dn, mod_attrs)
+
+            # conn.modify returns True if successful
+            if result:
+                logger.info('Set umichGetUniqStatus=COMPLETE for dn={}'.format(dn))
+            else:    # pragma: no cover
+                logger.error('Error updating umichGetUniqStatus for dn={}, details={}'.format(dn, conn.result))
 
     # Do not re-raise, just fail silently for now
     except Exception as e:    # pragma: no cover
