@@ -6,7 +6,7 @@ coverage==4.4.1
 Django==1.11.3
 django-jsonview==1.1.0
 django-watchman==0.13.1
-djangorestframework==3.6.3
+djangorestframework==3.11.2
 docutils==0.14
 idna==2.5
 itsdangerous==0.24
